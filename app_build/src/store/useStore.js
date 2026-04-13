@@ -12,6 +12,11 @@ export const useStore = create((set) => ({
   // Phase 2 Editor State
   selectedEntityTool: null, 
   activeDraftMap: null, 
+  
+  // Phase 2 Advanced Mechanics & UGC State
+  creativityMeter: 100,
+  communityLevels: [],
+  highScores: {},
 
   setUser: (user) => set({ user }),
   setTheme: (theme) => set({ activeTheme: theme }),
@@ -26,5 +31,10 @@ export const useStore = create((set) => ({
       gameState: !state.editorMode ? 'editing' : 'playing' 
   })),
   setSelectedTool: (toolId) => set({ selectedEntityTool: toolId }),
-  setDraftMap: (draft) => set({ activeDraftMap: draft })
+  setDraftMap: (draft) => set({ activeDraftMap: draft }),
+
+  // Phase 2 Actions
+  setCreativity: (val) => set({ creativityMeter: Math.max(0, Math.min(100, val)) }),
+  setCommunityLevels: (levels) => set({ communityLevels: levels }),
+  setHighScores: (scores) => set({ highScores: scores })
 }));

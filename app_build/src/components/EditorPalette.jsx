@@ -147,10 +147,32 @@ export default function EditorPalette() {
                Clear Full Map
            </button>
            <button 
-               style={{ width: '100%', padding: '0.75rem', background: '#00e5ff', color: 'black', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-               onClick={() => alert("Test Run triggered! Saving JSON representation...")}
-            >
-               Test Run Level
+                style={{ width: '100%', padding: '0.75rem', background: '#00e5ff', color: 'black', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                onClick={() => {
+                    alert("Test Run activated! Validating level...");
+                    window.dispatchEvent(new CustomEvent('test-run-level', { detail: { draft: activeDraftMap } }));
+                }}
+             >
+                Test Run Level
+           </button>
+           <button 
+                style={{ width: '100%', padding: '0.75rem', background: '#44ff44', color: 'black', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                onClick={async () => {
+                    const { user } = useStore.getState();
+                    if(!user) {
+                        alert("Please sign in to publish levels!");
+                        return;
+                    }
+                    try {
+                        const { publishLevel } = await import('../firebase/levels');
+                        await publishLevel(activeDraftMap, user.uid);
+                        alert("Level published for review!");
+                    } catch (e) {
+                        alert("Failed to publish level: " + e.message);
+                    }
+                }}
+             >
+                Publish Level
            </button>
            <button 
                style={{ width: '100%', padding: '0.75rem', background: 'rgba(255,255,255,0.1)', color: 'white', fontWeight: 'bold', border: 'none', borderRadius: '4px', cursor: 'pointer' }}

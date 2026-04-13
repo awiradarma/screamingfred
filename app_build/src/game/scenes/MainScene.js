@@ -1,7 +1,9 @@
 import * as Phaser from 'phaser';
 import Fred from '../entities/Fred';
 import { useStore } from '../../store/useStore';
-import { loadDraft, saveDraft } from '../../db/indexedStorage';
+import { loadDraft } from '../../db/indexedStorage';
+import Barry from '../entities/enemies/Barry';
+import Snake from '../entities/enemies/Snake';
 
 export default class MainScene extends Phaser.Scene {
     constructor() {
@@ -12,8 +14,11 @@ export default class MainScene extends Phaser.Scene {
     preload() {
         // Automatically fetch AI generated image assets from public Vite directory
         this.load.image('fred', '/assets/fred.png');
-        this.load.image('brick_platform', '/assets/brick.png'); // Maps perfectly to internal UI Tool ID
-        this.load.image('glaring_eye', '/assets/eye.png'); // Maps perfectly to internal UI Tool ID
+        this.load.image('fred_banana', '/assets/banana.png'); 
+        this.load.image('brick_platform', '/assets/brick.png'); 
+        this.load.image('glaring_eye', '/assets/eye.png');
+        this.load.image('barry_battery', '/assets/battery.png');
+        this.load.image('shoelace_snake', '/assets/snake.png');
     }
 
     create() {
@@ -28,14 +33,18 @@ export default class MainScene extends Phaser.Scene {
         this.player = new Fred(this, 96, 288);
         this.physics.add.collider(this.player, ground);
         
-        // Snap the enemy spawn coordinates natively
-        const placeholderEnemy = this.add.rectangle(608, 416, 64, 64, 0xff0000);
-        this.physics.add.existing(placeholderEnemy);
-        placeholderEnemy.body.setBounce(0.4);
-        placeholderEnemy.body.setCollideWorldBounds(true);
-        placeholderEnemy.body.setDragX(100);
-        this.enemies.add(placeholderEnemy);
+        // --- NEW EDITOR LOGIC (SCALED UP TO 64 FOR HI-RES) ---
+        this.gridGraphic = this.add.grid(416, 320, 832, 640, 64, 64, null, 0, 0xffffff, 0.1);
+        this.gridGraphic.setDepth(100);
+        this.gridGraphic.setVisible(false);
+
+        // Global colliders
         this.physics.add.collider(this.enemies, ground);
+        this.physics.add.collider(this.player, this.enemies, (player) => {
+            if (player.transformManager.currentState === 'BANANA') {
+                return; // Invulnerable in banana state
+            }
+        });
 
         this.physics.add.overlap(this.sonicRings, this.enemies, (ring, enemy) => {
             if(enemy && enemy.body && !enemy._recentlyHit) {
@@ -46,10 +55,10 @@ export default class MainScene extends Phaser.Scene {
             }
         });
 
-        // --- NEW EDITOR LOGIC (SCALED UP TO 64 FOR HI-RES) ---
-        this.gridGraphic = this.add.grid(416, 320, 832, 640, 64, 64, null, 0, 0xffffff, 0.1);
-        this.gridGraphic.setDepth(100);
-        this.gridGraphic.setVisible(false);
+        window.addEventListener('test-run-level', () => {
+             this.player.setPosition(96, 288);
+             this.player.body.setVelocity(0,0);
+        });
 
         loadDraft().then(draft => {
             if (draft && draft.mapData && draft.mapData.grid) {
@@ -84,33 +93,44 @@ export default class MainScene extends Phaser.Scene {
 
         let color = 0x888888;
         let isEnemy = false;
+        let EnemyClass = null;
 
         if (toolId.includes('brick')) color = 0xaa4444;
         if (toolId.includes('pancake')) color = 0xd2b48c;
         if (toolId.includes('electric')) color = 0xccff00;
         if (toolId.includes('text')) color = 0xffffff;
         
-        if (toolId.includes('eye') || toolId.includes('battery')) {
+        if (toolId.includes('eye')) {
             color = 0xff0000; 
+            isEnemy = true;
+        } else if (toolId === 'barry_battery') {
+            EnemyClass = Barry;
+            isEnemy = true;
+        } else if (toolId === 'waffle_bridge') {
+            EnemyClass = Snake;
             isEnemy = true;
         }
 
         let tile;
-        if (toolId === 'brick_platform' || toolId === 'glaring_eye') {
+        if (EnemyClass) {
+            tile = new EnemyClass(this, x, y);
+            this.enemies.add(tile);
+        } else if (toolId === 'brick_platform' || toolId === 'glaring_eye') {
             tile = this.add.sprite(x, y, toolId).setDisplaySize(64, 64);
+            if(toolId === 'glaring_eye') isEnemy = true;
         } else {
             tile = this.add.rectangle(x, y, 64, 64, color);
         }
         
         tile.setDepth(50);
         
-        if (isEnemy) {
+        if (isEnemy && !EnemyClass) {
             this.physics.add.existing(tile);
             tile.body.setBounce(0.4);
             tile.body.setCollideWorldBounds(true);
             tile.body.setDragX(100);
             this.enemies.add(tile);
-        } else {
+        } else if (!EnemyClass) {
             this.physics.add.existing(tile, true);
             this.physics.add.collider(this.player, tile);
             this.physics.add.collider(this.enemies, tile);

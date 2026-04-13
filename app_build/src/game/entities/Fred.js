@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser';
 import SonicRing from './SonicRing';
+import TransformationManager, { STATES } from './TransformationManager';
 
 export default class Fred extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y) {
@@ -20,6 +21,9 @@ export default class Fred extends Phaser.GameObjects.Sprite {
         this.runSpeed = 220;
         this.jumpVelocity = -480;
 
+        // Transformation
+        this.transformManager = new TransformationManager(this);
+
         // Input Setup
         this.cursors = scene.input.keyboard.createCursorKeys();
         this.screamKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
@@ -27,6 +31,17 @@ export default class Fred extends Phaser.GameObjects.Sprite {
 
     update() {
         if (!this.body) return;
+
+        this.transformManager.update();
+
+        if (this.transformManager.currentState === STATES.BANANA) {
+            // Cancel transformation with any movement or scream
+            if (Phaser.Input.Keyboard.JustDown(this.cursors.up) || 
+                Phaser.Input.Keyboard.JustDown(this.screamKey)) {
+                this.transformManager.setTransformation(STATES.NORMAL);
+            }
+            return; 
+        }
 
         // Horizontal Movement
         if (this.cursors.left.isDown) {
@@ -39,9 +54,13 @@ export default class Fred extends Phaser.GameObjects.Sprite {
             this.body.setVelocityX(0); // Frictionless stop
         }
 
-        // Jumping
-        if ((this.cursors.up.isDown || this.cursors.space.isDown) && this.body.onFloor()) {
-            this.body.setVelocityY(this.jumpVelocity);
+        // Jumping / Slumping into Banana
+        if (this.body.onFloor()) {
+            if ((this.cursors.up.isDown || this.cursors.space.isDown) && this.cursors.down.isDown) {
+                 this.transformManager.setTransformation(STATES.BANANA);
+            } else if (this.cursors.up.isDown || this.cursors.space.isDown) {
+                this.body.setVelocityY(this.jumpVelocity);
+            }
         }
 
         // Sonic Scream
