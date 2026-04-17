@@ -17,8 +17,8 @@
     "floor": { "passable": true, "description": "Soft green grass." },
     "edge_n": {
       "passable": true,
-      "description": "The meadow gives way to the Shoelace Forest to the north.",
-      "targetRoomId": "whispering_groove",
+      "description": "The meadow gives way to the Shoelace Forest clearing to the north.",
+      "targetRoomId": "forest_entrance",
       "targetPosition": { "x": 2, "y": 3 }
     },
     "gate_e": {
@@ -29,7 +29,7 @@
     },
     "gate_w": {
       "passable": true,
-      "description": "A sturdy wooden door. It smells of cedar.",
+      "description": "A sturdy wooden door. It leads back to the main forest clearing.",
       "targetRoomId": "forest_entrance",
       "targetPosition": { "x": 2, "y": 2 }
     },

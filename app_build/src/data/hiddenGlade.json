@@ -27,6 +27,12 @@
       "targetRoomId": "forest_entrance",
       "targetPosition": { "x": 2, "y": 3 }
     },
+    "exit_east": {
+      "passable": true,
+      "description": "A rusted iron gate stands here, leading back to the sunny meadow.",
+      "targetRoomId": "sunny_meadow",
+      "targetPosition": { "x": 4, "y": 2 }
+    },
     "npc_bob": {
       "passable": true,
       "description": "Bob the Boot sits by the stream, cleaning his laces.",

@@ -23,8 +23,8 @@
     },
     "edge_s": {
       "passable": true,
-      "description": "The whispers fade as the forest opens up into a sunny meadow to the south.",
-      "targetRoomId": "sunny_meadow",
+      "description": "The whispers fade as the forest opens up into the clearing to the south.",
+      "targetRoomId": "forest_entrance",
       "targetPosition": { "x": 2, "y": 1 }
     },
     "item_chest": {
