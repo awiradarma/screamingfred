@@ -30,44 +30,51 @@ function getTileConfig(tileType, stateFlags) {
 }
 
 export default function GridViewer({ grid, playerPosition, stateFlags, roomName }) {
+  const [isExpanded, setIsExpanded] = React.useState(window.innerWidth > 768);
+
   if (!grid) return null;
 
   return (
-    <div className="grid-viewer">
-      <div className="grid-header">
-        <span className="grid-icon">⊞</span>
+    <div className={`grid-viewer ${!isExpanded ? 'is-collapsed' : ''}`}>
+      <div className="grid-header" onClick={() => setIsExpanded(!isExpanded)} style={{ cursor: 'pointer' }}>
+        <span className="grid-icon">{isExpanded ? '⊟' : '⊞'}</span>
         <span className="grid-title">Tactical Map</span>
+        <span className="grid-toggle-hint">{isExpanded ? 'Collapse' : 'Expand'}</span>
       </div>
-      <div className="grid-container">
-        {grid.map((row, y) => (
-          <div key={y} className="grid-row">
-            {row.map((tileType, x) => {
-              const isPlayer = playerPosition.x === x && playerPosition.y === y;
-              const config = getTileConfig(tileType, stateFlags);
-              return (
-                <div
-                  key={`${x}-${y}`}
-                  className={`grid-cell ${config.className} ${isPlayer ? 'tile-player' : ''}`}
-                  title={`(${x},${y}) ${config.label}`}
-                >
-                  {isPlayer ? (
-                    <span className="player-marker">F</span>
-                  ) : (
-                    <span className="tile-icon">{config.icon}</span>
-                  )}
-                </div>
-              );
-            })}
+      {isExpanded && (
+        <>
+          <div className="grid-container">
+            {grid.map((row, y) => (
+              <div key={y} className="grid-row">
+                {row.map((tileType, x) => {
+                  const isPlayer = playerPosition.x === x && playerPosition.y === y;
+                  const config = getTileConfig(tileType, stateFlags);
+                  return (
+                    <div
+                      key={`${x}-${y}`}
+                      className={`grid-cell ${config.className} ${isPlayer ? 'tile-player' : ''}`}
+                      title={`(${x},${y}) ${config.label}`}
+                    >
+                      {isPlayer ? (
+                        <span className="player-marker">F</span>
+                      ) : (
+                        <span className="tile-icon">{config.icon}</span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <div className="grid-legend">
-        <span className="legend-item"><span className="legend-swatch swatch-player">F</span> Fred</span>
-        <span className="legend-item"><span className="legend-swatch swatch-npc">☺</span> NPC</span>
-        <span className="legend-item"><span className="legend-swatch swatch-item">◈</span> Item</span>
-        <span className="legend-item"><span className="legend-swatch swatch-enemy">☠</span> Enemy</span>
-        <span className="legend-item"><span className="legend-swatch swatch-exit">△</span> Exit</span>
-      </div>
+          <div className="grid-legend">
+            <span className="legend-item"><span className="legend-swatch swatch-player">F</span> Fred</span>
+            <span className="legend-item"><span className="legend-swatch swatch-npc">☺</span> NPC</span>
+            <span className="legend-item"><span className="legend-swatch swatch-item">◈</span> Item</span>
+            <span className="legend-item"><span className="legend-swatch swatch-enemy">☠</span> Enemy</span>
+            <span className="legend-item"><span className="legend-swatch swatch-exit">△</span> Exit</span>
+          </div>
+        </>
+      )}
     </div>
   );
 }
