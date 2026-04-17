@@ -7,7 +7,7 @@
   "grid": [
     ["wall",  "wall",  "exit_north","wall",  "wall"],
     ["wall",  "floor", "floor",     "floor", "wall"],
-    ["wall",  "floor", "npc_bob",   "floor", "wall"],
+    ["wall",  "floor", "npc_bob",   "floor", "exit_east"],
     ["wall",  "floor", "floor",     "floor", "wall"],
     ["wall",  "wall",  "wall",      "wall",  "wall"]
   ],

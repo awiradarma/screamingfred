@@ -5,11 +5,11 @@
   "theme": "Meadow",
   "description": "A wide, open meadow with knee-high grass. The northern edge is completely open, leading back into the deeper forest. To the east, a rusted iron gate stands alone. To the west, a sturdy wooden door is set into a freestanding stone arch.",
   "grid": [
-    ["edge_n",  "edge_n",      "edge_n",      "edge_n",  "edge_n"],
+    ["wall",    "wall",        "edge_n",      "wall",    "wall"],
     ["floor",   "floor",       "floor",       "floor",   "floor"],
-    ["gate_w",  "floor",       "floor",       "floor",   "gate_e"],
+    ["exit_west","floor",      "floor",       "floor",   "gate_east"],
     ["floor",   "floor",       "floor",       "floor",   "floor"],
-    ["wall",    "wall",        "exit_west",   "wall",    "wall"]
+    ["wall",    "wall",        "wall",        "wall",    "wall"]
   ],
   "player_start": { "x": 2, "y": 3 },
   "tiles": {
@@ -21,7 +21,7 @@
       "targetRoomId": "forest_entrance",
       "targetPosition": { "x": 2, "y": 4 }
     },
-    "gate_e": {
+    "gate_east": {
       "passable": true,
       "description": "A rusted iron gate. Beyond it, you see... nothing but white mist.",
       "targetRoomId": "hidden_glade",
