@@ -16,10 +16,8 @@
     "wall": { "passable": false, "description": "A low stone wall." },
     "floor": { "passable": true, "description": "Soft green grass." },
     "edge_n": {
-      "passable": true,
-      "description": "The meadow gives way to the Shoelace Forest clearing to the north.",
-      "targetRoomId": "forest_entrance",
-      "targetPosition": { "x": 2, "y": 4 }
+      "passable": false,
+      "description": "A dense wall of shoelace-vines prevents you from going north. You see the Shoelace Forest clearing through the gaps, but it's impassable here."
     },
     "gate_east": {
       "passable": true,
@@ -31,13 +29,13 @@
       "passable": true,
       "description": "A sturdy wooden door. It leads back to the main forest clearing.",
       "targetRoomId": "forest_entrance",
-      "targetPosition": { "x": 2, "y": 2 }
+      "targetPosition": { "x": 3, "y": 2 }
     },
     "exit_west": {
       "passable": true,
       "description": "The path leads back West to the clearing.",
       "targetRoomId": "forest_entrance",
-      "targetPosition": { "x": 4, "y": 2 }
+      "targetPosition": { "x": 3, "y": 2 }
     }
   },
   "state_flags": {}

@@ -25,13 +25,13 @@
       "passable": true,
       "description": "The trail leads north back to the clearing.",
       "targetRoomId": "forest_entrance",
-      "targetPosition": { "x": 2, "y": 4 }
+      "targetPosition": { "x": 2, "y": 1 }
     },
     "exit_east": {
       "passable": true,
       "description": "A rusted iron gate stands here, leading back to the sunny meadow.",
       "targetRoomId": "sunny_meadow",
-      "targetPosition": { "x": 0, "y": 2 }
+      "targetPosition": { "x": 3, "y": 2 }
     },
     "npc_bob": {
       "passable": true,

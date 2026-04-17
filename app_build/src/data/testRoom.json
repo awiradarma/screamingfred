@@ -25,13 +25,13 @@
       "passable": true,
       "description": "A narrow gap in the lace-wall opens northward. A faint breeze carries the scent of pancakes from beyond.",
       "targetRoomId": "whispering_groove",
-      "targetPosition": { "x": 2, "y": 4 }
+      "targetPosition": { "x": 2, "y": 3 }
     },
     "exit_south": {
       "passable": true,
       "description": "A muddy trail leads south, disappearing into deeper forest.",
       "targetRoomId": "hidden_glade",
-      "targetPosition": { "x": 2, "y": 0 }
+      "targetPosition": { "x": 2, "y": 1 }
     },
     "exit_east": {
       "passable": true,
