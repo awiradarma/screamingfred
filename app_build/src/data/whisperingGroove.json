@@ -25,7 +25,7 @@
       "passable": true,
       "description": "The whispers fade as the forest opens up into the clearing to the south.",
       "targetRoomId": "forest_entrance",
-      "targetPosition": { "x": 2, "y": 1 }
+      "targetPosition": { "x": 2, "y": 0 }
     },
     "item_chest": {
       "passable": true,

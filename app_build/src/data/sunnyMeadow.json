@@ -19,13 +19,13 @@
       "passable": true,
       "description": "The meadow gives way to the Shoelace Forest clearing to the north.",
       "targetRoomId": "forest_entrance",
-      "targetPosition": { "x": 2, "y": 3 }
+      "targetPosition": { "x": 2, "y": 4 }
     },
     "gate_e": {
       "passable": true,
       "description": "A rusted iron gate. Beyond it, you see... nothing but white mist.",
       "targetRoomId": "hidden_glade",
-      "targetPosition": { "x": 2, "y": 2 }
+      "targetPosition": { "x": 1, "y": 2 }
     },
     "gate_w": {
       "passable": true,
@@ -37,7 +37,7 @@
       "passable": true,
       "description": "The path leads back West to the clearing.",
       "targetRoomId": "forest_entrance",
-      "targetPosition": { "x": 3, "y": 2 }
+      "targetPosition": { "x": 4, "y": 2 }
     }
   },
   "state_flags": {}

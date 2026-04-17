@@ -62,11 +62,35 @@ function validateWorld() {
         }
 
         // 2. Check for reciprocity
-        // Note: Heuristic. If I go to Target, Target should have an exit back to Source.
         const targetExits = Object.values(targetRoom.tiles).filter(t => t.targetRoomId === sourceId);
         if (targetExits.length === 0) {
           console.warn(`⚠️ WARNING in [${sourceId}]: Exit "${tileType}" leads to [${targetId}], but [${targetId}] has NO path back to [${sourceId}]. (One-way trip)`);
           warnings++;
+        }
+
+        // 3. Check for cardinal entry consistency
+        // If exit name contains "north", target Y should ideally be 4 (bottom)
+        // If exit name contains "south", target Y should ideally be 0 (top)
+        // If exit name contains "east", target X should ideally be 0 (left)
+        // If exit name contains "west", target X should ideally be 4 (right)
+        if (tileData.targetPosition) {
+          const { x, y } = tileData.targetPosition;
+          if (tileType.includes('north') && y < 3) {
+            console.warn(`📍 HINT in [${sourceId}]: Exit "${tileType}" (North) drops player at y=${y}. For consistency, it should probably be y=3 or 4 (the bottom of room [${targetId}]).`);
+            warnings++;
+          }
+          if (tileType.includes('south') && y > 1) {
+            console.warn(`📍 HINT in [${sourceId}]: Exit "${tileType}" (South) drops player at y=${y}. For consistency, it should probably be y=0 or 1 (the top of room [${targetId}]).`);
+            warnings++;
+          }
+          if (tileType.includes('east') && x > 1) {
+            console.warn(`📍 HINT in [${sourceId}]: Exit "${tileType}" (East) drops player at x=${x}. For consistency, it should probably be x=0 or 1 (the left of room [${targetId}]).`);
+            warnings++;
+          }
+          if (tileType.includes('west') && x < 3) {
+            console.warn(`📍 HINT in [${sourceId}]: Exit "${tileType}" (West) drops player at x=${x}. For consistency, it should probably be x=3 or 4 (the right of room [${targetId}]).`);
+            warnings++;
+          }
         }
       }
     });

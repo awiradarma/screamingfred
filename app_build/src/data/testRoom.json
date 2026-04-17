@@ -25,19 +25,19 @@
       "passable": true,
       "description": "A narrow gap in the lace-wall opens northward. A faint breeze carries the scent of pancakes from beyond.",
       "targetRoomId": "whispering_groove",
-      "targetPosition": { "x": 2, "y": 3 }
+      "targetPosition": { "x": 2, "y": 4 }
     },
     "exit_south": {
       "passable": true,
       "description": "A muddy trail leads south, disappearing into deeper forest.",
       "targetRoomId": "hidden_glade",
-      "targetPosition": { "x": 2, "y": 1 }
+      "targetPosition": { "x": 2, "y": 0 }
     },
     "exit_east": {
       "passable": true,
       "description": "The forest thins out to the east, revealing a bright, sunny meadow.",
       "targetRoomId": "sunny_meadow",
-      "targetPosition": { "x": 2, "y": 3 }
+      "targetPosition": { "x": 1, "y": 2 }
     },
     "npc_sue": {
       "passable": true,
