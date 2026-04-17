@@ -1,0 +1,44 @@
+{
+  "room_id": "sunny_meadow",
+  "world_coord": "16_05",
+  "room_name": "Sunny Meadow",
+  "theme": "Meadow",
+  "description": "A wide, open meadow with knee-high grass. The northern edge is completely open, leading back into the deeper forest. To the east, a rusted iron gate stands alone. To the west, a sturdy wooden door is set into a freestanding stone arch.",
+  "grid": [
+    ["edge_n",  "edge_n",      "edge_n",      "edge_n",  "edge_n"],
+    ["floor",   "floor",       "floor",       "floor",   "floor"],
+    ["gate_w",  "floor",       "floor",       "floor",   "gate_e"],
+    ["floor",   "floor",       "floor",       "floor",   "floor"],
+    ["wall",    "wall",        "exit_west",   "wall",    "wall"]
+  ],
+  "player_start": { "x": 2, "y": 3 },
+  "tiles": {
+    "wall": { "passable": false, "description": "A low stone wall." },
+    "floor": { "passable": true, "description": "Soft green grass." },
+    "edge_n": {
+      "passable": true,
+      "description": "The meadow gives way to the Shoelace Forest to the north.",
+      "targetRoomId": "whispering_groove",
+      "targetPosition": { "x": 2, "y": 3 }
+    },
+    "gate_e": {
+      "passable": true,
+      "description": "A rusted iron gate. Beyond it, you see... nothing but white mist.",
+      "targetRoomId": "hidden_glade",
+      "targetPosition": { "x": 2, "y": 2 }
+    },
+    "gate_w": {
+      "passable": true,
+      "description": "A sturdy wooden door. It smells of cedar.",
+      "targetRoomId": "forest_entrance",
+      "targetPosition": { "x": 2, "y": 2 }
+    },
+    "exit_west": {
+      "passable": true,
+      "description": "The path leads back West to the clearing.",
+      "targetRoomId": "forest_entrance",
+      "targetPosition": { "x": 3, "y": 2 }
+    }
+  },
+  "state_flags": {}
+}

@@ -3,13 +3,13 @@
   "world_coord": "15_04",
   "room_name": "Whispering Groove",
   "theme": "Shoebox_Forest",
-  "description": "The trees here are taller and their laces vibrate with a strange energy. A faint whispering seems to come from the canopy. To the south, you see the clearing where you woke up.",
+  "description": "The trees here are taller and their laces vibrate with a strange energy. A faint whispering seems to come from the canopy. To the south, a bright, sunny meadow stretches out as far as the eye can see.",
   "grid": [
     ["wall",  "wall",  "wall",      "wall",  "wall"],
     ["wall",  "floor", "floor",     "item_chest", "wall"],
     ["wall",  "floor", "floor",     "floor", "wall"],
     ["wall",  "floor", "floor",     "floor", "wall"],
-    ["wall",  "wall",  "exit_south","wall",  "wall"]
+    ["edge_s","edge_s","edge_s",    "edge_s","edge_s"]
   ],
   "player_start": { "x": 2, "y": 3 },
   "tiles": {
@@ -21,10 +21,10 @@
       "passable": true,
       "description": "Soft moss covered in loose aglets."
     },
-    "exit_south": {
+    "edge_s": {
       "passable": true,
-      "description": "The path leads back south to the forest clearing.",
-      "targetRoomId": "forest_entrance",
+      "description": "The whispers fade as the forest opens up into a sunny meadow to the south.",
+      "targetRoomId": "sunny_meadow",
       "targetPosition": { "x": 2, "y": 1 }
     },
     "item_chest": {

@@ -7,7 +7,7 @@
   "grid": [
     ["wall",  "wall",      "exit_north", "wall",       "wall"],
     ["wall",  "npc_sue",   "floor",      "item_fridge", "wall"],
-    ["wall",  "floor",     "floor",      "floor",       "wall"],
+    ["wall",  "floor",     "floor",      "floor",       "exit_east"],
     ["wall",  "floor",     "enemy_snake","floor",       "wall"],
     ["wall",  "wall",      "exit_south", "wall",        "wall"]
   ],
@@ -32,6 +32,12 @@
       "description": "A muddy trail leads south, disappearing into deeper forest.",
       "targetRoomId": "hidden_glade",
       "targetPosition": { "x": 2, "y": 1 }
+    },
+    "exit_east": {
+      "passable": true,
+      "description": "The forest thins out to the east, revealing a bright, sunny meadow.",
+      "targetRoomId": "sunny_meadow",
+      "targetPosition": { "x": 2, "y": 3 }
     },
     "npc_sue": {
       "passable": true,
