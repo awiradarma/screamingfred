@@ -1,60 +1,82 @@
-import React from 'react';
-import Game from './components/Game';
-import EditorPalette from './components/EditorPalette';
-import WorldMap from './components/WorldMap';
+import React, { useEffect } from 'react';
+import './App.css';
+import ChatLog from './components/ChatLog';
+import CommandInput from './components/CommandInput';
+import GridViewer from './components/GridViewer';
+import PlayerHUD from './components/PlayerHUD';
 import { useStore } from './store/useStore';
-import { Edit3, Map as MapIcon } from 'lucide-react';
 
 export default function App() {
-  const { gameState, setGameState, editorMode, toggleEditorMode } = useStore();
-  
+  const {
+    gameState, gameLog, isGameStarted,
+    initGame, submitCommand,
+  } = useStore();
+
+  useEffect(() => {
+    if (!isGameStarted) {
+      initGame();
+    }
+  }, [isGameStarted, initGame]);
+
+  if (!gameState) {
+    return (
+      <div className="app-loading">
+        <div className="loading-text">Initializing Sentientworldia...</div>
+      </div>
+    );
+  }
+
+  const isDefeated = gameState.playerHP <= 0;
+
   return (
     <div className="app-container">
-      {/* Route: Overworld Map Menu */}
-      {gameState === 'menu' && (
-          <WorldMap />
-      )}
-
-      {/* Route: Gameplay and Editor Architecture */}
-      {gameState !== 'menu' && (
-      <header className="glass-panel app-header">
+      <header className="app-header">
         <h1 className="title-glow">Screaming Fred</h1>
-        
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            <button 
-                onClick={() => setGameState('menu')}
-                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px', padding: '0.5rem 1rem', fontSize: '0.875rem', pointerEvents: 'auto', fontWeight: 'bold', transition: 'all 0.2s', background: 'rgba(255,255,255,0.1)', color: 'white', cursor: 'pointer' }}
-            >
-                <MapIcon size={16} />
-                World Map
-            </button>
-            <button 
-                onClick={toggleEditorMode}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: '0.5rem', border: '1px solid', borderRadius: '4px', padding: '0.5rem 1rem', fontSize: '0.875rem', pointerEvents: 'auto', fontWeight: 'bold', transition: 'all 0.2s', cursor: 'pointer',
-                  background: editorMode ? 'rgba(0,229,255,0.2)' : 'rgba(255,255,255,0.1)',
-                  color: editorMode ? '#00e5ff' : 'white',
-                  borderColor: editorMode ? '#00e5ff' : 'rgba(255,255,255,0.1)',
-                  boxShadow: editorMode ? '0 0 10px rgba(0,229,255,0.3)' : 'none'
-                }}
-            >
-                <Edit3 size={16} />
-                {editorMode ? 'Exit Editor' : 'Level Editor'}
-            </button>
-            <div className="status-badge">Status: {gameState}</div>
-        </div>
+        <span className="title-subtitle">The Tactical Chronicles</span>
       </header>
-      )}
-      
-      {gameState !== 'menu' && (
-      <main className="game-wrapper">
-        <Game />
-        <EditorPalette />
+
+      <PlayerHUD
+        playerHP={gameState.playerHP}
+        maxHP={gameState.maxHP}
+        inventory={gameState.inventory}
+        position={gameState.playerPosition}
+        roomName={gameState.room.room_name}
+        theme={gameState.room.theme}
+      />
+
+      <main className="game-layout">
+        <section className="panel-chat">
+          <ChatLog messages={gameLog} />
+          <CommandInput onSubmit={submitCommand} disabled={isDefeated} />
+        </section>
+
+        <aside className="panel-grid">
+          <GridViewer
+            grid={gameState.room.grid}
+            playerPosition={gameState.playerPosition}
+            stateFlags={gameState.stateFlags}
+            roomName={gameState.room.room_name}
+          />
+          <div className="grid-info-box">
+            <div className="info-title">Room Info</div>
+            <div className="info-row">
+              <span className="info-label">Theme</span>
+              <span className="info-value">{gameState.room.theme.replace(/_/g, ' ')}</span>
+            </div>
+            <div className="info-row">
+              <span className="info-label">Coord</span>
+              <span className="info-value">{gameState.room.world_coord}</span>
+            </div>
+            <div className="info-row">
+              <span className="info-label">Turn</span>
+              <span className="info-value">{gameState.turnCount}</span>
+            </div>
+          </div>
+        </aside>
       </main>
-      )}
 
       <footer className="app-footer">
-        Sentientworldia v0.1.0 (Core Engine)
+        <span>Sentientworldia v1.0.0 — Phase 1: Solo Engine</span>
       </footer>
     </div>
   );

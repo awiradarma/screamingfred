@@ -1,0 +1,71 @@
+{
+  "world_coord": "15_05",
+  "room_name": "Shoelace Forest Clearing",
+  "theme": "Shoebox_Forest",
+  "description": "You stand in a dim clearing deep within the Shoelace Forest. Tangled laces hang from gnarled shoe-trees like vines, and the air smells faintly of leather polish. Somewhere nearby, something hisses.",
+  "grid": [
+    ["wall",  "wall",      "exit_north", "wall",       "wall"],
+    ["wall",  "npc_sue",   "floor",      "item_fridge", "wall"],
+    ["wall",  "floor",     "floor",      "floor",       "wall"],
+    ["wall",  "floor",     "enemy_snake","floor",       "wall"],
+    ["wall",  "wall",      "exit_south", "wall",        "wall"]
+  ],
+  "player_start": { "x": 2, "y": 2 },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "A thick wall of woven shoelaces blocks your path. They're knotted too tightly to untangle."
+    },
+    "floor": {
+      "passable": true,
+      "description": "Worn dirt floor, scuffed by countless soles."
+    },
+    "exit_north": {
+      "passable": true,
+      "description": "A narrow gap in the lace-wall opens northward. A faint breeze carries the scent of pancakes from beyond."
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "A muddy trail leads south, disappearing into deeper forest."
+    },
+    "npc_sue": {
+      "passable": true,
+      "description": "Sue the Sandal stands here, tapping her sole impatiently. Her buckle glints in the dim light.",
+      "npc": {
+        "name": "Sue the Sandal",
+        "dialogue": [
+          { "stage": 0, "text": "\"Oh! A tennis shoe! You're Fred, aren't you? I've heard your screaming from three blocks away.\"", "hint": "Try using SCREAM to impress her." },
+          { "stage": 1, "text": "\"Impressive pipes! Listen — I saw something slithering near the south exit. And that old fridge over there? Someone stashed something inside it. Be careful.\"" },
+          { "stage": 2, "text": "\"You've already gotten everything out of me, Fred. Go find your pasta!\"" }
+        ]
+      }
+    },
+    "item_fridge": {
+      "passable": true,
+      "description": "A battered mini-fridge stands wedged between the lace-walls. Its door is slightly ajar, and a faint warmth radiates from inside.",
+      "item": {
+        "name": "Mini Fridge",
+        "contains": { "name": "Spicy Noodle", "type": "pasta" },
+        "actions": ["open", "search", "scream"],
+        "opened_description": "The fridge stands open and empty. A lingering spice scent hangs in the air."
+      }
+    },
+    "enemy_snake": {
+      "passable": true,
+      "description": "A coiled Shoelace Snake blocks the path, its frayed tongue flicking menacingly. It hisses a warning as you approach.",
+      "enemy": {
+        "name": "Shoelace Snake",
+        "hp": 3,
+        "damage": 1,
+        "linger_timer_seconds": 5,
+        "defeat_message": "The Shoelace Snake unravels into a harmless pile of laces!",
+        "scream_vulnerable": true
+      }
+    }
+  },
+  "state_flags": {
+    "item_fridge_opened": false,
+    "sue_clue_given": false,
+    "snake_defeated": false
+  }
+}

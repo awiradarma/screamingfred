@@ -1,0 +1,145 @@
+/**
+ * textGenerator.js
+ * Narrative text templates for the MUD engine.
+ * Generates descriptive prose for rooms, items, NPCs, events, and combat.
+ */
+
+const SCREAM_FLAVOR = [
+  'Fred lets out an earth-shattering scream! The lace-vines tremble!',
+  'A sonic wave erupts from Fred! Nearby objects rattle!',
+  'Fred screams with the fury of a thousand morning alarms!',
+  'The air splits with Fred\'s legendary wail! Even the walls flinch!',
+  'Fred\'s scream echoes through the chamber — raw, primal, magnificent!',
+];
+
+const MOVEMENT_FLAVOR = {
+  north: 'You head north, your soles crunching against the dirt.',
+  south: 'You trudge southward, deeper into the unknown.',
+  east:  'You veer east, laces brushing against your sides.',
+  west:  'You shuffle west through the dimly-lit passage.',
+};
+
+const BLOCKED_FLAVOR = [
+  'You bump face-first into a wall. It doesn\'t budge. Neither does your dignity.',
+  'A solid barrier blocks your path. Not even Fred\'s scream could move this.',
+  'Nope. That\'s a wall. Walls tend to be non-negotiable.',
+];
+
+/**
+ * Get a random element from an array.
+ */
+function pick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+/**
+ * Generate the full room description when entering or looking.
+ */
+export function describeRoom(roomData) {
+  return roomData.description || 'You are in an unremarkable place.';
+}
+
+/**
+ * Generate tile-specific description.
+ */
+export function describeTile(tileType, tileData, stateFlags) {
+  if (!tileData) return 'Nothing remarkable here.';
+
+  // Check if item has been opened
+  if (tileData.item && stateFlags[`item_${tileName(tileType)}_opened`]) {
+    return tileData.item.opened_description || 'This has already been searched.';
+  }
+
+  // Check if enemy is defeated
+  if (tileData.enemy && stateFlags[`${tileName(tileType)}_defeated`]) {
+    return `A pile of unraveled laces lies where the ${tileData.enemy.name} once was.`;
+  }
+
+  return tileData.description || 'Nothing remarkable here.';
+}
+
+/**
+ * Extract a simple tile name from tile type string (e.g., "item_fridge" -> "fridge")
+ */
+function tileName(tileType) {
+  return tileType.replace(/^(npc_|item_|enemy_)/, '');
+}
+
+/**
+ * Generate movement text.
+ */
+export function describeMovement(direction) {
+  return MOVEMENT_FLAVOR[direction] || `You move ${direction}.`;
+}
+
+/**
+ * Generate blocked movement text.
+ */
+export function describeBlocked() {
+  return pick(BLOCKED_FLAVOR);
+}
+
+/**
+ * Generate scream text.
+ */
+export function describeScream() {
+  return pick(SCREAM_FLAVOR);
+}
+
+/**
+ * Generate NPC dialogue based on current stage.
+ */
+export function getNPCDialogue(npcData, stage) {
+  if (!npcData?.dialogue) return '"..."';
+  const line = npcData.dialogue.find(d => d.stage === stage);
+  return line ? line.text : npcData.dialogue[npcData.dialogue.length - 1].text;
+}
+
+/**
+ * Generate NPC dialogue hint.
+ */
+export function getNPCHint(npcData, stage) {
+  if (!npcData?.dialogue) return null;
+  const line = npcData.dialogue.find(d => d.stage === stage);
+  return line?.hint || null;
+}
+
+/**
+ * Generate item interaction text.
+ */
+export function describeItemFound(itemData) {
+  return `You open the ${itemData.name} and find a ${itemData.contains.name}! It's been added to your inventory.`;
+}
+
+/**
+ * Generate combat text.
+ */
+export function describeAttack(enemyData, damage) {
+  return `You strike the ${enemyData.name} for ${damage} damage! (${Math.max(0, enemyData.hp - damage)} HP remaining)`;
+}
+
+export function describeEnemyDefeated(enemyData) {
+  return enemyData.defeat_message || `The ${enemyData.name} has been defeated!`;
+}
+
+export function describeEnemyAttacks(enemyData) {
+  return `The ${enemyData.name} lashes out, dealing ${enemyData.damage} damage to you!`;
+}
+
+/**
+ * Generate the welcome message shown on game start.
+ */
+export function getWelcomeMessage() {
+  return [
+    '═══════════════════════════════════════════',
+    '  SCREAMING FRED: THE TACTICAL CHRONICLES',
+    '═══════════════════════════════════════════',
+    '',
+    'Fred the tennis shoe awakens in the Shoelace Forest.',
+    'His fridge is empty. His pasta — stolen.',
+    'His potatoes — gone. Someone will pay.',
+    '',
+    'Type HELP for a list of commands.',
+    '',
+  ].join('\n');
+}

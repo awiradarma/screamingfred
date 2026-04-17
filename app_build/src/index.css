@@ -1,98 +1,99 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Outfit:wght@400;600;700&display=swap');
 
+/* ── Design Tokens ──────────────────────────── */
 :root {
-  --primary-glow: #00e5ff;
-  --bg-color: #0b0c10;
-  --text-primary: #e6edf3;
+  /* Base colors */
+  --bg-deep:        #0a0e17;
+  --bg-surface:     #111827;
+  --bg-panel:       #1a2236;
+  --bg-panel-hover: #1f2a42;
+  --bg-input:       #0d1321;
+
+  /* Accent colors */
+  --accent-cyan:    #00e5ff;
+  --accent-green:   #39ff85;
+  --accent-gold:    #ffd700;
+  --accent-purple:  #b388ff;
+  --accent-orange:  #ff9100;
+
+  /* Text colors */
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8892a4;
+  --text-muted:     #4a5568;
+  --text-bright:    #f1f5f9;
+
+  /* Message colors */
+  --color-narrative: #c8d6e5;
+  --color-system:    #00e5ff;
+  --color-danger:    #ff4757;
+  --color-warning:   #ffa502;
+  --color-loot:      #ffd700;
+  --color-dialogue:  #b388ff;
+  --color-hint:      #39ff85;
+  --color-scream:    #ff6b81;
+  --color-player:    #8892a4;
+
+  /* HP bar */
+  --color-hp-high:   #39ff85;
+  --color-hp-mid:    #ffa502;
+  --color-hp-low:    #ff4757;
+
+  /* Borders & effects */
+  --border-subtle:   rgba(255, 255, 255, 0.06);
+  --border-accent:   rgba(0, 229, 255, 0.2);
+  --glow-cyan:       0 0 20px rgba(0, 229, 255, 0.3);
+  --glow-gold:       0 0 15px rgba(255, 215, 0, 0.2);
+
+  /* Sizing */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  /* Fonts */
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-display: 'Outfit', -apple-system, sans-serif;
 }
 
-html, body, #root {
+/* ── Reset & Base ───────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  width: 100vw;
-  height: 100vh;
-  font-family: 'Outfit', sans-serif;
-  background-color: var(--bg-color);
-  color: var(--text-primary);
+}
+
+html, body {
+  height: 100%;
   overflow: hidden;
 }
 
-* {
-  box-sizing: border-box;
+body {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-deep);
+  -webkit-font-smoothing: antialiased;
 }
 
-.app-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+#root {
   height: 100%;
-  position: relative;
 }
 
-.app-header {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  right: 1rem;
-  z-index: 10;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 1.5rem;
-  pointer-events: auto;
+::selection {
+  background: rgba(0, 229, 255, 0.25);
+  color: var(--text-bright);
 }
 
-.title-glow {
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 800;
-  text-shadow: 0 0 10px var(--primary-glow), 0 0 20px var(--primary-glow);
-  letter-spacing: 1px;
+::-webkit-scrollbar {
+  width: 6px;
 }
-
-.status-badge {
-  font-weight: 600;
-  font-size: 0.9rem;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 0.4rem 1rem;
-  border-radius: 6px;
-  border: 1px solid rgba(255,255,255,0.1);
+::-webkit-scrollbar-track {
+  background: transparent;
 }
-
-.game-wrapper {
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  position: relative;
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
 }
-
-.phaser-container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--bg-color);
-}
-
-.app-footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  text-align: center;
-  padding: 0.5rem;
-  font-size: 0.8rem;
-  background: rgba(0,0,0,0.7);
-  z-index: 10;
-  color: #8b949e;
-}
-
-/* Glassmorphism System */
-.glass-panel {
-  background: rgba(15, 15, 20, 0.65);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
