@@ -1,0 +1,43 @@
+{
+  "room_id": "whispering_groove",
+  "world_coord": "15_04",
+  "room_name": "Whispering Groove",
+  "theme": "Shoebox_Forest",
+  "description": "The trees here are taller and their laces vibrate with a strange energy. A faint whispering seems to come from the canopy. To the south, you see the clearing where you woke up.",
+  "grid": [
+    ["wall",  "wall",  "wall",      "wall",  "wall"],
+    ["wall",  "floor", "floor",     "item_chest", "wall"],
+    ["wall",  "floor", "floor",     "floor", "wall"],
+    ["wall",  "floor", "floor",     "floor", "wall"],
+    ["wall",  "wall",  "exit_south","wall",  "wall"]
+  ],
+  "player_start": { "x": 2, "y": 3 },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "Vibrant blue shoelaces form a dense, shimmering barrier."
+    },
+    "floor": {
+      "passable": true,
+      "description": "Soft moss covered in loose aglets."
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "The path leads back south to the forest clearing.",
+      "targetRoomId": "forest_entrance",
+      "targetPosition": { "x": 2, "y": 1 }
+    },
+    "item_chest": {
+      "passable": true,
+      "description": "A small wooden chest with a leather strap.",
+      "item": {
+        "name": "Leather Strap",
+        "contains": { "name": "Mysterious Button", "type": "quest_item" },
+        "opened_description": "The chest lies open and empty."
+      }
+    }
+  },
+  "state_flags": {
+    "item_chest_opened": false
+  }
+}

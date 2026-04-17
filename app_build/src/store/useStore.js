@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { initGameState, processCommand, getWelcomeMessages } from '../engine/roomEngine.js';
-import testRoom from '../data/testRoom.json';
+import { worldData } from '../data/worldData.js';
 
 /**
  * Zustand store for the MUD text adventure.
@@ -13,11 +13,12 @@ export const useStore = create((set, get) => ({
   isGameStarted: false,
 
   /**
-   * Initialize the game with the test room.
+   * Initialize the game with the starting room.
    */
   initGame: () => {
-    const initialState = initGameState(testRoom);
-    const welcomeMessages = getWelcomeMessages(testRoom);
+    const startRoom = worldData.forest_entrance;
+    const initialState = initGameState(startRoom);
+    const welcomeMessages = getWelcomeMessages(startRoom);
 
     set({
       gameState: initialState,

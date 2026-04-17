@@ -1,4 +1,5 @@
 {
+  "room_id": "forest_entrance",
   "world_coord": "15_05",
   "room_name": "Shoelace Forest Clearing",
   "theme": "Shoebox_Forest",
@@ -22,11 +23,15 @@
     },
     "exit_north": {
       "passable": true,
-      "description": "A narrow gap in the lace-wall opens northward. A faint breeze carries the scent of pancakes from beyond."
+      "description": "A narrow gap in the lace-wall opens northward. A faint breeze carries the scent of pancakes from beyond.",
+      "targetRoomId": "whispering_groove",
+      "targetPosition": { "x": 2, "y": 3 }
     },
     "exit_south": {
       "passable": true,
-      "description": "A muddy trail leads south, disappearing into deeper forest."
+      "description": "A muddy trail leads south, disappearing into deeper forest.",
+      "targetRoomId": "hidden_glade",
+      "targetPosition": { "x": 2, "y": 1 }
     },
     "npc_sue": {
       "passable": true,

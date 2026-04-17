@@ -11,6 +11,7 @@ import {
   describeItemFound, describeAttack, describeEnemyDefeated,
   describeEnemyAttacks, getWelcomeMessage,
 } from './textGenerator.js';
+import { getRoomData } from '../data/worldData.js';
 
 // Direction vectors for grid movement
 const DIR_VECTORS = {
@@ -162,6 +163,25 @@ function handleMove(state, direction, messages) {
   // Describe what's on the new tile
   const tileDesc = describeTile(targetTile, tileData, newState.stateFlags);
   messages.push({ text: tileDesc, type: 'narrative' });
+
+  // Handle Room Transition
+  if (tileData.targetRoomId) {
+    const nextRoom = getRoomData(tileData.targetRoomId);
+    if (nextRoom) {
+      messages.push({ text: `⚡ Transitioning to ${nextRoom.room_name}...`, type: 'system' });
+      return {
+        state: {
+          ...newState,
+          room: nextRoom,
+          playerPosition: tileData.targetPosition || { ...nextRoom.player_start },
+        },
+        messages: [
+          ...messages,
+          { text: describeRoom(nextRoom), type: 'narrative' }
+        ]
+      };
+    }
+  }
 
   // Enemy proximity warning
   if (tileData.enemy && !newState.stateFlags[`${targetTile.replace(/^enemy_/, '')}_defeated`]) {
