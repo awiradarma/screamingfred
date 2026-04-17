@@ -1,88 +1,90 @@
-AppRequirements.md: Screaming Fred
-Build Tool: Antigravity (Agentic AI)
-Source Material: Fred’s Adventure by Timothy Wiradarma
+AppRequirements.md: Screaming Fred (Tactical Text Adventure)
 
-1. Project Vision
-Screaming Fred is a 2D PWA platformer and no-code level editor. Players control Fred, a white tennis shoe, journeying across Sentientworldia to retrieve stolen pasta and potatoes. The game balances a high-fidelity 8-bit aesthetic with a "zero-install" web experience for desktop and mobile.
+1. Project Overview
+Screaming Fred: The Tactical Chronicles is a multiplayer interactive fiction PWA. Players form parties of up to 3 to explore a 30x30 world matrix. Each world square contains a tactical 5x5 sub-grid for high-detail interactions, combat, and discovery.
 
 2. Technical Stack
-Engine: Phaser.js (Standardized 2D game loop, 8-bit audio management, and canvas rendering).
-
-Backend: Firebase (Firestore for JSON level data, Auth for user-generated content).
-
-Storage: IndexedDB for local drafts; localStorage for instant map persistence.
-
-Input: Unified Input Bridge (WASD/Space for Desktop; Virtual Joystick/Action Buttons for Mobile).
+Frontend: React 19 / Vanilla CSS (Chat UI + Tactical Grid View).
+Real-time Engine: Firebase Firestore using stream-based snapshots to sync party state instantly.
+State Management:
+- Shared Party State: Tracks discovered items, NPC dialogue progress, and enemy health for the group.
+- Individual Player State: Tracks HP, inventory (Pasta/Potatoes), and specialized role perks.
 
 3. Core Gameplay & Narrative Mechanics
-3.1 Fred’s Abilities
-The Sonic Scream: An 8-bit sonic ring (expanding circle) that repels enemies and activates environmental triggers (like the Microphone or Scream Collector).
-
+3.1 Fred's Abilities
+The Sonic Scream: A text-based command that deals 2 damage to scream-vulnerable enemies, activates environmental triggers, and advances NPC dialogue.
 Transformation (Future Banana): A special power-up where Fred becomes a banana to act as a bridge over hazardous liquids.
-
-Jumping Expectations: In the Land of Endless Jumping, Fred's jump height is locked until the player selects "unexpected" thoughts.
+Jumping Expectations: In the Land of Endless Jumping, Fred's progress is locked until the player selects "unexpected" thoughts via dialogue choices.
 
 3.2 The Enemy & NPC Roster
-Barry the Battery: Zaps Fred with electricity and demands visitors "take a seat".
-
-Shoelace Snakes: Hissing ground enemies in the Shoelace Forest.
-
-Willy the Waffle: A detective guide who evaporates or melts in high heat.
-
+Barry the Battery: Stationary enemy that emits a 360-degree electric zap every 3 seconds. Movement triggered if Fred screams near him.
+Shoelace Snakes: Ground-based patrol enemies that hiss and accelerate towards Fred if he enters their line-of-sight.
+Willy the Waffle: A detective guide who evaporates or melts in high heat. Party member with "Search" ability.
 Derf: The Red-Eyed shadow brother; the final boss who requires a "Scream of Hope" for reconciliation.
 
-4. The Continuous World Map
-Dynamic Reveal: An SVG map covered in Orange Fog that clears as levels are completed.
+3.3 Command System
+Players interact through typed text commands:
+- look / l: Examine current surroundings
+- move <dir> / n/s/e/w: Navigate the 5x5 grid
+- interact <object>: Open, search, or use objects on the current tile
+- talk: Engage in multi-stage NPC dialogue
+- scream: Trigger Fred's Sonic Scream ability
+- attack: Engage enemies in turn-based combat
+- inventory / i: Check carried items
+- help / ?: Display available commands
 
-Replayability: Completed levels remain clickable for high-score runs or finding missed "Pasta/Potato" collectables.
+4. The Level Creator Experience (No-Code Editor)
+Creators design "Rumored Lands" within the Hidden Hideout framework using the following tools:
 
-Path Visuals: The map road shifts from Brick to Pancakes to Text to Obsidian based on the region.
+4.1 Admin-Locked Themes
+Creators are restricted by the "World Map Scene" assigned to their square's coordinates (e.g., (5, 5) is permanently Breakfastopia):
+- Asset Filtering: Only theme-appropriate descriptions, items, and NPCs are visible in the editor palette.
+- Environmental Triggers: Creators can set global room effects (e.g., "Melt" logic for Willy in lava rooms).
 
-5. No-Code Level Editor (The Hidden Hideout)
-The editor allows Timothy’s friends to contribute "Rumored Lands" (Side Quests) without technical knowledge.
+4.2 Tactical 5x5 Grid Design
+Within each world square, creators can define 25 specific interaction points:
+- Non-Passable Tiles: Mark specific 5x5 coordinates as walls or obstacles (e.g., a "Shoebox Wall" or "Giant Cereal Box") to shape the path.
+- NPC Placement:
+   - Dialogue Branching: Assign multiple conversation stages that provide clues based on Fred's "Scream" or Willy's "Search".
+Interactive Objects (Item Containers): Place boxes, wardrobes, or "Concrete Bacon" bushes.
+- Interaction Sets: Define custom actions (e.g., Look Inside, Scream at Lid, Search Drawer).
+- Enemy Logic: Proximity Triggers: Enemies (like Shoelace Snakes) attack if a player enters an adjacent 5x5 tile and stays for a configurable "Linger Timer".
 
-5.1 Theme-Locked Toolsets
-To maintain plot integrity, creators must select a theme before building. The theme limits the available tiles and logic:
+5. Persistent World Logic
+To ensure a high-quality multiplayer experience, the game tracks Discovery State in Firestore:
+- The "Group Memory" Rule: Once a party member interacts with a "Wardrobe" and finds a "Spicy Noodle," the object's state is updated to opened: true for the entire party. Visual Continuity: When players re-enter a room, the text description updates (e.g., "The wardrobe stands open and empty") instead of showing the original prompt.
 
-Shoeboxlandia: Brick tiles, "Glaring Eye" neighbors, Noise Complaint meters.
+6. The Continuous World Map
+Dynamic Reveal: A 30x30 grid overview with fog-of-war that clears as rooms are explored.
+Replayability: Completed rooms remain accessible for finding missed "Pasta/Potato" collectables.
+Theme Visuals: Each region has a distinct color scheme on the world map (Shoeboxlandia, Breakfastopia, Electric Desert, Textlandia).
 
-Breakfastopia: Pancake bushes, Waffle platforms, Syrup hazards.
-
-Electric Desert: Sand tiles, Barry the Battery, Microphone triggers.
-
-Textlandia: Objects made of literal text (e.g., platforms made of the word "ROAD").
-
-5.2 UGC Workflow
-Drafting: Level is built in-browser and saved to local IndexedDB.
-
-Validation: Creator must successfully "Test Run" the level before the Publish button is enabled.
-
-Deployment: Level is saved to Firestore as status: pending for admin review.
-
-Reward: Completing a community level grants Creativity Gained points to unlock skins (Banana Fred, Detective Willy).
-
-6. Technical Artifacts for Antigravity
-6.1 Unified Level Schema (SentientWorldia_Schema.json)
+7. Technical Artifacts
+7.1 Tactical Grid Schema (TacticalRoom.json)
 ```json
 {
-  "levelHeader": { "theme": "Textlandia", "author": "Timothy", "status": "draft" },
-  "mapData": {
-    "grid": [[1,0,1], [1,1,1]], 
-    "themeRules": "text_only_collision"
-  },
-  "entities": [
-    { "type": "barry_battery", "pos": [25, 10], "logic": "zap_on_proximity" },
-    { "type": "scream_microphone", "pos": [50, 10], "logic": "requires_high_decibel" }
+  "world_coord": "15_05",
+  "room_name": "Shoelace Forest Clearing",
+  "theme": "Shoebox_Forest",
+  "description": "You stand in a dim clearing...",
+  "grid": [
+    ["wall", "wall", "exit_north", "wall", "wall"],
+    ["wall", "npc_sue", "floor", "item_fridge", "wall"],
+    ["wall", "floor", "floor", "floor", "wall"],
+    ["wall", "floor", "enemy_snake", "floor", "wall"],
+    ["wall", "wall", "exit_south", "wall", "wall"]
   ],
-  "narrative": { "blah_prompt_frequency": 300, "is_bridge": true }
-}   
+  "player_start": { "x": 2, "y": 2 },
+  "tiles": { ... },
+  "state_flags": {
+    "item_fridge_opened": false,
+    "sue_clue_given": false,
+    "snake_defeated": false
+  }
+}
 ```
 
-6.2 Antigravity Implementation Priorities
-Physics Engine: Build Fred's platforming and the Sonic Ring hit-box logic.
-
-Theme Provider: Create a wrapper that filters the Editor Palette based on the selected region.
-
-Bridge Rhythm Engine: Implement the timed "Blah/Lah" button prompt for both Touch and Keyboard.
-
-Fog-of-War Map: Build the SVG scroller that clears as completedLevels updates in Firestore.
+7.2 Implementation Priorities
+Room Synchronizer: Build a Firestore listener that updates the 5x5 grid state for all party members when one player takes an action.
+Contextual Action Dropdown: Generate a UI component that filters actions based on Fred's current tile (e.g., if on item_fridge, show [Open, Scream, Search]).
+Proximity AI: Implement the turn-based "Linger Timer" for enemies that triggers an attack if players don't move tiles within X seconds.
