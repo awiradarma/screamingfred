@@ -364,14 +364,14 @@ function handleHelp(state, messages) {
 // ── Enemy Combat Logic ────────────────────────────────
 
 /**
- * Check if two positions are in "cross proximity" (same row or column).
+ * Check if two positions are in exactly same location.
  */
-function isCrossProximity(pos1, pos2) {
-  return pos1.x === pos2.x || pos1.y === pos2.y;
+function isSamePosition(pos1, pos2) {
+  return pos1.x === pos2.x && pos1.y === pos2.y;
 }
 
 /**
- * Process attacks from all enemies in cross-proximity to the player.
+ * Process attacks from all enemies on the same tile as the player.
  * Used for idle timers.
  */
 export function getEnemyIdleAttacks(state) {
@@ -379,36 +379,31 @@ export function getEnemyIdleAttacks(state) {
   let newState = { ...state };
   const playerPos = state.playerPosition;
 
-  // Iterate through the room grid to find enemies
-  state.room.grid.forEach((row, y) => {
-    row.forEach((tileType, x) => {
-      const tileData = getTileData(state.room, tileType);
-      if (!tileData?.enemy) return;
+  // Check the current tile for an enemy
+  const tileType = getCurrentTile(state);
+  const tileData = getTileData(state.room, tileType);
 
-      const defeatKey = `${tileType.replace(/^enemy_/, '')}_defeated`;
-      if (state.stateFlags[defeatKey]) return;
+  if (tileData?.enemy) {
+    const defeatKey = `${tileType.replace(/^enemy_/, '')}_defeated`;
+    if (!state.stateFlags[defeatKey]) {
+      // Player is at risk! Deal damage.
+      const damage = tileData.enemy.damage || 1;
+      newState.playerHP = Math.max(0, newState.playerHP - damage);
+      
+      messages.push({ 
+        text: `[IDLE WARNING] The ${tileData.enemy.name} bites you while you stand still!`, 
+        type: 'danger' 
+      });
+      messages.push({ 
+        text: describeEnemyAttacks(tileData.enemy), 
+        type: 'danger' 
+      });
 
-      // Check cross proximity
-      if (isCrossProximity(playerPos, { x, y })) {
-        // Player is at risk! Deal damage.
-        const damage = tileData.enemy.damage || 1;
-        newState.playerHP = Math.max(0, newState.playerHP - damage);
-        
-        messages.push({ 
-          text: `[IDLE WARNING] The ${tileData.enemy.name} sees you standing still and strikes!`, 
-          type: 'danger' 
-        });
-        messages.push({ 
-          text: describeEnemyAttacks(tileData.enemy), 
-          type: 'danger' 
-        });
-
-        if (newState.playerHP <= 0) {
-          messages.push({ text: '💀 Fred collapses! The world fades to black...', type: 'danger' });
-        }
+      if (newState.playerHP <= 0) {
+        messages.push({ text: '💀 Fred collapses! The world fades to black...', type: 'danger' });
       }
-    });
-  });
+    }
+  }
 
   return { state: newState, messages };
 }
