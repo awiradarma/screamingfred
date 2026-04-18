@@ -46,6 +46,7 @@ export default function App() {
   const isDefeated = gameState.playerHP <= 0;
 
   return (
+    <>
     <div className="app-container">
       <header className="app-header">
         <h1 className="title-glow">Screaming Fred</h1>
@@ -93,11 +94,8 @@ export default function App() {
         </aside>
       </main>
 
-      <MobileController onSubmit={submitCommand} disabled={isDefeated} />
-
-      <footer className="app-footer">
-        <span>Sentientworldia v1.0.0 — Phase 1: Solo Engine</span>
-      </footer>
     </div>
+    <MobileController onSubmit={submitCommand} disabled={isDefeated} />
+    </>
   );
 }

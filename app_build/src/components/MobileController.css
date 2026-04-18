@@ -1,14 +1,9 @@
 .mobile-controller {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
-  z-index: 1000;
-  display: flex;
-  flex-direction: column-reverse;
-  align-items: center;
-  gap: 20px;
+  inset: 0; /* Cover the screen but with pointer-events: none */
+  z-index: 9999;
   pointer-events: none;
-  filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.4));
+  display: block; /* No flex on the main container to avoid pushing children */
 }
 
 /* Base button properties for interactivity */
@@ -37,13 +32,17 @@
 
 /* Action Menu */
 .action-menu {
+  position: absolute;
+  bottom: calc(180px + env(safe-area-inset-bottom, 0px)); /* Above the D-Pad */
+  right: calc(20px + env(safe-area-inset-right, 0px));
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   opacity: 0;
-  transform: translateY(20px) scale(0.9);
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform: translateY(10px) scale(0.9);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
+  filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.3));
 }
 
 .action-menu.is-visible {
@@ -119,17 +118,23 @@
 
 /* D-Pad */
 .dpad-container {
+  position: absolute;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  right: calc(20px + env(safe-area-inset-right, 0px));
   display: grid;
   grid-template-areas: 
     ". n ."
     "w c e"
     ". s .";
   gap: 6px;
-  background: rgba(26, 34, 54, 0.4);
-  padding: 8px;
+  background: rgba(26, 34, 54, 0.6);
+  padding: 10px;
   border-radius: 50%;
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  pointer-events: auto;
 }
 
 .dpad-btn {

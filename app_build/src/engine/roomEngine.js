@@ -320,20 +320,27 @@ export function handleMove(state, direction, messages) {
 
   messages.push({ text: describeMovement(direction), type: 'narrative' });
 
-  // Describe what's on the new tile
-  const tileDesc = describeTile(targetTile, tileData, finalState.stateFlags);
+  // Apply Tile Effects (Lava, Ice, Bouncy, etc.)
+  const effectResult = applyTileEffects(finalState, newX, newY, messages, direction);
+  finalState = effectResult.state;
+  const currentPos = finalState.playerPosition; 
+
+  // Describe what's on the NEW FINAL tile (after effects like sliding/bouncing)
+  const finalTileType = getTileAt(finalState.room, currentPos.x, currentPos.y);
+  const finalTileData = getTileData(finalState.room, finalTileType);
+  const tileDesc = describeTile(finalTileType, finalTileData, finalState.stateFlags);
   messages.push({ text: tileDesc, type: 'narrative' });
 
   // Handle Room Transition
-  if (tileData.targetRoomId) {
-    const nextRoom = getRoomData(tileData.targetRoomId);
+  if (finalTileData.targetRoomId) {
+    const nextRoom = getRoomData(finalTileData.targetRoomId);
     if (nextRoom) {
       messages.push({ text: `⚡ Transitioning to ${nextRoom.room_name}...`, type: 'system' });
       return {
         state: {
           ...finalState,
           room: nextRoom,
-          playerPosition: tileData.targetPosition || { ...nextRoom.player_start },
+          playerPosition: finalTileData.targetPosition || { ...nextRoom.player_start },
         },
         messages: [
           ...messages,
@@ -344,11 +351,79 @@ export function handleMove(state, direction, messages) {
   }
 
   // Enemy proximity warning
-  if (tileData.enemy && !finalState.stateFlags[`${targetTile.replace(/^enemy_/, '')}_defeated`]) {
-    messages.push({ text: `⚠ A ${tileData.enemy.name} is here! You can ATTACK or SCREAM.`, type: 'danger' });
+  if (finalTileData.enemy && !finalState.stateFlags[`${finalTileType.replace(/^enemy_/, '')}_defeated`]) {
+    messages.push({ text: `⚠ A ${finalTileData.enemy.name} is here! You can ATTACK or SCREAM.`, type: 'danger' });
   }
 
   return { state: finalState, messages };
+}
+
+/**
+ * Apply special effects based on the tile type or tile properties.
+ */
+function applyTileEffects(state, x, y, messages, direction) {
+  let newState = { ...state };
+  let currentX = x;
+  let currentY = y;
+  
+  const tileType = getTileAt(state.room, x, y);
+  const tileData = getTileData(state.room, tileType);
+
+  if (!tileData) return { state: newState, messages };
+
+  // 1. Damage Effects (Lava, Lake, Toxic)
+  if (tileData.effect === 'damage' || ['lava', 'lake', 'toxic_pit'].includes(tileType) || tileType.includes('lava') || tileType.includes('lake')) {
+    const damage = tileData.damageAmount || 1;
+    newState.playerHP = Math.max(0, newState.playerHP - damage);
+    const msg = tileData.effectMessage || (tileType.includes('lava') ? "Sizzle! The lava burns!" : "Gurgle! The water is deep and cold.");
+    messages.push({ text: `⚠️ ${msg} (-${damage} HP)`, type: 'danger' });
+  }
+
+  // 2. Bouncy Effects (Push back)
+  if (tileData.effect === 'bouncy' || tileType === 'bouncy' || tileType.includes('bouncy')) {
+    messages.push({ text: "💨 BOING! You bounce right back!", type: 'warning' });
+    // Calculate previous position
+    const { dx, dy } = DIR_VECTORS[direction];
+    currentX -= dx;
+    currentY -= dy;
+    newState.playerPosition = { x: currentX, y: currentY };
+    return { state: newState, messages }; // Stop processing further effects on the bouncy tile
+  }
+
+  // 3. Ice Effects (Slide)
+  if (tileData.effect === 'ice' || tileType === 'ice' || tileType.includes('ice')) {
+    messages.push({ text: "❄️ Woah! It's slippery!", type: 'narrative' });
+    const { dx, dy } = DIR_VECTORS[direction];
+    
+    // Slide until hitting a non-ice tile or a wall
+    let slideX = currentX + dx;
+    let slideY = currentY + dy;
+    
+    while (true) {
+      const nextTile = getTileAt(state.room, slideX, slideY);
+      const nextTileData = getTileData(state.room, nextTile);
+      
+      if (!nextTile || !nextTileData || !nextTileData.passable) {
+        break; // Hit a wall or edge
+      }
+      
+      currentX = slideX;
+      currentY = slideY;
+      
+      // If the next tile is NOT ice, stop sliding
+      if (nextTileData.effect !== 'ice' && nextTile !== 'ice' && !nextTile.includes('ice')) {
+        break;
+      }
+      
+      slideX += dx;
+      slideY += dy;
+    }
+    
+    newState.playerPosition = { x: currentX, y: currentY };
+    messages.push({ text: "You slide across the ice!", type: 'narrative' });
+  }
+
+  return { state: newState, messages };
 }
 
 function handleInteract(state, target, messages) {

@@ -15,6 +15,10 @@ const TILE_CONFIG = {
   npc_sue:    { icon: '☺', label: 'NPC',    className: 'tile-npc' },
   item_fridge: { icon: '◈', label: 'Item',  className: 'tile-item' },
   enemy_snake: { icon: '☠', label: 'Enemy', className: 'tile-enemy' },
+  lava:       { icon: '≈', label: 'Lava',   className: 'tile-lava' },
+  ice:        { icon: '❄', label: 'Ice',    className: 'tile-ice' },
+  lake:       { icon: '≋', label: 'Lake',   className: 'tile-lake' },
+  bouncy:     { icon: '⊗', label: 'Bouncy', className: 'tile-bouncy' },
 };
 
 function getTileConfig(tileType, stateFlags) {
