@@ -29,7 +29,7 @@ function getTileConfig(tileType, stateFlags) {
   return TILE_CONFIG[tileType] || { icon: '?', label: tileType, className: 'tile-unknown' };
 }
 
-export default function GridViewer({ grid, playerPosition, stateFlags, roomName }) {
+export default function GridViewer({ grid, playerPosition, stateFlags, roomName, entities }) {
   const [isExpanded, setIsExpanded] = React.useState(window.innerWidth > 768);
 
   if (!grid) return null;
@@ -49,6 +49,8 @@ export default function GridViewer({ grid, playerPosition, stateFlags, roomName 
                 {row.map((tileType, x) => {
                   const isPlayer = playerPosition.x === x && playerPosition.y === y;
                   const config = getTileConfig(tileType, stateFlags);
+                  const cellEntities = (entities || []).filter(e => e.x === x && e.y === y && !stateFlags[`${e.id}_defeated`]);
+
                   return (
                     <div
                       key={`${x}-${y}`}
@@ -57,6 +59,8 @@ export default function GridViewer({ grid, playerPosition, stateFlags, roomName 
                     >
                       {isPlayer ? (
                         <span className="player-marker">F</span>
+                      ) : cellEntities.length > 0 ? (
+                        <span className="entity-marker" title={cellEntities[0].name}>☠</span>
                       ) : (
                         <span className="tile-icon">{config.icon}</span>
                       )}

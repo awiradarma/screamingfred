@@ -73,6 +73,7 @@ export default function App() {
             playerPosition={gameState.playerPosition}
             stateFlags={gameState.stateFlags}
             roomName={gameState.room.room_name}
+            entities={gameState.entities}
           />
           <div className="grid-info-box">
             <div className="info-title">Room Info</div>

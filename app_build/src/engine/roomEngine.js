@@ -38,6 +38,7 @@ export function initGameState(roomData) {
     stateFlags: { ...roomData.state_flags },
     npcStages: {},       // track dialogue stages per NPC
     enemyHP: {},         // track enemy HP overrides
+    entities: (roomData.entities || []).map(e => ({ ...e })), // cloned live entities
     turnCount: 0,
   };
 }
@@ -102,43 +103,139 @@ export function processCommand(state, rawInput) {
   const command = parseCommand(rawInput);
   const messages = [];
   let newState = { ...state, turnCount: state.turnCount + 1 };
+  let result;
 
   switch (command.action) {
     case 'empty':
       return { state, messages: [] };
 
     case 'look':
-      return handleLook(newState, messages);
+      result = handleLook(newState, messages);
+      break;
 
     case 'move':
-      return handleMove(newState, command.target, messages);
+      result = handleMove(newState, command.target, messages);
+      break;
 
     case 'interact':
-      return handleInteract(newState, command.target, messages);
+      result = handleInteract(newState, command.target, messages);
+      break;
 
     case 'talk':
-      return handleTalk(newState, messages);
+      result = handleTalk(newState, messages);
+      break;
 
     case 'scream':
-      return handleScream(newState, messages);
+      result = handleScream(newState, messages);
+      break;
 
     case 'attack':
-      return handleAttack(newState, messages);
+      result = handleAttack(newState, messages);
+      break;
 
     case 'inventory':
-      return handleInventory(newState, messages);
+      result = handleInventory(newState, messages);
+      break;
 
     case 'help':
-      return handleHelp(newState, messages);
+      result = handleHelp(newState, messages);
+      break;
 
     case 'use':
-      return handleUse(newState, command.target, messages);
+      result = handleUse(newState, command.target, messages);
+      break;
 
     case 'unknown':
     default:
       messages.push({ text: `You mumble "${command.raw}" but nothing happens. Type HELP for commands.`, type: 'system' });
-      return { state: newState, messages };
+      break;
   }
+
+  if (result) {
+    newState = result.state;
+    // If the handler returned a new messages array (like in room transitions), sync it
+    if (result.messages && result.messages !== messages) {
+      messages.splice(0, messages.length, ...result.messages);
+    }
+  }
+
+  // After EVERY command that takes a turn (move, use, attack, scream, etc.)
+  // We process living entities (moving enemies, stalkers)
+  const turnTakingActions = ['move', 'use', 'attack', 'scream', 'interact', 'talk'];
+  if (turnTakingActions.includes(command.action)) {
+    const entityResult = processLivingEntities(newState, messages);
+    newState = entityResult.state;
+    // processLivingEntities mutates the 'messages' array directly via reference
+  }
+
+  return { state: newState, messages };
+}
+
+/**
+ * Process AI turns for entities (Patrols, Stalkers).
+ */
+function processLivingEntities(state, messages) {
+  let newState = { ...state };
+  const player = newState.playerPosition;
+
+  const updatedEntities = newState.entities.map(entity => {
+    // If entity is an enemy and is defeated (via flag), don't process
+    const isDefeated = newState.stateFlags[`${entity.id}_defeated`];
+    if (isDefeated) return entity;
+
+    let nextX = entity.x;
+    let nextY = entity.y;
+
+    if (entity.behavior === 'stalk') {
+      const dist = Math.abs(player.x - entity.x) + Math.abs(player.y - entity.y);
+      const range = entity.detectionRange || 10;
+
+      if (dist <= range && dist > 0) {
+        // Simple step-towards-player logic
+        const dx = player.x - entity.x;
+        const dy = player.y - entity.y;
+
+        if (Math.abs(dx) > Math.abs(dy)) {
+          nextX += Math.sign(dx);
+        } else {
+          nextY += Math.sign(dy);
+        }
+      }
+    } else if (entity.behavior === 'patrol' && entity.patrolPath) {
+      // Find current point in path
+      const currentPointIdx = entity.patrolPath.findIndex(p => p.x === entity.x && p.y === entity.y);
+      const nextPointIdx = (currentPointIdx + 1) % entity.patrolPath.length;
+      const target = entity.patrolPath[nextPointIdx];
+      
+      const dx = target.x - entity.x;
+      const dy = target.y - entity.y;
+      
+      if (dx !== 0) nextX += Math.sign(dx);
+      else if (dy !== 0) nextY += Math.sign(dy);
+    }
+
+    // Collision Check: Don't move into walls or other non-passable tiles
+    const tileAtNext = getTileAt(newState.room, nextX, nextY);
+    const tileData = getTileData(newState.room, tileAtNext);
+    if (!tileData || (tileData.passable === false)) {
+      return entity; // Stay put
+    }
+
+    // Trigger Combat if entity moves onto Fred
+    if (nextX === player.x && nextY === player.y) {
+      const damage = entity.damage || 1;
+      newState.playerHP = Math.max(0, newState.playerHP - damage);
+      messages.push({ 
+        text: `⚠️ The ${entity.name} catches up to you and attacks, dealing ${damage} damage!`, 
+        type: 'danger' 
+      });
+      return { ...entity, x: nextX, y: nextY };
+    }
+
+    return { ...entity, x: nextX, y: nextY };
+  });
+
+  return { state: { ...newState, entities: updatedEntities }, messages };
 }
 
 // ── Command Handlers ──────────────────────────────────
@@ -318,12 +415,32 @@ function handleTalk(state, messages) {
   }
 
   // Advance dialogue stage (but not beyond max)
-  const maxStage = Math.max(...tileData.npc.dialogue.map(d => d.stage));
+  const dialogueStages = tileData.npc.dialogue;
+  const currentDialogue = dialogueStages.find(d => d.stage === currentStage);
+  
+  // Handle onComplete effects
+  let finalFlags = { ...state.stateFlags };
+  let finalInventory = [...state.inventory];
+  
+  if (currentDialogue?.onComplete) {
+    const { action, itemId, flagSet, msg } = currentDialogue.onComplete;
+    if (action === 'give_item' && itemId && globalItems[itemId]) {
+      finalInventory.push({ ...globalItems[itemId], itemId });
+      messages.push({ text: msg || `🎁 ${tileData.npc.name} gave you: ${globalItems[itemId].name}!`, type: 'loot' });
+    }
+    if (action === 'set_flag' && flagSet) {
+      finalFlags[flagSet] = true;
+    }
+  }
+
+  const maxStage = Math.max(...dialogueStages.map(d => d.stage));
   const newStage = Math.min(currentStage + 1, maxStage);
 
   return {
     state: {
       ...state,
+      inventory: finalInventory,
+      stateFlags: finalFlags,
       npcStages: { ...state.npcStages, [npcKey]: newStage },
     },
     messages
@@ -335,27 +452,43 @@ function handleScream(state, messages) {
 
   const tileType = getCurrentTile(state);
   const tileData = getTileData(state.room, tileType);
+  const entityEnemy = state.entities.find(e => e.x === state.playerPosition.x && e.y === state.playerPosition.y && !state.stateFlags[`${e.id}_defeated`]);
+
   let newState = { ...state };
 
-  // Scream effects on enemies
-  if (tileData?.enemy && tileData.enemy.scream_vulnerable && !state.stateFlags[`${tileType.replace(/^enemy_/, '')}_defeated`]) {
-    const enemyKey = tileType;
-    const currentHP = state.enemyHP[enemyKey] ?? tileData.enemy.hp;
-    const newHP = currentHP - 2; // Scream does 2 damage
+  // Scream effects on enemies (Tile or Entity)
+  const target = entityEnemy || (tileData?.enemy?.scream_vulnerable ? tileData.enemy : null);
+  if (target) {
+    const targetId = entityEnemy ? entityEnemy.id : tileType.replace(/^enemy_/, '');
+    const defeatKey = `${targetId}_defeated`;
+    
+    if (!state.stateFlags[defeatKey]) {
+      const enemyKey = entityEnemy ? entityEnemy.id : tileType;
+      const currentHP = state.enemyHP[enemyKey] ?? target.hp;
+      const newHP = currentHP - 2; // Scream does 2 damage
 
-    if (newHP <= 0) {
-      messages.push({ text: describeEnemyDefeated(tileData.enemy), type: 'loot' });
-      newState = {
-        ...newState,
-        stateFlags: { ...newState.stateFlags, [`${tileType.replace(/^enemy_/, '')}_defeated`]: true },
-        enemyHP: { ...newState.enemyHP, [enemyKey]: 0 },
-      };
-    } else {
-      messages.push({ text: `Your scream stuns the ${tileData.enemy.name}! (${newHP} HP remaining)`, type: 'narrative' });
-      newState = {
-        ...newState,
-        enemyHP: { ...newState.enemyHP, [enemyKey]: newHP },
-      };
+      if (newHP <= 0) {
+        messages.push({ text: describeEnemyDefeated(target), type: 'loot' });
+        
+        // Handle Loot
+        if (target.loot && globalItems[target.loot]) {
+          const lootItem = { ...globalItems[target.loot], itemId: target.loot };
+          newState.inventory = [...newState.inventory, lootItem];
+          messages.push({ text: `💎 You looted: ${lootItem.name}!`, type: 'loot' });
+        }
+
+        newState = {
+          ...newState,
+          stateFlags: { ...newState.stateFlags, [defeatKey]: true },
+          enemyHP: { ...newState.enemyHP, [enemyKey]: 0 },
+        };
+      } else {
+        messages.push({ text: `Your scream stuns the ${target.name}! (${newHP} HP remaining)`, type: 'narrative' });
+        newState = {
+          ...newState,
+          enemyHP: { ...newState.enemyHP, [enemyKey]: newHP },
+        };
+      }
     }
   }
 
@@ -379,24 +512,30 @@ function handleScream(state, messages) {
 function handleAttack(state, messages) {
   const tileType = getCurrentTile(state);
   const tileData = getTileData(state.room, tileType);
+  
+  // Find local entity at this position if no static enemy
+  const entityEnemy = state.entities.find(e => e.x === state.playerPosition.x && e.y === state.playerPosition.y && !state.stateFlags[`${e.id}_defeated`]);
 
-  if (!tileData?.enemy) {
+  if (!tileData?.enemy && !entityEnemy) {
     messages.push({ text: 'There\'s nothing to attack here. Save your energy.', type: 'system' });
     return { state, messages };
   }
 
-  const defeatKey = `${tileType.replace(/^enemy_/, '')}_defeated`;
+  const target = entityEnemy || tileData.enemy;
+  const targetId = entityEnemy ? entityEnemy.id : tileType.replace(/^enemy_/, '');
+  const defeatKey = `${targetId}_defeated`;
+
   if (state.stateFlags[defeatKey]) {
     messages.push({ text: 'The enemy is already defeated. Move along.', type: 'system' });
     return { state, messages };
   }
 
-  const enemyKey = tileType;
-  const currentHP = state.enemyHP[enemyKey] ?? tileData.enemy.hp;
+  const enemyKey = entityEnemy ? entityEnemy.id : tileType;
+  const currentHP = state.enemyHP[enemyKey] ?? target.hp;
   const playerDamage = 1;
   const newEnemyHP = currentHP - playerDamage;
 
-  messages.push({ text: describeAttack(tileData.enemy, playerDamage), type: 'narrative' });
+  messages.push({ text: describeAttack(target, playerDamage), type: 'narrative' });
 
   let newState = {
     ...state,
@@ -404,15 +543,23 @@ function handleAttack(state, messages) {
   };
 
   if (newEnemyHP <= 0) {
-    messages.push({ text: describeEnemyDefeated(tileData.enemy), type: 'loot' });
+    messages.push({ text: describeEnemyDefeated(target), type: 'loot' });
+    
+    // Handle Loot
+    if (target.loot && globalItems[target.loot]) {
+      const lootItem = { ...globalItems[target.loot], itemId: target.loot };
+      newState.inventory = [...newState.inventory, lootItem];
+      messages.push({ text: `💎 You looted: ${lootItem.name}!`, type: 'loot' });
+    }
+
     newState = {
       ...newState,
       stateFlags: { ...newState.stateFlags, [defeatKey]: true },
     };
   } else {
     // Enemy counter-attacks
-    const newPlayerHP = state.playerHP - tileData.enemy.damage;
-    messages.push({ text: describeEnemyAttacks(tileData.enemy), type: 'danger' });
+    const newPlayerHP = state.playerHP - target.damage;
+    messages.push({ text: describeEnemyAttacks(target), type: 'danger' });
     newState = { ...newState, playerHP: Math.max(0, newPlayerHP) };
 
     if (newPlayerHP <= 0) {
@@ -469,10 +616,10 @@ function handleUse(state, itemTarget, messages) {
 
     case 'unlock':
       // Check if player is on OR adjacent to the target tile
-      const adjacentTiles = getAdjacentTiles(state);
-      const isNearTarget = adjacentTiles.some(tile => tile.type === target) || getCurrentTile(state) === target;
+      const adjacentUnlocked = getAdjacentTiles(state);
+      const isNearTargetUnlocked = adjacentUnlocked.some(tile => tile.type === target) || getCurrentTile(state) === target;
       
-      if (isNearTarget) {
+      if (isNearTargetUnlocked) {
         newState.stateFlags = { ...state.stateFlags, [flagSet]: true };
         messages.push({ text: successMessage || `You use the ${item.name} to unlock the way!`, type: 'loot' });
         usedSuccessfully = true;
@@ -481,27 +628,71 @@ function handleUse(state, itemTarget, messages) {
       }
       break;
 
-    case 'damage_enemy':
-      const curTileType = getCurrentTile(state);
-      if (curTileType === target && !state.stateFlags[`${target.replace(/^enemy_/, '')}_defeated`]) {
-        const enemyKey = target;
-        const currentHP = state.enemyHP[enemyKey] ?? getTileData(state.room, target).enemy.hp;
-        const newHP = currentHP - (value || 1);
-        
-        messages.push({ text: successMessage || `You use the ${item.name} against the enemy!`, type: 'narrative' });
-        
-        if (newHP <= 0) {
-          const tileData = getTileData(state.room, target);
-          messages.push({ text: describeEnemyDefeated(tileData.enemy), type: 'loot' });
-          newState.stateFlags = { ...newState.stateFlags, [`${target.replace(/^enemy_/, '')}_defeated`]: true };
-          newState.enemyHP = { ...newState.enemyHP, [enemyKey]: 0 };
+    case 'set_flag':
+      newState.stateFlags = { ...state.stateFlags, [flagSet]: true };
+      messages.push({ text: successMessage || `Spirit of investigation! Flag '${flagSet}' set.`, type: 'hint' });
+      usedSuccessfully = true;
+      break;
+
+    case 'teleport':
+      if (item.onUse.targetRoomId) {
+        const nextRoomData = getRoomData(item.onUse.targetRoomId);
+        if (nextRoomData) {
+          newState = {
+            ...newState,
+            room: nextRoomData,
+            playerPosition: item.onUse.targetPosition || { ...nextRoomData.player_start }
+          };
+          messages.push({ text: successMessage || `🌀 Space-time ripples... you arrive at ${nextRoomData.room_name}!`, type: 'narrative' });
+          usedSuccessfully = true;
         } else {
-          messages.push({ text: `The enemy takes ${value} damage! (${newHP} HP remaining)`, type: 'narrative' });
-          newState.enemyHP = { ...newState.enemyHP, [enemyKey]: newHP };
+          messages.push({ text: "The magic flickers... destination unknown.", type: 'warning' });
+        }
+      }
+      break;
+
+    case 'damage_enemy':
+      // DYNAMIC TARGETING: If no target specified, or if we want to be flexible, find enemies in room
+      let finalTarget = target;
+      if (!finalTarget) {
+        const potentialTargets = [];
+        state.room.grid.forEach((row, y) => {
+          row.forEach((tile, x) => {
+            if (tile.startsWith('enemy_') && !state.stateFlags[`${tile.replace(/^enemy_/, '')}_defeated`]) {
+              potentialTargets.push({ type: tile, x, y });
+            }
+          });
+        });
+        
+        if (potentialTargets.length > 0) {
+          // Auto-target the closest enemy
+          const px = state.playerPosition.x;
+          const py = state.playerPosition.y;
+          potentialTargets.sort((a,b) => (Math.abs(a.x-px)+Math.abs(a.y-py)) - (Math.abs(b.x-px)+Math.abs(b.y-py)));
+          finalTarget = potentialTargets[0].type;
+        }
+      }
+
+      if (finalTarget && !state.stateFlags[`${finalTarget.replace(/^enemy_/, '')}_defeated`]) {
+        const enemyKeyName = finalTarget;
+        const eData = getTileData(state.room, finalTarget).enemy;
+        const currentHpVal = state.enemyHP[enemyKeyName] ?? eData.hp;
+        const dmgVal = value || 1;
+        const nextHpVal = currentHpVal - dmgVal;
+        
+        messages.push({ text: successMessage || `You use the ${item.name} against the ${eData.name}!`, type: 'narrative' });
+        
+        if (nextHpVal <= 0) {
+          messages.push({ text: describeEnemyDefeated(eData), type: 'loot' });
+          newState.stateFlags = { ...newState.stateFlags, [`${finalTarget.replace(/^enemy_/, '')}_defeated`]: true };
+          newState.enemyHP = { ...newState.enemyHP, [enemyKeyName]: 0 };
+        } else {
+          messages.push({ text: `The ${eData.name} takes ${dmgVal} damage! (${nextHpVal} HP remaining)`, type: 'narrative' });
+          newState.enemyHP = { ...newState.enemyHP, [enemyKeyName]: nextHpVal };
         }
         usedSuccessfully = true;
       } else {
-        messages.push({ text: failureMessage || `There's no enemy here to use the ${item.name} on.`, type: 'warning' });
+        messages.push({ text: failureMessage || `There is no enemy in sight to use the ${item.name} on.`, type: 'warning' });
       }
       break;
 
@@ -547,26 +738,26 @@ export function getEnemyIdleAttacks(state) {
   // Check the current tile for an enemy
   const tileType = getCurrentTile(state);
   const tileData = getTileData(state.room, tileType);
+  const entityEnemy = state.entities.find(e => e.x === playerPos.x && e.y === playerPos.y && !state.stateFlags[`${e.id}_defeated`]);
 
-  if (tileData?.enemy) {
-    const defeatKey = `${tileType.replace(/^enemy_/, '')}_defeated`;
-    if (!state.stateFlags[defeatKey]) {
-      // Player is at risk! Deal damage.
-      const damage = tileData.enemy.damage || 1;
-      newState.playerHP = Math.max(0, newState.playerHP - damage);
-      
-      messages.push({ 
-        text: `[IDLE WARNING] The ${tileData.enemy.name} bites you while you stand still!`, 
-        type: 'danger' 
-      });
-      messages.push({ 
-        text: describeEnemyAttacks(tileData.enemy), 
-        type: 'danger' 
-      });
+  const enemy = entityEnemy || (tileData?.enemy && !state.stateFlags[`${tileType.replace(/^enemy_/, '')}_defeated`] ? tileData.enemy : null);
 
-      if (newState.playerHP <= 0) {
-        messages.push({ text: '💀 Fred collapses! The world fades to black...', type: 'danger' });
-      }
+  if (enemy) {
+    // Player is at risk! Deal damage.
+    const damage = enemy.damage || 1;
+    newState.playerHP = Math.max(0, newState.playerHP - damage);
+    
+    messages.push({ 
+      text: `[IDLE WARNING] The ${enemy.name} bites you while you stand still!`, 
+      type: 'danger' 
+    });
+    messages.push({ 
+      text: describeEnemyAttacks(enemy), 
+      type: 'danger' 
+    });
+
+    if (newState.playerHP <= 0) {
+      messages.push({ text: '💀 Fred collapses! The world fades to black...', type: 'danger' });
     }
   }
 
@@ -583,9 +774,14 @@ export function getAvailableActions(state) {
   const tileData = getTileData(state.room, tileType);
   const actions = ['look', 'move', 'scream'];
 
+  // Check for entities at current position
+  const entityEnemy = state.entities.find(e => e.x === state.playerPosition.x && e.y === state.playerPosition.y && !state.stateFlags[`${e.id}_defeated`]);
+
   if (tileData?.npc) actions.push('talk');
   if (tileData?.item && !state.stateFlags[`${tileType}_opened`]) actions.push('interact');
-  if (tileData?.enemy && !state.stateFlags[`${tileType.replace(/^enemy_/, '')}_defeated`]) actions.push('attack');
+  if ((tileData?.enemy && !state.stateFlags[`${tileType.replace(/^enemy_/, '')}_defeated`]) || entityEnemy) {
+    actions.push('attack');
+  }
 
   return actions;
 }

@@ -28,7 +28,7 @@
     ],
     [
       "wall",
-      "floor",
+      "item_slingshot",
       "enemy_snake",
       "item_potato",
       "wall"
@@ -36,7 +36,7 @@
     [
       "wall",
       "wall",
-      "exit_south",
+      "item_scroll",
       "wall",
       "wall"
     ]
@@ -103,7 +103,11 @@
           },
           {
             "stage": 1,
-            "text": "\"Impressive pipes! Listen — I saw something slithering near the south exit. And that old fridge over there? Someone stashed something inside it. Be careful.\""
+            "text": "\"Impressive! Take this potato for your journey. And be careful — I saw a Shadow Stalker nearby.\"",
+            "onComplete": {
+              "action": "give_item",
+              "itemId": "food_potato"
+            }
           },
           {
             "stage": 2,
@@ -138,16 +142,22 @@
         ]
       }
     },
-    "item_rock": {
+    "item_slingshot": {
+      "name": "Slingshot",
       "passable": true,
-      "description": "A sharp, jagged rock lies near the fridge. It looks like it could hurt if thrown.",
       "item": {
-        "name": "Sharp Rock",
-        "itemId": "weapon_rock",
-        "actions": [
-          "interact",
-          "search"
-        ]
+        "name": "Woven Slingshot",
+        "itemId": "weapon_slingshot",
+        "actions": ["interact", "search"]
+      }
+    },
+    "item_scroll": {
+      "name": "Old Scroll",
+      "passable": true,
+      "item": {
+        "name": "Recall Scroll",
+        "itemId": "scroll_recall",
+        "actions": ["interact", "search"]
       }
     },
     "enemy_snake": {
@@ -163,6 +173,20 @@
       }
     }
   },
+  "entities": [
+    {
+      "id": "shadow_stalker",
+      "type": "enemy",
+      "name": "The Shadow Stalker",
+      "x": 1,
+      "y": 2,
+      "behavior": "stalk",
+      "detectionRange": 10,
+      "hp": 5,
+      "damage": 2,
+      "loot": "weapon_rock"
+    }
+  ],
   "state_flags": {
     "item_fridge_opened": false,
     "sue_clue_given": false,

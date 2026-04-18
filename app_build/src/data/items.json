@@ -26,5 +26,27 @@
       "consume": true,
       "successMessage": "Crack! The rock hits the snake square on the head."
     }
+  },
+  "weapon_slingshot": {
+    "name": "Woven Slingshot",
+    "description": "A sturdy slingshot made of dried laces. It can hit any enemy in sight.",
+    "type": "weapon",
+    "onUse": {
+      "action": "damage_enemy",
+      "value": 2,
+      "successMessage": "Zing! The pebble flies true!"
+    }
+  },
+  "scroll_recall": {
+    "name": "Recall Scroll",
+    "description": "Ancient parchment that brings you home.",
+    "type": "tool",
+    "onUse": {
+      "action": "teleport",
+      "targetRoomId": "forest_entrance",
+      "targetPosition": { "x": 2, "y": 2 },
+      "consume": true,
+      "successMessage": "🌀 You read the scroll and feel a sudden tug on your laces..."
+    }
   }
 }

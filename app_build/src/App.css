@@ -356,6 +356,20 @@
   50% { opacity: 0.6; text-shadow: none; }
 }
 
+.entity-marker {
+  color: #ff4757;
+  font-weight: 700;
+  font-size: 1.2rem;
+  animation: entityPulse 1.5s ease-in-out infinite;
+  text-shadow: 0 0 8px rgba(255, 71, 87, 0.6);
+  z-index: 10;
+}
+
+@keyframes entityPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.7; }
+}
+
 .tile-icon {
   user-select: none;
 }
