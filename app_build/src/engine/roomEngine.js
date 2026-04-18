@@ -12,6 +12,8 @@ import {
   describeEnemyAttacks, getWelcomeMessage,
 } from './textGenerator.js';
 import { getRoomData } from '../data/worldData.js';
+import roomDatas from '../data/testRoom.json';
+import globalItems from '../data/items.json';
 
 // Direction vectors for grid movement
 const DIR_VECTORS = {
@@ -60,7 +62,34 @@ function getTileData(room, tileType) {
  * Get the current tile type the player is standing on.
  */
 function getCurrentTile(state) {
-  return getTileAt(state.room, state.playerPosition.x, state.playerPosition.y);
+  return state.room.grid[state.playerPosition.y][state.playerPosition.x];
+}
+
+/**
+ * Returns an array of tile info (type, pos) adjacent to the player.
+ */
+function getAdjacentTiles(state) {
+  const { x, y } = state.playerPosition;
+  const adjacent = [];
+  const dirs = [
+    { x: 0, y: -1 }, // North
+    { x: 0, y: 1 },  // South
+    { x: -1, y: 0 }, // West
+    { x: 1, y: 0 }   // East
+  ];
+
+  dirs.forEach(d => {
+    const nx = x + d.x;
+    const ny = y + d.y;
+    if (ny >= 0 && ny < state.room.grid.length && nx >= 0 && nx < state.room.grid[0].length) {
+      adjacent.push({
+        type: state.room.grid[ny][nx],
+        pos: { x: nx, y: ny }
+      });
+    }
+  });
+
+  return adjacent;
 }
 
 /**
@@ -102,6 +131,9 @@ export function processCommand(state, rawInput) {
     case 'help':
       return handleHelp(newState, messages);
 
+    case 'use':
+      return handleUse(newState, command.target, messages);
+
     case 'unknown':
     default:
       messages.push({ text: `You mumble "${command.raw}" but nothing happens. Type HELP for commands.`, type: 'system' });
@@ -130,7 +162,7 @@ function handleLook(state, messages) {
   return { state, messages };
 }
 
-function handleMove(state, direction, messages) {
+export function handleMove(state, direction, messages) {
   if (!direction || !DIR_VECTORS[direction]) {
     messages.push({ text: 'Move where? Try: north, south, east, west (or n/s/e/w)', type: 'system' });
     return { state, messages };
@@ -152,16 +184,47 @@ function handleMove(state, direction, messages) {
     return { state, messages };
   }
 
-  // Move the player
-  const newState = {
-    ...state,
+  // Use a mutable working state to avoid 'stale state' bugs where flags overwrite pos
+  let finalState = { ...state };
+  let finalFlags = { ...state.stateFlags };
+
+  // Check for locked door/gate (New Dynamic Conditions)
+  if (tileData.conditions) {
+    const { requiredItem, requiredFlag, failMessage, onSuccess } = tileData.conditions;
+
+    // Check if player has the item (check itemId or name)
+    const hasItem = requiredItem ? state.inventory.some(i => i.itemId === requiredItem || i.name === requiredItem) : true;
+    // Check if player has met the flag
+    const hasFlag = requiredFlag ? state.stateFlags[requiredFlag] || finalFlags[requiredFlag] : true;
+
+    if (!hasItem || !hasFlag) {
+      messages.push({ 
+        text: failMessage || `The ${tileData.name || 'path'} is locked.`, 
+        type: 'warning' 
+      });
+      return { state, messages };
+    }
+
+    // Condition met! Handle onSuccess if it hasn't been handled yet
+    if (onSuccess && (!onSuccess.setFlag || !state.stateFlags[onSuccess.setFlag])) {
+      if (onSuccess.msg) messages.push({ text: onSuccess.msg, type: 'loot' });
+      if (onSuccess.setFlag) {
+        finalFlags[onSuccess.setFlag] = true;
+      }
+    }
+  }
+
+  // Move the player and apply all flag changes
+  finalState = {
+    ...finalState,
     playerPosition: { x: newX, y: newY },
+    stateFlags: finalFlags
   };
 
   messages.push({ text: describeMovement(direction), type: 'narrative' });
 
   // Describe what's on the new tile
-  const tileDesc = describeTile(targetTile, tileData, newState.stateFlags);
+  const tileDesc = describeTile(targetTile, tileData, finalState.stateFlags);
   messages.push({ text: tileDesc, type: 'narrative' });
 
   // Handle Room Transition
@@ -171,7 +234,7 @@ function handleMove(state, direction, messages) {
       messages.push({ text: `⚡ Transitioning to ${nextRoom.room_name}...`, type: 'system' });
       return {
         state: {
-          ...newState,
+          ...finalState,
           room: nextRoom,
           playerPosition: tileData.targetPosition || { ...nextRoom.player_start },
         },
@@ -184,11 +247,11 @@ function handleMove(state, direction, messages) {
   }
 
   // Enemy proximity warning
-  if (tileData.enemy && !newState.stateFlags[`${targetTile.replace(/^enemy_/, '')}_defeated`]) {
+  if (tileData.enemy && !finalState.stateFlags[`${targetTile.replace(/^enemy_/, '')}_defeated`]) {
     messages.push({ text: `⚠ A ${tileData.enemy.name} is here! You can ATTACK or SCREAM.`, type: 'danger' });
   }
 
-  return { state: newState, messages };
+  return { state: finalState, messages };
 }
 
 function handleInteract(state, target, messages) {
@@ -206,14 +269,32 @@ function handleInteract(state, target, messages) {
     return { state, messages };
   }
 
-  // Open the item — add contents to inventory
-  const newState = {
-    ...state,
-    inventory: [...state.inventory, tileData.item.contains],
-    stateFlags: { ...state.stateFlags, [flagKey]: true },
-  };
+  // Process picking up items
+  let newState = { ...state, stateFlags: { ...state.stateFlags, [flagKey]: true } };
+  
+  if (tileData.item) {
+    let itemToCollect = null;
+    
+    // Resolve item from Global Registry if itemId provided
+    if (tileData.item.itemId && globalItems[tileData.item.itemId]) {
+      itemToCollect = { ...globalItems[tileData.item.itemId], itemId: tileData.item.itemId };
+    } else if (tileData.item.contains) {
+      // Legacy/Local definition
+      itemToCollect = { ...tileData.item.contains };
+    }
 
-  messages.push({ text: describeItemFound(tileData.item), type: 'loot' });
+    if (itemToCollect) {
+      newState.inventory = [...state.inventory, itemToCollect];
+      messages.push({ 
+        text: `You found: ${itemToCollect.name}!`,
+        type: 'loot' 
+      });
+    }
+    
+    if (tileData.item.onCollect) {
+      messages.push({ text: tileData.item.onCollect, type: 'narrative' });
+    }
+  }
   return { state: newState, messages };
 }
 
@@ -350,6 +431,90 @@ function handleInventory(state, messages) {
     messages.push({ text: `Inventory:\n${items}`, type: 'system' });
   }
   return { state, messages };
+}
+
+function handleUse(state, itemTarget, messages) {
+  if (!itemTarget) {
+    messages.push({ text: 'Use what? Try: use <item>', type: 'system' });
+    return { state, messages };
+  }
+
+  // Find item in inventory
+  const itemIndex = state.inventory.findIndex(i => 
+    i.name.toLowerCase().includes(itemTarget.toLowerCase()) ||
+    i.type.toLowerCase() === itemTarget.toLowerCase()
+  );
+
+  if (itemIndex === -1) {
+    messages.push({ text: `You don't have a "${itemTarget}" in your inventory.`, type: 'system' });
+    return { state, messages };
+  }
+
+  const item = state.inventory[itemIndex];
+  if (!item.onUse) {
+    messages.push({ text: `You can't think of a way to use the ${item.name} right now.`, type: 'system' });
+    return { state, messages };
+  }
+
+  const { action, value, target, flagSet, successMessage, failureMessage, consume } = item.onUse;
+  let newState = { ...state };
+  let usedSuccessfully = false;
+
+  switch (action) {
+    case 'heal':
+      newState.playerHP = Math.min(state.maxHP, state.playerHP + (value || 0));
+      messages.push({ text: successMessage || `You use the ${item.name} and feel revitalized!`, type: 'hint' });
+      usedSuccessfully = true;
+      break;
+
+    case 'unlock':
+      // Check if player is on OR adjacent to the target tile
+      const adjacentTiles = getAdjacentTiles(state);
+      const isNearTarget = adjacentTiles.some(tile => tile.type === target) || getCurrentTile(state) === target;
+      
+      if (isNearTarget) {
+        newState.stateFlags = { ...state.stateFlags, [flagSet]: true };
+        messages.push({ text: successMessage || `You use the ${item.name} to unlock the way!`, type: 'loot' });
+        usedSuccessfully = true;
+      } else {
+        messages.push({ text: failureMessage || `There's nothing to unlock with the ${item.name} here. Try standing closer to it.`, type: 'warning' });
+      }
+      break;
+
+    case 'damage_enemy':
+      const curTileType = getCurrentTile(state);
+      if (curTileType === target && !state.stateFlags[`${target.replace(/^enemy_/, '')}_defeated`]) {
+        const enemyKey = target;
+        const currentHP = state.enemyHP[enemyKey] ?? getTileData(state.room, target).enemy.hp;
+        const newHP = currentHP - (value || 1);
+        
+        messages.push({ text: successMessage || `You use the ${item.name} against the enemy!`, type: 'narrative' });
+        
+        if (newHP <= 0) {
+          const tileData = getTileData(state.room, target);
+          messages.push({ text: describeEnemyDefeated(tileData.enemy), type: 'loot' });
+          newState.stateFlags = { ...newState.stateFlags, [`${target.replace(/^enemy_/, '')}_defeated`]: true };
+          newState.enemyHP = { ...newState.enemyHP, [enemyKey]: 0 };
+        } else {
+          messages.push({ text: `The enemy takes ${value} damage! (${newHP} HP remaining)`, type: 'narrative' });
+          newState.enemyHP = { ...newState.enemyHP, [enemyKey]: newHP };
+        }
+        usedSuccessfully = true;
+      } else {
+        messages.push({ text: failureMessage || `There's no enemy here to use the ${item.name} on.`, type: 'warning' });
+      }
+      break;
+
+    default:
+      messages.push({ text: 'That item doesn\'t seem to do anything useful.', type: 'system' });
+      break;
+  }
+
+  if (usedSuccessfully && consume) {
+    newState.inventory = state.inventory.filter((_, i) => i !== itemIndex);
+  }
+
+  return { state: newState, messages };
 }
 
 function handleHelp(state, messages) {

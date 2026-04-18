@@ -70,8 +70,52 @@
 
 .btn-interact { border-left: 3px solid var(--accent-gold) !important; }
 .btn-talk     { border-left: 3px solid var(--accent-purple) !important; }
+.btn-use      { border-left: 3px solid var(--accent-cyan) !important; }
 .btn-attack   { border-left: 3px solid var(--color-danger) !important; }
 .btn-scream   { border-left: 3px solid var(--color-scream) !important; }
+
+/* Item Selection Menu Specifics */
+.item-selection-menu {
+  background: rgba(20, 26, 41, 0.98) !important;
+  border-radius: var(--radius-lg);
+  padding: 12px;
+  border: 1px solid var(--accent-cyan);
+  box-shadow: 0 0 40px rgba(0, 188, 212, 0.25);
+  min-width: 160px;
+}
+
+.menu-header {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent-cyan);
+  padding: 0 0 8px 0;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  width: 100%;
+}
+
+.item-btn {
+  width: 100% !important;
+  margin-bottom: 6px;
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+
+.item-btn:hover {
+  background: rgba(0, 188, 212, 0.1) !important;
+  border-color: var(--accent-cyan);
+}
+
+.cancel-btn {
+  width: 100% !important;
+  margin-top: 4px;
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  height: 36px !important;
+}
 
 /* D-Pad */
 .dpad-container {

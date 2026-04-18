@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useStore } from '../store/useStore';
 import './MobileController.css';
 
 /**
@@ -7,21 +8,45 @@ import './MobileController.css';
  */
 export default function MobileController({ onSubmit, disabled }) {
   const [showActions, setShowActions] = useState(false);
+  const [showItemSelection, setShowItemSelection] = useState(false);
+  const { gameState } = useStore();
+  const inventory = gameState?.inventory || [];
 
   const handleMove = (dir) => {
     if (disabled) return;
     onSubmit(dir);
+    setShowActions(false);
+    setShowItemSelection(false);
   };
 
   const handleAction = (action) => {
     if (disabled) return;
+    
+    if (action === 'use') {
+      if (inventory.length === 0) {
+        // No items, just close menu
+        setShowActions(false);
+        return;
+      }
+      setShowItemSelection(true);
+      return;
+    }
+
     onSubmit(action);
     setShowActions(false);
+    setShowItemSelection(false);
+  };
+
+  const handleUseItem = (item) => {
+    onSubmit(`use ${item.name}`);
+    setShowActions(false);
+    setShowItemSelection(false);
   };
 
   const actions = [
     { id: 'interact', label: 'Interact', icon: '✋' },
     { id: 'talk', label: 'Talk', icon: '💬' },
+    { id: 'use', label: 'Use', icon: '🎒' },
     { id: 'attack', label: 'Attack', icon: '⚔️' },
     { id: 'scream', label: 'Scream', icon: '😱' },
   ];
@@ -29,18 +54,36 @@ export default function MobileController({ onSubmit, disabled }) {
   return (
     <div className={`mobile-controller ${disabled ? 'is-disabled' : ''}`}>
       {/* Action Menu */}
-      <div className={`action-menu ${showActions ? 'is-visible' : ''}`}>
+      <div className={`action-menu ${showActions && !showItemSelection ? 'is-visible' : ''}`}>
         {actions.map(action => (
           <button
             key={action.id}
             className={`action-btn btn-${action.id}`}
             onClick={() => handleAction(action.id)}
+            disabled={action.id === 'use' && inventory.length === 0}
             aria-label={action.label}
           >
             <span className="action-icon">{action.icon}</span>
             <span className="action-label">{action.label}</span>
           </button>
         ))}
+      </div>
+
+      {/* Item Selection Menu */}
+      <div className={`action-menu item-selection-menu ${showItemSelection ? 'is-visible' : ''}`}>
+        <div className="menu-header">Use what?</div>
+        {inventory.map((item, idx) => (
+          <button
+            key={`${item.itemId}-${idx}`}
+            className="action-btn item-btn"
+            onClick={() => handleUseItem(item)}
+          >
+            <span className="action-label">{item.name}</span>
+          </button>
+        ))}
+        <button className="action-btn cancel-btn" onClick={() => setShowItemSelection(false)}>
+          <span className="action-label">Back</span>
+        </button>
       </div>
 
       {/* D-Pad controls */}
@@ -62,12 +105,18 @@ export default function MobileController({ onSubmit, disabled }) {
         
         {/* Central Action Toggle */}
         <button 
-          className={`dpad-center ${showActions ? 'is-active' : ''}`}
-          onClick={() => setShowActions(!showActions)}
+          className={`dpad-center ${(showActions || showItemSelection) ? 'is-active' : ''}`}
+          onClick={() => {
+            if (showItemSelection) {
+              setShowItemSelection(false);
+            } else {
+              setShowActions(!showActions);
+            }
+          }}
           aria-label="Toggle Actions"
         >
           <div className="btn-inner">
-             {showActions ? '✕' : 'ACT'}
+             {(showActions || showItemSelection) ? '✕' : 'ACT'}
           </div>
         </button>
 

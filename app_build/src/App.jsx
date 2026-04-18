@@ -19,6 +19,22 @@ export default function App() {
     }
   }, [isGameStarted, initGame]);
 
+  useEffect(() => {
+    const handleGlobalKeyDown = (e) => {
+      // Ignore if typing in an input or textarea
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      const key = e.key.toLowerCase();
+      if (key === 'arrowup' || key === 'w') submitCommand('north');
+      if (key === 'arrowdown' || key === 's') submitCommand('south');
+      if (key === 'arrowleft' || key === 'a') submitCommand('west');
+      if (key === 'arrowright' || key === 'd') submitCommand('east');
+    };
+
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, [submitCommand]);
+
   if (!gameState) {
     return (
       <div className="app-loading">

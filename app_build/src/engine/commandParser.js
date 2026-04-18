@@ -20,6 +20,7 @@ const ACTION_ALIASES = {
   help:     'help',     '?': 'help',   commands: 'help',
   talk:     'talk',     speak: 'talk',  chat: 'talk',
   attack:   'attack',   hit: 'attack',  fight: 'attack',
+  use:      'use',      apply: 'use',   consume: 'use',
 };
 
 /**
@@ -61,6 +62,7 @@ export function getHelpText() {
     { cmd: 'move <dir> / n/s/e/w',   desc: 'Move north, south, east, or west' },
     { cmd: 'interact <object>',      desc: 'Interact with an object on your tile' },
     { cmd: 'talk',                   desc: 'Talk to an NPC on your tile' },
+    { cmd: 'use <item>',             desc: 'Use an item from your inventory' },
     { cmd: 'scream',                 desc: 'Use Fred\'s Sonic Scream ability' },
     { cmd: 'attack',                 desc: 'Attack an enemy on your tile' },
     { cmd: 'inventory / i',          desc: 'Check your inventory' },

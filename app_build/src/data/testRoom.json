@@ -5,13 +5,46 @@
   "theme": "Shoebox_Forest",
   "description": "You stand in a dim clearing deep within the Shoelace Forest. Tangled laces hang from gnarled shoe-trees like vines, and the air smells faintly of leather polish. Somewhere nearby, something hisses.",
   "grid": [
-    ["wall",  "wall",      "exit_north", "wall",       "wall"],
-    ["wall",  "npc_sue",   "floor",      "item_fridge", "wall"],
-    ["wall",  "floor",     "floor",      "floor",       "exit_east"],
-    ["wall",  "floor",     "enemy_snake","floor",       "wall"],
-    ["wall",  "wall",      "exit_south", "wall",        "wall"]
+    [
+      "wall",
+      "wall",
+      "exit_north",
+      "wall",
+      "wall"
+    ],
+    [
+      "wall",
+      "npc_sue",
+      "floor",
+      "item_fridge",
+      "wall"
+    ],
+    [
+      "wall",
+      "floor",
+      "floor",
+      "floor",
+      "exit_east"
+    ],
+    [
+      "wall",
+      "floor",
+      "enemy_snake",
+      "item_potato",
+      "wall"
+    ],
+    [
+      "wall",
+      "wall",
+      "exit_south",
+      "wall",
+      "wall"
+    ]
   ],
-  "player_start": { "x": 2, "y": 2 },
+  "player_start": {
+    "x": 2,
+    "y": 2
+  },
   "tiles": {
     "wall": {
       "passable": false,
@@ -25,19 +58,37 @@
       "passable": true,
       "description": "A narrow gap in the lace-wall opens northward. A faint breeze carries the scent of pancakes from beyond.",
       "targetRoomId": "whispering_groove",
-      "targetPosition": { "x": 2, "y": 3 }
+      "targetPosition": {
+        "x": 2,
+        "y": 3
+      }
     },
     "exit_south": {
       "passable": true,
       "description": "A muddy trail leads south, disappearing into deeper forest.",
       "targetRoomId": "hidden_glade",
-      "targetPosition": { "x": 2, "y": 1 }
+      "targetPosition": {
+        "x": 2,
+        "y": 1
+      }
     },
     "exit_east": {
+      "name": "Woven Gate",
       "passable": true,
-      "description": "The forest thins out to the east, revealing a bright, sunny meadow.",
+      "conditions": {
+        "requiredItem": "key_silver",
+        "failMessage": "A heavy gate of silver-threaded laces blocks the path east. It hasn't been opened in a long time, and looks like it needs a special key.",
+        "onSuccess": {
+          "msg": "You slide the Silver Key into the woven lock. With a click, the gate to the east swings wide!",
+          "setFlag": "gate_unlocked"
+        }
+      },
+      "description": "The woven laces form a beautiful, open gate leading east to the Sunny Meadow.",
       "targetRoomId": "sunny_meadow",
-      "targetPosition": { "x": 1, "y": 2 }
+      "targetPosition": {
+        "x": 1,
+        "y": 2
+      }
     },
     "npc_sue": {
       "passable": true,
@@ -45,9 +96,19 @@
       "npc": {
         "name": "Sue the Sandal",
         "dialogue": [
-          { "stage": 0, "text": "\"Oh! A tennis shoe! You're Fred, aren't you? I've heard your screaming from three blocks away.\"", "hint": "Try using SCREAM to impress her." },
-          { "stage": 1, "text": "\"Impressive pipes! Listen — I saw something slithering near the south exit. And that old fridge over there? Someone stashed something inside it. Be careful.\"" },
-          { "stage": 2, "text": "\"You've already gotten everything out of me, Fred. Go find your pasta!\"" }
+          {
+            "stage": 0,
+            "text": "\"Oh! A tennis shoe! You're Fred, aren't you? I've heard your screaming from three blocks away.\"",
+            "hint": "Try using SCREAM to impress her."
+          },
+          {
+            "stage": 1,
+            "text": "\"Impressive pipes! Listen — I saw something slithering near the south exit. And that old fridge over there? Someone stashed something inside it. Be careful.\""
+          },
+          {
+            "stage": 2,
+            "text": "\"You've already gotten everything out of me, Fred. Go find your pasta!\""
+          }
         ]
       }
     },
@@ -56,9 +117,37 @@
       "description": "A battered mini-fridge stands wedged between the lace-walls. Its door is slightly ajar, and a faint warmth radiates from inside.",
       "item": {
         "name": "Mini Fridge",
-        "contains": { "name": "Spicy Noodle", "type": "pasta" },
-        "actions": ["open", "search", "scream"],
+        "itemId": "key_silver",
+        "actions": [
+          "open",
+          "search",
+          "scream"
+        ],
         "opened_description": "The fridge stands open and empty. A lingering spice scent hangs in the air."
+      }
+    },
+    "item_potato": {
+      "passable": true,
+      "description": "A large, remarkably clean potato lies on the ground here, looking very appetizing.",
+      "item": {
+        "name": "Tasty Potato",
+        "itemId": "food_potato",
+        "actions": [
+          "interact",
+          "search"
+        ]
+      }
+    },
+    "item_rock": {
+      "passable": true,
+      "description": "A sharp, jagged rock lies near the fridge. It looks like it could hurt if thrown.",
+      "item": {
+        "name": "Sharp Rock",
+        "itemId": "weapon_rock",
+        "actions": [
+          "interact",
+          "search"
+        ]
       }
     },
     "enemy_snake": {
@@ -77,6 +166,7 @@
   "state_flags": {
     "item_fridge_opened": false,
     "sue_clue_given": false,
-    "snake_defeated": false
+    "snake_defeated": false,
+    "gate_unlocked": false
   }
 }

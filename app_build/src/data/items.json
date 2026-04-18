@@ -1,0 +1,30 @@
+{
+  "key_silver": {
+    "name": "Silver Key",
+    "description": "An ornate key with silver etchings. It looks like it belongs to a woven lock.",
+    "type": "key"
+  },
+  "food_potato": {
+    "name": "Tasty Potato",
+    "description": "It looks delicious and restoring.",
+    "type": "food",
+    "onUse": {
+      "action": "heal",
+      "value": 5,
+      "consume": true,
+      "successMessage": "You eat the Tasty Potato. Your HP is restored!"
+    }
+  },
+  "weapon_rock": {
+    "name": "Sharp Rock",
+    "description": "A jagged stone, good for throwing.",
+    "type": "weapon",
+    "onUse": {
+      "action": "damage_enemy",
+      "target": "enemy_snake",
+      "value": 3,
+      "consume": true,
+      "successMessage": "Crack! The rock hits the snake square on the head."
+    }
+  }
+}
