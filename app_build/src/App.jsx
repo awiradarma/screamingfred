@@ -4,6 +4,7 @@ import ChatLog from './components/ChatLog';
 import CommandInput from './components/CommandInput';
 import GridViewer from './components/GridViewer';
 import PlayerHUD from './components/PlayerHUD';
+import MobileController from './components/MobileController';
 import { useStore } from './store/useStore';
 
 export default function App() {
@@ -74,6 +75,8 @@ export default function App() {
           </div>
         </aside>
       </main>
+
+      <MobileController onSubmit={submitCommand} disabled={isDefeated} />
 
       <footer className="app-footer">
         <span>Sentientworldia v1.0.0 — Phase 1: Solo Engine</span>
