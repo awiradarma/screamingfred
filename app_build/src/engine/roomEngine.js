@@ -361,6 +361,58 @@ function handleHelp(state, messages) {
   return { state, messages };
 }
 
+// ── Enemy Combat Logic ────────────────────────────────
+
+/**
+ * Check if two positions are in "cross proximity" (same row or column).
+ */
+function isCrossProximity(pos1, pos2) {
+  return pos1.x === pos2.x || pos1.y === pos2.y;
+}
+
+/**
+ * Process attacks from all enemies in cross-proximity to the player.
+ * Used for idle timers.
+ */
+export function getEnemyIdleAttacks(state) {
+  const messages = [];
+  let newState = { ...state };
+  const playerPos = state.playerPosition;
+
+  // Iterate through the room grid to find enemies
+  state.room.grid.forEach((row, y) => {
+    row.forEach((tileType, x) => {
+      const tileData = getTileData(state.room, tileType);
+      if (!tileData?.enemy) return;
+
+      const defeatKey = `${tileType.replace(/^enemy_/, '')}_defeated`;
+      if (state.stateFlags[defeatKey]) return;
+
+      // Check cross proximity
+      if (isCrossProximity(playerPos, { x, y })) {
+        // Player is at risk! Deal damage.
+        const damage = tileData.enemy.damage || 1;
+        newState.playerHP = Math.max(0, newState.playerHP - damage);
+        
+        messages.push({ 
+          text: `[IDLE WARNING] The ${tileData.enemy.name} sees you standing still and strikes!`, 
+          type: 'danger' 
+        });
+        messages.push({ 
+          text: describeEnemyAttacks(tileData.enemy), 
+          type: 'danger' 
+        });
+
+        if (newState.playerHP <= 0) {
+          messages.push({ text: '💀 Fred collapses! The world fades to black...', type: 'danger' });
+        }
+      }
+    });
+  });
+
+  return { state: newState, messages };
+}
+
 // ── Public Utilities ──────────────────────────────────
 
 /**

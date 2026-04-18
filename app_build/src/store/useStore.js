@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { initGameState, processCommand, getWelcomeMessages } from '../engine/roomEngine.js';
+import { initGameState, processCommand, getWelcomeMessages, getEnemyIdleAttacks } from '../engine/roomEngine.js';
 import { worldData } from '../data/worldData.js';
 
 /**
@@ -11,6 +11,7 @@ export const useStore = create((set, get) => ({
   gameState: null,       // initialized via initGame()
   gameLog: [],           // array of { text, type, timestamp }
   isGameStarted: false,
+  idleTimer: null,
 
   /**
    * Initialize the game with the starting room.
@@ -25,6 +26,8 @@ export const useStore = create((set, get) => ({
       gameLog: welcomeMessages.map(m => ({ ...m, timestamp: Date.now() })),
       isGameStarted: true,
     });
+
+    get().startIdleTimer();
   },
 
   /**
@@ -45,6 +48,43 @@ export const useStore = create((set, get) => ({
       gameState: newState,
       gameLog: [...gameLog, echoMsg, ...timestampedMessages],
     });
+
+    get().startIdleTimer();
+  },
+
+  /**
+   * Start or reset the idle timer.
+   */
+  startIdleTimer: () => {
+    const { idleTimer, triggerIdleAttack } = get();
+    if (idleTimer) clearTimeout(idleTimer);
+
+    const newTimer = setTimeout(() => {
+      triggerIdleAttack();
+    }, 5000); // 5 seconds idle threshold
+
+    set({ idleTimer: newTimer });
+  },
+
+  /**
+   * Trigger the idle attack logic from the engine.
+   */
+  triggerIdleAttack: () => {
+    const { gameState, gameLog, startIdleTimer } = get();
+    if (!gameState || gameState.playerHP <= 0) return;
+
+    const { state: newState, messages } = getEnemyIdleAttacks(gameState);
+    
+    if (messages.length > 0) {
+      const timestampedMessages = messages.map(m => ({ ...m, timestamp: Date.now() }));
+      set({
+        gameState: newState,
+        gameLog: [...gameLog, ...timestampedMessages],
+      });
+    }
+
+    // Always restart the timer to allow for repeated attacks if still idle
+    startIdleTimer();
   },
 
   /**
