@@ -19,9 +19,16 @@ const TILE_CONFIG = {
   ice:        { icon: '❄', label: 'Ice',    className: 'tile-ice' },
   lake:       { icon: '≋', label: 'Lake',   className: 'tile-lake' },
   bouncy:     { icon: '⊗', label: 'Bouncy', className: 'tile-bouncy' },
+  exit:       { icon: '△', label: 'Exit',   className: 'tile-exit' },
+  enemy:      { icon: '☠', label: 'Enemy',  className: 'tile-enemy' },
+  npc:        { icon: '☺', label: 'NPC',    className: 'tile-npc' },
+  item:       { icon: '◈', label: 'Item',   className: 'tile-item' },
 };
 
-function getTileConfig(tileType, stateFlags) {
+function getTileConfig(tileType, stateFlags, roomTiles = {}) {
+  // Check room-specific metadata first
+  const roomMeta = roomTiles[tileType];
+  
   // Check if enemy is defeated
   if (tileType.startsWith('enemy_') && stateFlags[`${tileType.replace(/^enemy_/, '')}_defeated`]) {
     return { icon: '·', label: 'Clear', className: 'tile-floor tile-cleared' };
@@ -30,10 +37,36 @@ function getTileConfig(tileType, stateFlags) {
   if (tileType.startsWith('item_') && stateFlags[`${tileType}_opened`]) {
     return { icon: '◇', label: 'Opened', className: 'tile-item tile-opened' };
   }
-  return TILE_CONFIG[tileType] || { icon: '?', label: tileType, className: 'tile-unknown' };
+
+  // Merge static config with room metadata
+  let baseType = tileType;
+  if (tileType.startsWith('exit_') && !TILE_CONFIG[tileType]) {
+    baseType = 'exit';
+  }
+  if (tileType.startsWith('enemy_') && !TILE_CONFIG[tileType]) {
+    baseType = 'enemy';
+  }
+  if (tileType.startsWith('npc_') && !TILE_CONFIG[tileType]) {
+    baseType = 'npc';
+  }
+  if (tileType.startsWith('item_') && !TILE_CONFIG[tileType]) {
+    baseType = 'item';
+  }
+  
+  const baseConfig = TILE_CONFIG[baseType] || { icon: '?', label: tileType, className: 'tile-unknown' };
+  
+  if (roomMeta) {
+    return {
+        ...baseConfig,
+        label: roomMeta.name || baseConfig.label,
+        description: roomMeta.description || baseConfig.description
+    };
+  }
+
+  return baseConfig;
 }
 
-export default function GridViewer({ grid, playerPosition, stateFlags, roomName, entities }) {
+export default function GridViewer({ grid, playerPosition, stateFlags, roomName, entities, tiles: roomTiles }) {
   const [isExpanded, setIsExpanded] = React.useState(window.innerWidth > 768);
 
   if (!grid) return null;
@@ -52,7 +85,7 @@ export default function GridViewer({ grid, playerPosition, stateFlags, roomName,
               <div key={y} className="grid-row">
                 {row.map((tileType, x) => {
                   const isPlayer = playerPosition.x === x && playerPosition.y === y;
-                  const config = getTileConfig(tileType, stateFlags);
+                  const config = getTileConfig(tileType, stateFlags, roomTiles);
                   const cellEntities = (entities || []).filter(e => e.x === x && e.y === y && !stateFlags[`${e.id}_defeated`]);
 
                   return (

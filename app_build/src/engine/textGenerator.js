@@ -43,7 +43,7 @@ export function describeRoom(roomData) {
  * Generate tile-specific description.
  */
 export function describeTile(tileType, tileData, stateFlags) {
-  if (!tileData) return 'Nothing remarkable here.';
+  if (!tileData) return 'Nothing unremarkable here.';
 
   // Check if item has been opened
   if (tileData.item && stateFlags[`item_${tileName(tileType)}_opened`]) {
@@ -55,7 +55,16 @@ export function describeTile(tileType, tileData, stateFlags) {
     return `A pile of unraveled laces lies where the ${tileData.enemy.name} once was.`;
   }
 
-  return tileData.description || 'Nothing remarkable here.';
+  let text = tileData.description || 'Nothing remarkable here.';
+  if (tileData.name && !text.includes(tileData.name)) {
+    text = `${tileData.name}: ${text}`;
+  }
+
+  if (tileData.npc) {
+    text = `${tileData.npc.name} is standing here. ${text}`;
+  }
+
+  return text;
 }
 
 /**

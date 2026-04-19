@@ -1,6 +1,6 @@
 {
   "room_id": "forest_entrance",
-  "world_coord": "15_05",
+  "world_coord": "15,15,0",
   "room_name": "Shoelace Forest Clearing",
   "theme": "Shoebox_Forest",
   "description": "You stand in a dim clearing deep within the Shoelace Forest. Tangled laces hang from gnarled shoe-trees like vines, and the air smells faintly of leather polish. Somewhere nearby, something hisses.",
@@ -36,7 +36,7 @@
     [
       "wall",
       "wall",
-      "item_scroll",
+      "exit_south",
       "wall",
       "wall"
     ]

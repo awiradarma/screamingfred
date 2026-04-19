@@ -26,12 +26,58 @@
 
 /* ── Header ─────────────────────────────────── */
 .app-header {
+  height: 64px;
   display: flex;
-  align-items: baseline;
-  gap: 12px;
-  padding: 16px 0 8px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  background: rgba(10, 14, 23, 0.8);
   border-bottom: 1px solid var(--border-subtle);
+  backdrop-filter: blur(10px);
   flex-shrink: 0;
+  z-index: 100;
+}
+
+.header-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-nav {
+  display: flex;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nav-btn {
+  padding: 6px 14px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-btn.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.nav-btn:hover:not(.active):not(.disabled) {
+  color: white;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-btn.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
 .title-glow {
@@ -50,6 +96,27 @@
   color: var(--text-muted);
   letter-spacing: 0.05em;
   text-transform: uppercase;
+}
+
+.restart-btn {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 2px 8px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.restart-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: #ef4444;
+  color: white;
 }
 
 /* ── Player HUD ─────────────────────────────── */

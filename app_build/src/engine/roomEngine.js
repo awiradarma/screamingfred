@@ -11,9 +11,7 @@ import {
   describeItemFound, describeAttack, describeEnemyDefeated,
   describeEnemyAttacks, getWelcomeMessage,
 } from './textGenerator.js';
-import { getRoomData } from '../data/worldData.js';
-import roomDatas from '../data/testRoom.json';
-import globalItems from '../data/items.json';
+import { getRoomData, getRoomAt, isValidCoordinate } from '../data/worldData.js';
 
 // Direction vectors for grid movement
 const DIR_VECTORS = {
@@ -97,9 +95,10 @@ function getAdjacentTiles(state) {
  * Process a raw input string and return updated state + message array.
  * @param {object} state - Current game state
  * @param {string} rawInput - Player's typed input
+ * @param {object} itemRegistry - The cloud-backed item registry
  * @returns {{ state: object, messages: Array<{text: string, type: string}> }}
  */
-export function processCommand(state, rawInput) {
+export function processCommand(state, rawInput, itemRegistry = {}) {
   const command = parseCommand(rawInput);
   const messages = [];
   let newState = { ...state, turnCount: state.turnCount + 1 };
@@ -118,19 +117,19 @@ export function processCommand(state, rawInput) {
       break;
 
     case 'interact':
-      result = handleInteract(newState, command.target, messages);
+      result = handleInteract(newState, command.target, messages, itemRegistry);
       break;
 
     case 'talk':
-      result = handleTalk(newState, messages);
+      result = handleTalk(newState, messages, itemRegistry);
       break;
 
     case 'scream':
-      result = handleScream(newState, messages);
+      result = handleScream(newState, messages, itemRegistry);
       break;
 
     case 'attack':
-      result = handleAttack(newState, messages);
+      result = handleAttack(newState, messages, itemRegistry);
       break;
 
     case 'inventory':
@@ -142,7 +141,7 @@ export function processCommand(state, rawInput) {
       break;
 
     case 'use':
-      result = handleUse(newState, command.target, messages);
+      result = handleUse(newState, command.target, messages, itemRegistry);
       break;
 
     case 'unknown':
@@ -270,13 +269,34 @@ export function handleMove(state, direction, messages) {
   const newY = state.playerPosition.y + dy;
 
   const targetTile = getTileAt(state.room, newX, newY);
+  const tileData = targetTile ? getTileData(state.room, targetTile) : null;
+
+  // Check for world edge transition if no tile exists at target
+  let transitionRoom = null;
+  let transitionPos = null;
+
   if (!targetTile) {
-    messages.push({ text: describeBlocked(), type: 'warning' });
-    return { state, messages };
+    const currentCoord = state.room.world_coord;
+    if (currentCoord) {
+      const parts = currentCoord.split(',').map(Number);
+      if (parts.length >= 2) {
+        const [cx, cy, cz = 0] = parts;
+        const nx = cx + dx;
+        const ny = cy + dy;
+
+        // Note: we can't use require here in browser, using the imported functions
+        if (isValidCoordinate(nx, ny, cz)) {
+          transitionRoom = getRoomAt(nx, ny, cz);
+          if (transitionRoom) {
+            transitionPos = calculateEntryPosition(transitionRoom, direction);
+          }
+        }
+      }
+    }
   }
 
-  const tileData = getTileData(state.room, targetTile);
-  if (!tileData || !tileData.passable) {
+  // If no transition and no tile (or impassable tile), it's blocked
+  if (!transitionRoom && (!targetTile || !tileData?.passable)) {
     messages.push({ text: describeBlocked(), type: 'warning' });
     return { state, messages };
   }
@@ -328,30 +348,36 @@ export function handleMove(state, direction, messages) {
   // Describe what's on the NEW FINAL tile (after effects like sliding/bouncing)
   const finalTileType = getTileAt(finalState.room, currentPos.x, currentPos.y);
   const finalTileData = getTileData(finalState.room, finalTileType);
-  const tileDesc = describeTile(finalTileType, finalTileData, finalState.stateFlags);
-  messages.push({ text: tileDesc, type: 'narrative' });
+  
+  if (finalTileData) {
+    const tileDesc = describeTile(finalTileType, finalTileData, finalState.stateFlags);
+    messages.push({ text: tileDesc, type: 'narrative' });
+  }
 
-  // Handle Room Transition
-  if (finalTileData.targetRoomId) {
-    const nextRoom = getRoomData(finalTileData.targetRoomId);
-    if (nextRoom) {
-      messages.push({ text: `⚡ Transitioning to ${nextRoom.room_name}...`, type: 'system' });
-      return {
-        state: {
-          ...finalState,
-          room: nextRoom,
-          playerPosition: finalTileData.targetPosition || { ...nextRoom.player_start },
-        },
-        messages: [
-          ...messages,
-          { text: describeRoom(nextRoom), type: 'narrative' }
-        ]
-      };
-    }
+  // Handle Room Transition (Specific trigger or Edge transition)
+  if (finalTileData?.targetRoomId) {
+    // Explicit transition tile
+    transitionRoom = getRoomData(finalTileData.targetRoomId);
+    transitionPos = finalTileData.targetPosition;
+  }
+
+  if (transitionRoom) {
+    messages.push({ text: `⚡ Transitioning to ${transitionRoom.room_name}...`, type: 'system' });
+    return {
+      state: {
+        ...finalState,
+        room: transitionRoom,
+        playerPosition: transitionPos || { ...transitionRoom.player_start },
+      },
+      messages: [
+        ...messages,
+        { text: describeRoom(transitionRoom), type: 'narrative' }
+      ]
+    };
   }
 
   // Enemy proximity warning
-  if (finalTileData.enemy && !finalState.stateFlags[`${finalTileType.replace(/^enemy_/, '')}_defeated`]) {
+  if (finalTileData?.enemy && !finalState.stateFlags[`${finalTileType.replace(/^enemy_/, '')}_defeated`]) {
     messages.push({ text: `⚠ A ${finalTileData.enemy.name} is here! You can ATTACK or SCREAM.`, type: 'danger' });
   }
 
@@ -359,74 +385,111 @@ export function handleMove(state, direction, messages) {
 }
 
 /**
- * Apply special effects based on the tile type or tile properties.
+ * Calculate the starting position when entering a room from an edge.
  */
+function calculateEntryPosition(room, fromDirection) {
+  const height = room.grid.length;
+  const width = room.grid[0].length;
+  
+  switch (fromDirection) {
+    case 'north': return { x: Math.floor(width / 2), y: height - 1 };
+    case 'south': return { x: Math.floor(width / 2), y: 0 };
+    case 'east':  return { x: 0, y: Math.floor(height / 2) };
+    case 'west':  return { x: width - 1, y: Math.floor(height / 2) };
+    default: return { ...room.player_start };
+  }
+}
+
 function applyTileEffects(state, x, y, messages, direction) {
   let newState = { ...state };
   let currentX = x;
   let currentY = y;
-  
-  const tileType = getTileAt(state.room, x, y);
-  const tileData = getTileData(state.room, tileType);
+  let loopCount = 0;
+  let moved = true;
 
-  if (!tileData) return { state: newState, messages };
-
-  // 1. Damage Effects (Lava, Lake, Toxic)
-  if (tileData.effect === 'damage' || ['lava', 'lake', 'toxic_pit'].includes(tileType) || tileType.includes('lava') || tileType.includes('lake')) {
-    const damage = tileData.damageAmount || 1;
-    newState.playerHP = Math.max(0, newState.playerHP - damage);
-    const msg = tileData.effectMessage || (tileType.includes('lava') ? "Sizzle! The lava burns!" : "Gurgle! The water is deep and cold.");
-    messages.push({ text: `⚠️ ${msg} (-${damage} HP)`, type: 'danger' });
-  }
-
-  // 2. Bouncy Effects (Push back)
-  if (tileData.effect === 'bouncy' || tileType === 'bouncy' || tileType.includes('bouncy')) {
-    messages.push({ text: "💨 BOING! You bounce right back!", type: 'warning' });
-    // Calculate previous position
-    const { dx, dy } = DIR_VECTORS[direction];
-    currentX -= dx;
-    currentY -= dy;
-    newState.playerPosition = { x: currentX, y: currentY };
-    return { state: newState, messages }; // Stop processing further effects on the bouncy tile
-  }
-
-  // 3. Ice Effects (Slide)
-  if (tileData.effect === 'ice' || tileType === 'ice' || tileType.includes('ice')) {
-    messages.push({ text: "❄️ Woah! It's slippery!", type: 'narrative' });
-    const { dx, dy } = DIR_VECTORS[direction];
+  while (moved && loopCount < 15) {
+    moved = false;
+    loopCount++;
     
-    // Slide until hitting a non-ice tile or a wall
-    let slideX = currentX + dx;
-    let slideY = currentY + dy;
-    
-    while (true) {
-      const nextTile = getTileAt(state.room, slideX, slideY);
-      const nextTileData = getTileData(state.room, nextTile);
-      
-      if (!nextTile || !nextTileData || !nextTileData.passable) {
-        break; // Hit a wall or edge
-      }
-      
-      currentX = slideX;
-      currentY = slideY;
-      
-      // If the next tile is NOT ice, stop sliding
-      if (nextTileData.effect !== 'ice' && nextTile !== 'ice' && !nextTile.includes('ice')) {
-        break;
-      }
-      
-      slideX += dx;
-      slideY += dy;
+    const tileType = getTileAt(newState.room, currentX, currentY);
+    const tileData = getTileData(newState.room, tileType);
+    if (!tileData) break;
+
+    // 1. Damage Effects (Lava, Lake, Toxic)
+    if (tileData.effect === 'damage' || ['lava', 'lake', 'toxic_pit'].includes(tileType) || tileType.includes('lava') || tileType.includes('lake')) {
+      const damage = tileData.damageAmount || 1;
+      newState.playerHP = Math.max(0, newState.playerHP - damage);
+      const msg = tileData.effectMessage || (tileType.includes('lava') ? "Sizzle! The lava burns!" : "Gurgle! The water is deep and cold.");
+      messages.push({ text: `⚠️ ${msg} (-${damage} HP)`, type: 'danger' });
     }
-    
-    newState.playerPosition = { x: currentX, y: currentY };
-    messages.push({ text: "You slide across the ice!", type: 'narrative' });
+
+    // 2. Bouncy Effects (Random non-wall teleport)
+    if (tileData.effect === 'bouncy' || tileType === 'bouncy' || tileType.includes('bouncy')) {
+      messages.push({ text: "💨 BOING! The bouncy pad flings you across the room!", type: 'warning' });
+      
+      const validTiles = [];
+      newState.room.grid.forEach((row, ty) => {
+        row.forEach((tile, tx) => {
+          const tData = getTileData(newState.room, tile);
+          if (tData && tData.passable !== false && tile !== 'stone_wall' && !tile.includes('wall')) {
+            validTiles.push({ x: tx, y: ty });
+          }
+        });
+      });
+
+      if (validTiles.length > 0) {
+        const randomTarget = validTiles[Math.floor(Math.random() * validTiles.length)];
+        currentX = randomTarget.x;
+        currentY = randomTarget.y;
+        newState.playerPosition = { x: currentX, y: currentY };
+        moved = true;
+        continue; // Check the new tile immediately
+      }
+    }
+
+    // 3. Ice Effects (Slide)
+    if (tileData.effect === 'ice' || tileType === 'ice' || tileType.includes('ice')) {
+      messages.push({ text: "❄️ Woah! It's slippery!", type: 'narrative' });
+      const { dx, dy } = DIR_VECTORS[direction];
+      
+      let slideX = currentX + dx;
+      let slideY = currentY + dy;
+      let lastValidX = currentX;
+      let lastValidY = currentY;
+      
+      while (true) {
+        const nextTile = getTileAt(newState.room, slideX, slideY);
+        const nextTileData = getTileData(newState.room, nextTile);
+        
+        if (!nextTile || !nextTileData || !nextTileData.passable) {
+          break; 
+        }
+        
+        lastValidX = slideX;
+        lastValidY = slideY;
+        
+        if (nextTileData.effect !== 'ice' && nextTile !== 'ice' && !nextTile.includes('ice')) {
+          break;
+        }
+        
+        slideX += dx;
+        slideY += dy;
+      }
+      
+      if (lastValidX !== currentX || lastValidY !== currentY) {
+        currentX = lastValidX;
+        currentY = lastValidY;
+        newState.playerPosition = { x: currentX, y: currentY };
+        messages.push({ text: "You slide across the ice!", type: 'narrative' });
+        moved = true; // Check the landing tile for effects (like a bouncy pad at the end of ice)
+      }
+    }
   }
 
   return { state: newState, messages };
 }
 
-function handleInteract(state, target, messages) {
+function handleInteract(state, target, messages, globalItems = {}) {
   const tileType = getCurrentTile(state);
   const tileData = getTileData(state.room, tileType);
 
@@ -435,10 +498,16 @@ function handleInteract(state, target, messages) {
     return { state, messages };
   }
 
+  const verb = tileData.interactionVerb || 'SEARCH';
   const flagKey = `${tileType}_opened`;
   if (state.stateFlags[flagKey]) {
     messages.push({ text: tileData.item.opened_description || 'Already searched.', type: 'system' });
     return { state, messages };
+  }
+
+  messages.push({ text: `You ${verb} the ${tileData.name || 'object'}...`, type: 'narrative' });
+  if (tileData.revealMessage) {
+    messages.push({ text: tileData.revealMessage, type: 'narrative' });
   }
 
   // Process picking up items
@@ -451,16 +520,25 @@ function handleInteract(state, target, messages) {
     if (tileData.item.itemId && globalItems[tileData.item.itemId]) {
       itemToCollect = { ...globalItems[tileData.item.itemId], itemId: tileData.item.itemId };
     } else if (tileData.item.contains) {
-      // Legacy/Local definition
       itemToCollect = { ...tileData.item.contains };
     }
 
     if (itemToCollect) {
-      newState.inventory = [...state.inventory, itemToCollect];
-      messages.push({ 
-        text: `You found: ${itemToCollect.name}!`,
-        type: 'loot' 
+      // Support comma separated list of items
+      const itmNames = itemToCollect.name.split(',').map(s => s.trim());
+      itmNames.forEach(name => {
+        if (name) {
+          newState.inventory = [...newState.inventory, { name, type: 'resource' }];
+          messages.push({ 
+            text: `You found: ${name}!`,
+            type: 'loot' 
+          });
+        }
       });
+    }
+
+    if (tileData.item.setFlag) {
+      newState.stateFlags[tileData.item.setFlag] = true;
     }
     
     if (tileData.item.onCollect) {
@@ -470,7 +548,7 @@ function handleInteract(state, target, messages) {
   return { state: newState, messages };
 }
 
-function handleTalk(state, messages) {
+function handleTalk(state, messages, globalItems = {}) {
   const tileType = getCurrentTile(state);
   const tileData = getTileData(state.room, tileType);
 
@@ -479,50 +557,74 @@ function handleTalk(state, messages) {
     return { state, messages };
   }
 
+  const npcData = tileData.npc;
   const npcKey = tileType;
-  const currentStage = state.npcStages[npcKey] || 0;
-  const dialogue = getNPCDialogue(tileData.npc, currentStage);
-  const hint = getNPCHint(tileData.npc, currentStage);
-
-  messages.push({ text: dialogue, type: 'dialogue' });
-  if (hint) {
-    messages.push({ text: `💡 ${hint}`, type: 'hint' });
+  
+  // Find the first dialogue stage that meets requirements (scanned in reverse for priority)
+  const dialogueStages = npcData.dialogue || [];
+  let bestStage = dialogueStages[0];
+  for (let i = dialogueStages.length - 1; i >= 0; i--) {
+    const stage = dialogueStages[i];
+    if (!stage.requiresFlag || state.stateFlags[stage.requiresFlag]) {
+      bestStage = stage;
+      break;
+    }
   }
 
-  // Advance dialogue stage (but not beyond max)
-  const dialogueStages = tileData.npc.dialogue;
-  const currentDialogue = dialogueStages.find(d => d.stage === currentStage);
-  
-  // Handle onComplete effects
+  if (!bestStage) {
+    messages.push({ text: '"..."', type: 'dialogue' });
+    return { state, messages };
+  }
+
+  messages.push({ text: bestStage.text || '...', type: 'dialogue' });
+  if (bestStage.hint) {
+    messages.push({ text: `💡 ${bestStage.hint}`, type: 'hint' });
+  }
+
   let finalFlags = { ...state.stateFlags };
   let finalInventory = [...state.inventory];
   
-  if (currentDialogue?.onComplete) {
-    const { action, itemId, flagSet, msg } = currentDialogue.onComplete;
+  // Handle Rewards (Gives Item)
+  if (bestStage.givesItem) {
+    const rewardKey = `${npcKey}_reward_${bestStage.stage || 0}`;
+    if (!finalFlags[rewardKey]) {
+      finalInventory.push({ ...bestStage.givesItem });
+      finalFlags[rewardKey] = true;
+      messages.push({ 
+        text: `🎁 ${tileData.name || npcData.name} gave you: ${bestStage.givesItem.name}!`, 
+        type: 'loot' 
+      });
+    }
+  }
+
+  // Handle setFlag
+  if (bestStage.setFlag) {
+    finalFlags[bestStage.setFlag] = true;
+  }
+
+  // Legacy/Custom onComplete support
+  if (bestStage.onComplete) {
+    const { action, itemId, flagSet, msg } = bestStage.onComplete;
     if (action === 'give_item' && itemId && globalItems[itemId]) {
       finalInventory.push({ ...globalItems[itemId], itemId });
-      messages.push({ text: msg || `🎁 ${tileData.npc.name} gave you: ${globalItems[itemId].name}!`, type: 'loot' });
+      messages.push({ text: msg || `🎁 ${tileData.name || npcData.name} gave you: ${globalItems[itemId].name}!`, type: 'loot' });
     }
     if (action === 'set_flag' && flagSet) {
       finalFlags[flagSet] = true;
     }
   }
 
-  const maxStage = Math.max(...dialogueStages.map(d => d.stage));
-  const newStage = Math.min(currentStage + 1, maxStage);
-
   return {
     state: {
       ...state,
       inventory: finalInventory,
       stateFlags: finalFlags,
-      npcStages: { ...state.npcStages, [npcKey]: newStage },
     },
     messages
   };
 }
 
-function handleScream(state, messages) {
+function handleScream(state, messages, globalItems = {}) {
   messages.push({ text: describeScream(), type: 'scream' });
 
   const tileType = getCurrentTile(state);
@@ -584,7 +686,7 @@ function handleScream(state, messages) {
   return { state: newState, messages };
 }
 
-function handleAttack(state, messages) {
+function handleAttack(state, messages, globalItems = {}) {
   const tileType = getCurrentTile(state);
   const tileData = getTileData(state.room, tileType);
   
@@ -655,7 +757,7 @@ function handleInventory(state, messages) {
   return { state, messages };
 }
 
-function handleUse(state, itemTarget, messages) {
+function handleUse(state, itemTarget, messages, globalItems = {}) {
   if (!itemTarget) {
     messages.push({ text: 'Use what? Try: use <item>', type: 'system' });
     return { state, messages };

@@ -5,8 +5,17 @@ const LEVELS_COLLECTION = 'levels';
 
 export const publishLevel = async (schema, authorId) => {
     try {
+        const cleanData = JSON.parse(JSON.stringify(schema));
+        
+        // Universal array stringification for Firestore
+        Object.keys(cleanData).forEach(key => {
+            if (Array.isArray(cleanData[key])) {
+                cleanData[key] = JSON.stringify(cleanData[key]);
+            }
+        });
+
         const docRef = await addDoc(collection(db, LEVELS_COLLECTION), {
-            ...schema,
+            ...cleanData,
             authorId,
             status: 'pending',
             createdAt: serverTimestamp()

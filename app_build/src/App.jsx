@@ -5,18 +5,25 @@ import CommandInput from './components/CommandInput';
 import GridViewer from './components/GridViewer';
 import PlayerHUD from './components/PlayerHUD';
 import MobileController from './components/MobileController';
+import WorldMap from './components/WorldMap';
+import LevelEditor from './components/LevelEditor';
 import { useStore } from './store/useStore';
 
 export default function App() {
   const {
     gameState, gameLog, isGameStarted,
     initGame, submitCommand,
+    activeView, setView, isAdmin
   } = useStore();
 
   useEffect(() => {
-    if (!isGameStarted) {
-      initGame();
-    }
+    const sequence = async () => {
+      if (!isGameStarted) {
+        await useStore.getState().loadWorldData();
+        await initGame();
+      }
+    };
+    sequence();
   }, [isGameStarted, initGame]);
 
   useEffect(() => {
@@ -43,14 +50,51 @@ export default function App() {
     );
   }
 
+  if (activeView === 'world_map') {
+    return <WorldMap />;
+  }
+
+  if (activeView === 'editor') {
+    return <LevelEditor />;
+  }
+
   const isDefeated = gameState.playerHP <= 0;
 
   return (
     <>
     <div className="app-container">
       <header className="app-header">
-        <h1 className="title-glow">Screaming Fred</h1>
-        <span className="title-subtitle">The Tactical Chronicles</span>
+        <div className="header-main">
+          <h1 className="title-glow">Screaming Fred</h1>
+          <span className="title-subtitle">The Tactical Chronicles</span>
+          <button className="restart-btn" onClick={() => {
+            if (window.confirm('Restart the game? All current progress will be lost.')) {
+              useStore.getState().resetGame();
+            }
+          }}>Restart</button>
+        </div>
+        {isAdmin && (
+          <nav className="admin-nav">
+            <button 
+              className={`nav-btn ${activeView === 'game' ? 'active' : ''}`}
+              onClick={() => setView('game')}
+            >
+              Play
+            </button>
+            <button 
+              className={`nav-btn ${activeView === 'world_map' ? 'active' : ''}`}
+              onClick={() => setView('world_map')}
+            >
+              Map
+            </button>
+            <button 
+              className={`nav-btn ${activeView === 'editor' ? 'active' : ''}`}
+              onClick={() => setView('editor')}
+            >
+              Editor
+            </button>
+          </nav>
+        )}
       </header>
 
       <PlayerHUD
