@@ -33,11 +33,11 @@
 /* Action Menu */
 .action-menu {
   position: absolute;
-  bottom: calc(180px + env(safe-area-inset-bottom, 0px)); /* Above the D-Pad */
-  right: calc(20px + env(safe-area-inset-right, 0px));
+  bottom: calc(210px + env(safe-area-inset-bottom, 0px)); /* Lifted higher to clear D-Pad */
+  right: calc(15px + env(safe-area-inset-right, 0px));
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   opacity: 0;
   transform: translateY(10px) scale(0.9);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -52,13 +52,13 @@
 }
 
 .action-btn {
-  width: 130px;
-  height: 48px;
+  width: 120px;
+  height: 42px;
   border-radius: var(--radius-md);
-  gap: 12px;
-  padding: 0 16px;
+  gap: 10px;
+  padding: 0 12px;
   justify-content: flex-start !important;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 500;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
@@ -218,12 +218,50 @@
   }
   
   .dpad-btn {
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
+    font-size: 1rem;
   }
   
   .dpad-center {
-    width: 56px;
-    height: 56px;
+    width: 52px;
+    height: 52px;
+  }
+
+  .dpad-container {
+    right: 10px;
+    bottom: 10px;
+    padding: 8px;
+  }
+
+  .action-menu {
+    bottom: 20px; /* Positioned at the bottom left */
+    left: 15px;
+    right: auto;
+    flex-direction: column-reverse; /* Scream at the top of the list now */
+  }
+  
+  .action-btn {
+    width: 100px;
+    height: 34px;
+    font-size: 0.7rem;
+    padding: 0 8px;
+  }
+
+  .dpad-container {
+    right: 10px;
+    bottom: 10px;
+    padding: 6px;
+  }
+
+  .dpad-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 0.9rem;
+  }
+  
+  .dpad-center {
+    width: 48px;
+    height: 48px;
   }
 }

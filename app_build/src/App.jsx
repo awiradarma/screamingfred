@@ -67,38 +67,48 @@ export default function App() {
     <>
     <div className="app-container">
       <header className="app-header">
-        <div className="header-main">
-          <h1 className="title-glow">Screaming Fred</h1>
-          <span className="title-subtitle">The Tactical Chronicles</span>
-          <span className="app-version">v{pkg.version}</span>
+        <div className="header-left">
+          <div className="title-group">
+            <h1 className="title-glow">Screaming Fred</h1>
+            <span className="app-version">v{pkg.version}</span>
+          </div>
+        </div>
+        
+        <div className="header-right">
+          {isAdmin && (
+            <nav className="admin-nav">
+              <button 
+                className={`nav-btn ${activeView === 'game' ? 'active' : ''}`}
+                onClick={() => setView('game')}
+                title="Play"
+              >
+                <span className="nav-icon">🎮</span>
+                <span className="nav-text">Play</span>
+              </button>
+              <button 
+                className={`nav-btn ${activeView === 'world_map' ? 'active' : ''}`}
+                onClick={() => setView('world_map')}
+                title="Map"
+              >
+                <span className="nav-icon">🗺️</span>
+                <span className="nav-text">Map</span>
+              </button>
+              <button 
+                className={`nav-btn ${activeView === 'editor' ? 'active' : ''}`}
+                onClick={() => setView('editor')}
+                title="Editor"
+              >
+                <span className="nav-icon">🛠️</span>
+                <span className="nav-text">Editor</span>
+              </button>
+            </nav>
+          )}
           <button className="restart-btn" onClick={() => {
             if (gameState?.playerHP <= 0 || window.confirm('Restart the game? All current progress will be lost.')) {
               resetGame();
             }
           }}>Restart</button>
         </div>
-        {isAdmin && (
-          <nav className="admin-nav">
-            <button 
-              className={`nav-btn ${activeView === 'game' ? 'active' : ''}`}
-              onClick={() => setView('game')}
-            >
-              Play
-            </button>
-            <button 
-              className={`nav-btn ${activeView === 'world_map' ? 'active' : ''}`}
-              onClick={() => setView('world_map')}
-            >
-              Map
-            </button>
-            <button 
-              className={`nav-btn ${activeView === 'editor' ? 'active' : ''}`}
-              onClick={() => setView('editor')}
-            >
-              Editor
-            </button>
-          </nav>
-        )}
       </header>
 
       <PlayerHUD
