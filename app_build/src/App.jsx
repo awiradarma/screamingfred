@@ -8,11 +8,12 @@ import MobileController from './components/MobileController';
 import WorldMap from './components/WorldMap';
 import LevelEditor from './components/LevelEditor';
 import { useStore } from './store/useStore';
+import pkg from '../package.json';
 
 export default function App() {
   const {
     gameState, gameLog, isGameStarted,
-    initGame, submitCommand,
+    initGame, resetGame, submitCommand,
     activeView, setView, isAdmin
   } = useStore();
 
@@ -28,6 +29,8 @@ export default function App() {
 
   useEffect(() => {
     const handleGlobalKeyDown = (e) => {
+      if (gameState?.playerHP <= 0) return; // Block all keys if dead
+      
       // Ignore if typing in an input or textarea
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
@@ -40,7 +43,7 @@ export default function App() {
 
     window.addEventListener('keydown', handleGlobalKeyDown);
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
-  }, [submitCommand]);
+  }, [submitCommand, gameState?.playerHP]);
 
   if (!gameState) {
     return (
@@ -67,9 +70,10 @@ export default function App() {
         <div className="header-main">
           <h1 className="title-glow">Screaming Fred</h1>
           <span className="title-subtitle">The Tactical Chronicles</span>
+          <span className="app-version">v{pkg.version}</span>
           <button className="restart-btn" onClick={() => {
-            if (window.confirm('Restart the game? All current progress will be lost.')) {
-              useStore.getState().resetGame();
+            if (gameState?.playerHP <= 0 || window.confirm('Restart the game? All current progress will be lost.')) {
+              resetGame();
             }
           }}>Restart</button>
         </div>

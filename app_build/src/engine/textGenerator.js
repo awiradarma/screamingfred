@@ -33,6 +33,27 @@ function pick(arr) {
 }
 
 /**
+ * Helper to prepend "the" to a name if it doesn't already have an article.
+ */
+export function formatEntityName(name, capitalize = false) {
+  if (!name) return '';
+  let formatted = name;
+  const lower = name.toLowerCase();
+  if (!lower.startsWith('the ') && !lower.startsWith('a ') && !lower.startsWith('an ')) {
+    formatted = `the ${name}`;
+  }
+  
+  if (capitalize) {
+    return formatted.replace(/^./, str => str.toUpperCase());
+  }
+  return formatted;
+}
+
+function withArticle(name) {
+  return formatEntityName(name);
+}
+
+/**
  * Generate the full room description when entering or looking.
  */
 export function describeRoom(roomData) {
@@ -52,7 +73,7 @@ export function describeTile(tileType, tileData, stateFlags) {
 
   // Check if enemy is defeated
   if (tileData.enemy && stateFlags[`${tileName(tileType)}_defeated`]) {
-    return `A pile of unraveled laces lies where the ${tileData.enemy.name} once was.`;
+    return `A pile of unraveled laces lies where ${withArticle(tileData.enemy.name)} once was.`;
   }
 
   let text = tileData.description || 'Nothing remarkable here.';
@@ -124,15 +145,15 @@ export function describeItemFound(itemData) {
  * Generate combat text.
  */
 export function describeAttack(enemyData, damage) {
-  return `You strike the ${enemyData.name} for ${damage} damage! (${Math.max(0, enemyData.hp - damage)} HP remaining)`;
+  return `You strike ${withArticle(enemyData.name)} for ${damage} damage! (${Math.max(0, enemyData.hp - damage)} HP remaining)`;
 }
 
 export function describeEnemyDefeated(enemyData) {
-  return enemyData.defeat_message || `The ${enemyData.name} has been defeated!`;
+  return enemyData.defeat_message || `${withArticle(enemyData.name).replace(/^./, str => str.toUpperCase())} has been defeated!`;
 }
 
 export function describeEnemyAttacks(enemyData) {
-  return `The ${enemyData.name} lashes out, dealing ${enemyData.damage} damage to you!`;
+  return `${withArticle(enemyData.name).replace(/^./, str => str.toUpperCase())} lashes out, dealing ${enemyData.damage} damage to you!`;
 }
 
 /**

@@ -9,7 +9,7 @@ import {
   describeRoom, describeTile, describeMovement, describeBlocked,
   describeScream, getNPCDialogue, getNPCHint,
   describeItemFound, describeAttack, describeEnemyDefeated,
-  describeEnemyAttacks, getWelcomeMessage,
+  describeEnemyAttacks, getWelcomeMessage, formatEntityName
 } from './textGenerator.js';
 import { getRoomData, getRoomAt, isValidCoordinate } from '../data/worldData.js';
 
@@ -104,6 +104,15 @@ export function processCommand(state, rawInput, itemRegistry = {}) {
   let newState = { ...state, turnCount: state.turnCount + 1 };
   let result;
 
+  const isDead = state.playerHP <= 0;
+
+  // Meta-commands that are allowed even while dead
+  const allowedWhileDead = ['look', 'help', 'inventory', 'empty'];
+  if (isDead && !allowedWhileDead.includes(command.action)) {
+    messages.push({ text: "You are too weak to do that. You have fallen. Use RESTART to try again.", type: 'danger' });
+    return { state, messages };
+  }
+
   switch (command.action) {
     case 'empty':
       return { state, messages: [] };
@@ -152,19 +161,15 @@ export function processCommand(state, rawInput, itemRegistry = {}) {
 
   if (result) {
     newState = result.state;
-    // If the handler returned a new messages array (like in room transitions), sync it
     if (result.messages && result.messages !== messages) {
       messages.splice(0, messages.length, ...result.messages);
     }
   }
 
-  // After EVERY command that takes a turn (move, use, attack, scream, etc.)
-  // We process living entities (moving enemies, stalkers)
   const turnTakingActions = ['move', 'use', 'attack', 'scream', 'interact', 'talk'];
   if (turnTakingActions.includes(command.action)) {
     const entityResult = processLivingEntities(newState, messages);
     newState = entityResult.state;
-    // processLivingEntities mutates the 'messages' array directly via reference
   }
 
   return { state: newState, messages };
@@ -225,7 +230,7 @@ function processLivingEntities(state, messages) {
       const damage = entity.damage || 1;
       newState.playerHP = Math.max(0, newState.playerHP - damage);
       messages.push({ 
-        text: `⚠️ The ${entity.name} catches up to you and attacks, dealing ${damage} damage!`, 
+        text: `⚠️ ${formatEntityName(entity.name, true)} catches up to you and attacks, dealing ${damage} damage!`, 
         type: 'danger' 
       });
       return { ...entity, x: nextX, y: nextY };
@@ -316,7 +321,7 @@ export function handleMove(state, direction, messages) {
 
     if (!hasItem || !hasFlag) {
       messages.push({ 
-        text: failMessage || `The ${tileData.name || 'path'} is locked.`, 
+        text: failMessage || `${formatEntityName(tileData.name || 'path', true)} is locked.`, 
         type: 'warning' 
       });
       return { state, messages };
@@ -505,7 +510,7 @@ function handleInteract(state, target, messages, globalItems = {}) {
     return { state, messages };
   }
 
-  messages.push({ text: `You ${verb} the ${tileData.name || 'object'}...`, type: 'narrative' });
+  messages.push({ text: `You ${verb} ${formatEntityName(tileData.name || 'object')}...`, type: 'narrative' });
   if (tileData.revealMessage) {
     messages.push({ text: tileData.revealMessage, type: 'narrative' });
   }
@@ -660,7 +665,7 @@ function handleScream(state, messages, globalItems = {}) {
           enemyHP: { ...newState.enemyHP, [enemyKey]: 0 },
         };
       } else {
-        messages.push({ text: `Your scream stuns the ${target.name}! (${newHP} HP remaining)`, type: 'narrative' });
+        messages.push({ text: `Your scream stuns ${formatEntityName(target.name)}! (${newHP} HP remaining)`, type: 'narrative' });
         newState = {
           ...newState,
           enemyHP: { ...newState.enemyHP, [enemyKey]: newHP },
@@ -776,7 +781,7 @@ function handleUse(state, itemTarget, messages, globalItems = {}) {
 
   const item = state.inventory[itemIndex];
   if (!item.onUse) {
-    messages.push({ text: `You can't think of a way to use the ${item.name} right now.`, type: 'system' });
+    messages.push({ text: `You can't think of a way to use ${formatEntityName(item.name)} right now.`, type: 'system' });
     return { state, messages };
   }
 
@@ -787,7 +792,7 @@ function handleUse(state, itemTarget, messages, globalItems = {}) {
   switch (action) {
     case 'heal':
       newState.playerHP = Math.min(state.maxHP, state.playerHP + (value || 0));
-      messages.push({ text: successMessage || `You use the ${item.name} and feel revitalized!`, type: 'hint' });
+      messages.push({ text: successMessage || `You use ${formatEntityName(item.name)} and feel revitalized!`, type: 'hint' });
       usedSuccessfully = true;
       break;
 
@@ -798,10 +803,10 @@ function handleUse(state, itemTarget, messages, globalItems = {}) {
       
       if (isNearTargetUnlocked) {
         newState.stateFlags = { ...state.stateFlags, [flagSet]: true };
-        messages.push({ text: successMessage || `You use the ${item.name} to unlock the way!`, type: 'loot' });
+        messages.push({ text: successMessage || `You use ${formatEntityName(item.name)} to unlock the way!`, type: 'loot' });
         usedSuccessfully = true;
       } else {
-        messages.push({ text: failureMessage || `There's nothing to unlock with the ${item.name} here. Try standing closer to it.`, type: 'warning' });
+        messages.push({ text: failureMessage || `There's nothing to unlock with ${formatEntityName(item.name)} here. Try standing closer to it.`, type: 'warning' });
       }
       break;
 
@@ -857,14 +862,14 @@ function handleUse(state, itemTarget, messages, globalItems = {}) {
         const dmgVal = value || 1;
         const nextHpVal = currentHpVal - dmgVal;
         
-        messages.push({ text: successMessage || `You use the ${item.name} against the ${eData.name}!`, type: 'narrative' });
+        messages.push({ text: successMessage || `You use ${formatEntityName(item.name)} against ${formatEntityName(eData.name)}!`, type: 'narrative' });
         
         if (nextHpVal <= 0) {
           messages.push({ text: describeEnemyDefeated(eData), type: 'loot' });
           newState.stateFlags = { ...newState.stateFlags, [`${finalTarget.replace(/^enemy_/, '')}_defeated`]: true };
           newState.enemyHP = { ...newState.enemyHP, [enemyKeyName]: 0 };
         } else {
-          messages.push({ text: `The ${eData.name} takes ${dmgVal} damage! (${nextHpVal} HP remaining)`, type: 'narrative' });
+          messages.push({ text: `${formatEntityName(eData.name, true)} takes ${dmgVal} damage! (${nextHpVal} HP remaining)`, type: 'narrative' });
           newState.enemyHP = { ...newState.enemyHP, [enemyKeyName]: nextHpVal };
         }
         usedSuccessfully = true;
@@ -925,7 +930,7 @@ export function getEnemyIdleAttacks(state) {
     newState.playerHP = Math.max(0, newState.playerHP - damage);
     
     messages.push({ 
-      text: `[IDLE WARNING] The ${enemy.name} bites you while you stand still!`, 
+      text: `[IDLE WARNING] ${formatEntityName(enemy.name, true)} bites you while you stand still!`, 
       type: 'danger' 
     });
     messages.push({ 

@@ -3,7 +3,7 @@ import { initGameState, processCommand, getWelcomeMessages, getEnemyIdleAttacks 
 import { worldData, getRoomAt } from '../data/worldData.js';
 import { fetchWorldRooms } from '../firebase/worldPersistence.js';
 import { fetchItemRegistry, loadRegistryFromLocal, migrateStaticItems } from '../firebase/registryPersistence.js';
-import { savePlayerSession, loadPlayerSession } from '../firebase/sessionPersistence.js';
+import { savePlayerSession, loadPlayerSession, clearPlayerSession } from '../firebase/sessionPersistence.js';
 import staticItems from '../data/items.json';
 
 /**
@@ -28,6 +28,7 @@ export const useStore = create((set, get) => ({
    * Initialize the game. Checks for existing sessions first.
    */
   initGame: async (forceNew = false) => {
+    console.log(`initGame called. forceNew: ${forceNew}`);
     // 1. Ensure Registry is loaded
     let registry = get().itemRegistry;
     if (Object.keys(registry).length === 0) {
@@ -40,6 +41,7 @@ export const useStore = create((set, get) => ({
 
     // 2. Check for existing session
     let session = forceNew ? null : await loadPlayerSession();
+    console.log(`Session found: ${!!session}`);
     
     let startRoom;
     let initialState;
@@ -175,8 +177,22 @@ export const useStore = create((set, get) => ({
    * Process a player command string.
    */
   submitCommand: (rawInput) => {
-    const { gameState, gameLog } = get();
+    const { gameState, gameLog, resetGame, addMessage } = get();
     if (!gameState) return;
+
+    const normalized = rawInput.toLowerCase().trim();
+    if (normalized === 'restart') {
+      if (window.confirm('Restart the game? All current progress will be lost.')) {
+        resetGame();
+      }
+      return;
+    }
+
+    // Guard: Prevent actions if player is dead
+    if (gameState.playerHP <= 0) {
+      addMessage("You are incapacitated! You must RESTART to continue.", "danger");
+      return;
+    }
 
     // Echo the player's command
     const echoMsg = { text: rawInput, type: 'player', timestamp: Date.now() };
@@ -234,11 +250,17 @@ export const useStore = create((set, get) => ({
   /**
    * Reset the game to its initial state.
    */
-  resetGame: () => {
+  resetGame: async () => {
+    console.info("resetGame triggered: clearing session and re-initializing...");
     const { initGame, addMessage } = get();
-    // Clear log and re-init
+    
+    // 1. Clear the cloud session
+    await clearPlayerSession();
+    
+    // 2. Clear local logs and re-init fresh
     set({ gameLog: [] });
-    initGame();
+    await initGame(true);
+    
     addMessage('--- Game Restarted ---', 'system');
   },
 

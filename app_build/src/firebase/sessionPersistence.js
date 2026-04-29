@@ -1,5 +1,5 @@
 import { db, auth } from './config';
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { signInAnonymously } from 'firebase/auth';
 
 const SESSIONS_COLL = 'player_sessions';
@@ -57,5 +57,19 @@ export async function loadPlayerSession() {
   } catch (error) {
     console.error("Failed to load player session:", error);
     return null;
+  }
+}
+/**
+ * Clear the player's session from Firestore.
+ */
+export async function clearPlayerSession() {
+  try {
+    const uid = await ensureAuth();
+    const sessionDoc = doc(db, SESSIONS_COLL, uid);
+    await deleteDoc(sessionDoc);
+    return true;
+  } catch (error) {
+    console.error("Failed to clear player session:", error);
+    return false;
   }
 }
