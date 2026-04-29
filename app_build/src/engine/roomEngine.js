@@ -564,21 +564,27 @@ function handleTalk(state, messages, globalItems = {}) {
 
   const npcData = tileData.npc;
   const npcKey = tileType;
-  
-  // Find the first dialogue stage that meets requirements (scanned in reverse for priority)
   const dialogueStages = npcData.dialogue || [];
+  
+  if (dialogueStages.length === 0) {
+    messages.push({ text: '"..."', type: 'dialogue' });
+    return { state, messages };
+  }
+
+  // Track sequential progression using npcStages
+  const currentStageLimit = state.npcStages[npcKey] || 0;
+  
+  // Find the best dialogue stage (scanned in reverse from the current allowed limit)
   let bestStage = dialogueStages[0];
-  for (let i = dialogueStages.length - 1; i >= 0; i--) {
+  let bestStageIdx = 0;
+
+  for (let i = Math.min(currentStageLimit, dialogueStages.length - 1); i >= 0; i--) {
     const stage = dialogueStages[i];
     if (!stage.requiresFlag || state.stateFlags[stage.requiresFlag]) {
       bestStage = stage;
+      bestStageIdx = i;
       break;
     }
-  }
-
-  if (!bestStage) {
-    messages.push({ text: '"..."', type: 'dialogue' });
-    return { state, messages };
   }
 
   messages.push({ text: bestStage.text || '...', type: 'dialogue' });
@@ -588,10 +594,14 @@ function handleTalk(state, messages, globalItems = {}) {
 
   let finalFlags = { ...state.stateFlags };
   let finalInventory = [...state.inventory];
+  let finalNpcStages = { ...state.npcStages };
   
+  // Increment stage tracker for this NPC to allow progression on next talk
+  finalNpcStages[npcKey] = Math.min(bestStageIdx + 1, dialogueStages.length - 1);
+
   // Handle Rewards (Gives Item)
   if (bestStage.givesItem) {
-    const rewardKey = `${npcKey}_reward_${bestStage.stage || 0}`;
+    const rewardKey = `${npcKey}_reward_${bestStage.stage || bestStageIdx}`;
     if (!finalFlags[rewardKey]) {
       finalInventory.push({ ...bestStage.givesItem });
       finalFlags[rewardKey] = true;
@@ -624,6 +634,7 @@ function handleTalk(state, messages, globalItems = {}) {
       ...state,
       inventory: finalInventory,
       stateFlags: finalFlags,
+      npcStages: finalNpcStages,
     },
     messages
   };
@@ -677,7 +688,7 @@ function handleScream(state, messages, globalItems = {}) {
   // Scream effects on NPCs — advance dialogue
   if (tileData?.npc) {
     const npcKey = tileType;
-    const currentStage = state.npcStages[npcKey] || 0;
+    const currentStage = state.npcStages?.[npcKey] || 0;
     if (currentStage === 0) {
       newState = {
         ...newState,
