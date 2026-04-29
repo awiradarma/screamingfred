@@ -1,7 +1,8 @@
-import forest_entrance from './testRoom.json';
-import whispering_groove from './whisperingGroove.json';
-import hidden_glade from './hiddenGlade.json';
-import sunny_meadow from './sunnyMeadow.json';
+import freds_house from './fredsHouse.json';
+import shoeboxlandia_street from './shoeboxlandiaStreet.json';
+import forest_entrance from './forestEntrance.json';
+import snake_path from './snakePath.json';
+import freddista_shack from './freddistaShack.json';
 
 export const WORLD_SIZE = 30;
 export const COORD_MIN = 0;
@@ -9,19 +10,22 @@ export const COORD_MAX = 29;
 
 /**
  * Registry mapping "x,y,z" strings to room IDs.
+ * Chapter 1: Fred's House → Shoeboxlandia → Forest → Snakes → Freddista
  */
 export const worldCoordinateRegistry = {
-  "15,15,0": "forest_entrance",
-  "15,14,0": "whispering_groove",
-  "15,16,0": "hidden_glade",
-  "16,15,0": "sunny_meadow",
+  "15,15,0": "freds_house",
+  "15,16,0": "shoeboxlandia_street",
+  "15,17,0": "forest_entrance",
+  "15,18,0": "snake_path",
+  "15,19,0": "freddista_shack",
 };
 
 export const worldData = {
+  freds_house,
+  shoeboxlandia_street,
   forest_entrance,
-  whispering_groove,
-  hidden_glade,
-  sunny_meadow,
+  snake_path,
+  freddista_shack,
 };
 
 /**

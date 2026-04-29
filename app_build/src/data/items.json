@@ -1,52 +1,65 @@
 {
-  "key_silver": {
-    "name": "Silver Key",
-    "description": "An ornate key with silver etchings. It looks like it belongs to a woven lock.",
-    "type": "key"
+  "clue_empty_fridge": {
+    "name": "Empty Fridge Clue",
+    "description": "Evidence that someone stole Fred's pasta and potatoes from his fridge. Freddista is the prime suspect.",
+    "type": "quest"
+  },
+  "flavor_karaoke": {
+    "name": "Karaoke Memory",
+    "description": "A fond memory of last night's karaoke session. Fred's neighbors are less fond of it.",
+    "type": "quest"
+  },
+  "flavor_photo": {
+    "name": "Old Photo",
+    "description": "A dusty photo of two young tennis shoes playing together. One face is scribbled over. Who was it?",
+    "type": "quest"
+  },
+  "flavor_signpost": {
+    "name": "Signpost Info",
+    "description": "You memorized the directions. Shoelace Forest is south. Breakfastopia is... somewhere.",
+    "type": "quest"
+  },
+  "food_breadroll": {
+    "name": "Stale Breadroll",
+    "description": "A slightly stale breadroll from Sal's Surplus. Still edible. Probably.",
+    "type": "food",
+    "onUse": {
+      "action": "heal",
+      "value": 3,
+      "consume": true,
+      "successMessage": "You chew the stale breadroll. It tastes like cardboard, but your HP is restored!"
+    }
   },
   "food_potato": {
-    "name": "Tasty Potato",
-    "description": "It looks delicious and restoring.",
+    "name": "Wild Potato",
+    "description": "A fresh potato found in the forest. Delicious and restorative.",
     "type": "food",
     "onUse": {
       "action": "heal",
       "value": 5,
       "consume": true,
-      "successMessage": "You eat the Tasty Potato. Your HP is restored!"
+      "successMessage": "You devour the Wild Potato. Your HP is fully restored!"
     }
   },
-  "weapon_rock": {
-    "name": "Sharp Rock",
-    "description": "A jagged stone, good for throwing.",
-    "type": "weapon",
-    "onUse": {
-      "action": "damage_enemy",
-      "target": "enemy_snake",
-      "value": 3,
-      "consume": true,
-      "successMessage": "Crack! The rock hits the snake square on the head."
-    }
-  },
-  "weapon_slingshot": {
-    "name": "Woven Slingshot",
-    "description": "A sturdy slingshot made of dried laces. It can hit any enemy in sight.",
+  "weapon_stick": {
+    "name": "Sturdy Stick",
+    "description": "A solid branch from a shoe-tree. Good for whacking snakes.",
     "type": "weapon",
     "onUse": {
       "action": "damage_enemy",
       "value": 2,
-      "successMessage": "Zing! The pebble flies true!"
+      "consume": false,
+      "successMessage": "WHACK! You swing the stick with all your might!"
     }
   },
-  "scroll_recall": {
-    "name": "Recall Scroll",
-    "description": "Ancient parchment that brings you home.",
-    "type": "tool",
-    "onUse": {
-      "action": "teleport",
-      "targetRoomId": "forest_entrance",
-      "targetPosition": { "x": 2, "y": 2 },
-      "consume": true,
-      "successMessage": "🌀 You read the scroll and feel a sudden tug on your laces..."
-    }
+  "tool_lantern": {
+    "name": "Old Lantern",
+    "description": "A battered lantern from Freddista's shack. It gives off a faint, warm glow.",
+    "type": "tool"
+  },
+  "quest_note": {
+    "name": "Freddista's Note",
+    "description": "A crumpled note from Freddista: 'Day 4,382. Still alone. They say my stare kills. It doesn't.'",
+    "type": "quest"
   }
 }

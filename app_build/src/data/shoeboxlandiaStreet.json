@@ -1,0 +1,100 @@
+{
+  "room_id": "shoeboxlandia_street",
+  "world_coord": "15,16,0",
+  "room_name": "Shoeboxlandia Street",
+  "theme": "Shoeboxlandia",
+  "description": "You step onto the main street of Shoeboxlandia. Neat rows of shoebox houses line the road, each one identical and perfectly aligned. Countless eyes glare at you from behind curtains — probably because of the karaoke last night. A shopkeeper's stall and a wise old slipper catch your attention.",
+  "grid": [
+    ["edge_n",       "edge_n",       "edge_n",        "edge_n",       "edge_n"],
+    ["wall",         "npc_shopkeeper","floor",         "item_signpost","wall"],
+    ["wall",         "floor",        "floor",         "floor",        "wall"],
+    ["wall",         "floor",        "npc_elder",     "floor",        "wall"],
+    ["wall",         "wall",         "exit_south",    "wall",         "wall"]
+  ],
+  "player_start": { "x": 2, "y": 2 },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "A low fence made of stacked shoebox lids. Orderly, like everything in Shoeboxlandia."
+    },
+    "floor": {
+      "passable": true,
+      "description": "A well-worn brick road. Every shoe in town has walked this path a thousand times."
+    },
+    "edge_n": {
+      "passable": true,
+      "description": "The street continues north, back toward Fred's house.",
+      "targetRoomId": "freds_house",
+      "targetPosition": { "x": 2, "y": 3 }
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "The road narrows into a dirt trail heading south. You can see the first trees of the Shoelace Forest in the distance.",
+      "targetRoomId": "forest_entrance",
+      "targetPosition": { "x": 2, "y": 0 }
+    },
+    "item_signpost": {
+      "passable": true,
+      "description": "A wooden signpost with arrows pointing in various directions. One reads: 'Shoelace Forest — SOUTH (Enter at your own risk!)'. Another reads: 'Breakfastopia — ???'.",
+      "item": {
+        "name": "Signpost",
+        "itemId": "flavor_signpost",
+        "actions": ["interact", "search"]
+      }
+    },
+    "npc_shopkeeper": {
+      "passable": true,
+      "description": "A cheerful sneaker runs a small stall selling odds and ends. A hand-painted sign reads: 'Sal's Surplus — We've got what you need (probably)'.",
+      "npc": {
+        "name": "Sal the Sneaker",
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "\"Welcome to Sal's! Business has been slow — nobody in Shoeboxlandia wants anything new. Say, you're that screaming shoe, aren't you? Give me a good SCREAM and I'll toss in a snack for free!\"",
+            "hint": "Try using SCREAM near Sal."
+          },
+          {
+            "stage": 1,
+            "text": "\"HA! That was magnificent! Here, take this breadroll. It's a little stale, but it'll keep your sole together on the road. Heard you're heading to the forest? Brave lad.\"",
+            "onComplete": {
+              "action": "give_item",
+              "itemId": "food_breadroll"
+            }
+          },
+          {
+            "stage": 2,
+            "text": "\"That's all I've got for ya, Fred. Good luck out there — and try not to scream TOO much. Well, actually, scream all you want.\""
+          }
+        ]
+      }
+    },
+    "npc_elder": {
+      "passable": true,
+      "description": "An ancient slipper sits on a rocking chair, watching the world go by. His velvet is faded, but his eyes are sharp.",
+      "npc": {
+        "name": "Elder Velvet",
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "\"Ah, young Fred. I've lived in Shoeboxlandia longer than anyone. Every shoe has its place here, they say. But you... you've never quite fit in, have you?\"",
+            "hint": "Talk to Elder Velvet again for directions."
+          },
+          {
+            "stage": 1,
+            "text": "\"Freddista, you say? I remember when she was exiled. The whole town turned against her over rumors — her stare kills, they said. Nonsense, if you ask me. But nobody asked me.\""
+          },
+          {
+            "stage": 2,
+            "text": "\"The Shoelace Forest is straight south from here. Follow the dirt path. But be careful — the forest is full of shoelace snakes. They hiss and they bite. Nasty creatures. If one coils around you, try screaming at it. Works on most things.\""
+          },
+          {
+            "stage": 3,
+            "text": "\"One more thing, Fred. There are lands beyond this one — Breakfastopia, the Electric Desert, places I've only heard of in children's tales. But maybe... maybe they're not just tales. Now go, before I fall asleep.\""
+          }
+        ]
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {}
+}

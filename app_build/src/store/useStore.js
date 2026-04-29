@@ -67,7 +67,7 @@ export const useStore = create((set, get) => ({
       get().addMessage('Welcome back, Fred! Your progress has been restored.', 'system');
     } else {
       // Start fresh
-      startRoom = getRoomAt(15, 15, 0) || worldData.forest_entrance;
+      startRoom = getRoomAt(15, 15, 0) || worldData.freds_house;
       initialState = initGameState(startRoom);
       const welcomeMessages = getWelcomeMessages(startRoom);
       set({ gameLog: welcomeMessages.map(m => ({ ...m, timestamp: Date.now() })) });

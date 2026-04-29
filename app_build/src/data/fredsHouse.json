@@ -1,0 +1,87 @@
+{
+  "room_id": "freds_house",
+  "world_coord": "15,15,0",
+  "room_name": "Fred's House",
+  "theme": "Shoeboxlandia",
+  "description": "You stand inside Fred's small, cozy shoebox home. The walls are made of sturdy cardboard, and a faint smell of pasta lingers in the air — or at least it used to. Your fridge hums quietly in the corner. A karaoke machine sits proudly in the middle of the room, still warm from last night's session.",
+  "grid": [
+    ["wall",         "wall",         "wall",          "wall",         "wall"],
+    ["wall",         "item_karaoke", "floor",         "item_fridge",  "wall"],
+    ["wall",         "floor",        "floor",         "floor",        "wall"],
+    ["wall",         "npc_neighbor", "floor",         "item_photo",   "wall"],
+    ["wall",         "wall",         "exit_south",    "wall",         "wall"]
+  ],
+  "player_start": { "x": 2, "y": 2 },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "Thick cardboard walls, reinforced with tape. Home sweet home."
+    },
+    "floor": {
+      "passable": true,
+      "description": "Scuffed linoleum flooring. You can see the marks from last night's dance moves."
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "The front door leads out to the street of Shoeboxlandia. You can hear shoes shuffling outside.",
+      "targetRoomId": "shoeboxlandia_street",
+      "targetPosition": { "x": 2, "y": 0 }
+    },
+    "item_fridge": {
+      "passable": true,
+      "description": "Your trusty mini-fridge. This morning it was packed with pasta and potatoes. Now it stands slightly ajar, suspiciously empty.",
+      "item": {
+        "name": "Empty Fridge",
+        "itemId": "clue_empty_fridge",
+        "actions": ["open", "search"],
+        "opened_description": "The fridge is completely empty. Not even a crumb. Someone has stolen your pasta AND your potatoes! This can only mean one thing... Freddista."
+      }
+    },
+    "item_karaoke": {
+      "passable": true,
+      "description": "Your beloved karaoke machine. It's still plugged in from last night's 3-hour session of 'AHHHHHHH' in various pitches. No wonder the neighbors are upset.",
+      "revealMessage": "You press a button. The machine crackles: '♪ OHHH OHh UMM Large microphone thingy... ♪' — a classic Fred original.",
+      "item": {
+        "name": "Karaoke Machine",
+        "itemId": "flavor_karaoke",
+        "actions": ["interact", "scream"]
+      }
+    },
+    "item_photo": {
+      "passable": true,
+      "description": "A dusty photo frame sits on a small shelf. The photo shows two small tennis shoes playing together, but one face has been scribbled over. You can't quite remember who the other shoe was...",
+      "item": {
+        "name": "Old Photo",
+        "itemId": "flavor_photo",
+        "actions": ["interact", "search"]
+      }
+    },
+    "npc_neighbor": {
+      "passable": true,
+      "description": "Your neighbor, Grumpy Gary the Galosh, stands at your doorway with his arms crossed. He looks annoyed — again.",
+      "npc": {
+        "name": "Grumpy Gary",
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "\"Another noise complaint, Fred! That karaoke at 2 AM? The whole block heard you! Every shoe knows your screaming by now.\"",
+            "hint": "Try talking to him again for more info."
+          },
+          {
+            "stage": 1,
+            "text": "\"Wait, your food was stolen? Ha! Well, you know what they say about Freddista... she lives in the Shoelace Forest, south of town. She steals from houses to survive, or so I've heard. Her stare can kill, they say!\"",
+            "hint": "Head south to find the Shoelace Forest."
+          },
+          {
+            "stage": 2,
+            "text": "\"You're actually going after her? You're braver than I thought. Or dumber. Head south through town — the forest is past the edge of Shoeboxlandia. And stop screaming at night!\""
+          }
+        ]
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {
+    "fridge_checked": false
+  }
+}

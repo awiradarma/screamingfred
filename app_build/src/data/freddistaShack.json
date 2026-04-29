@@ -1,0 +1,87 @@
+{
+  "room_id": "freddista_shack",
+  "world_coord": "15,19,0",
+  "room_name": "Freddista's Shack",
+  "theme": "Shoelace_Forest",
+  "description": "At the end of the winding forest path stands a small, crooked shack made of mismatched wood and old shoebox scraps. The door hangs slightly open. Whoever lives here has been alone for a very long time. This is where the rumors say the 'monster' Freddista dwells.",
+  "grid": [
+    ["edge_n",       "edge_n",       "edge_n",        "edge_n",       "edge_n"],
+    ["wall",         "item_lantern", "floor",         "floor",        "wall"],
+    ["wall",         "floor",        "npc_freddista", "floor",        "wall"],
+    ["wall",         "floor",        "floor",         "item_note",    "wall"],
+    ["wall",         "wall",         "wall",          "wall",         "wall"]
+  ],
+  "player_start": { "x": 2, "y": 1 },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "Rough wooden walls patched with bark and old laces. Whoever built this shack did the best they could with very little."
+    },
+    "floor": {
+      "passable": true,
+      "description": "A dirt floor covered with dried leaves. It's simple but surprisingly tidy."
+    },
+    "edge_n": {
+      "passable": true,
+      "description": "The forest path leads back north through the snake-infested trail.",
+      "targetRoomId": "snake_path",
+      "targetPosition": { "x": 2, "y": 3 }
+    },
+    "item_lantern": {
+      "passable": true,
+      "description": "A battered lantern hangs from a nail on the wall. It gives off a faint, warm glow — the only source of light in the shack.",
+      "item": {
+        "name": "Old Lantern",
+        "itemId": "tool_lantern",
+        "actions": ["interact", "search"]
+      }
+    },
+    "item_note": {
+      "passable": true,
+      "description": "A crumpled note lies on the floor near the wall. It looks like it's been written and rewritten many times.",
+      "item": {
+        "name": "Freddista's Note",
+        "itemId": "quest_note",
+        "actions": ["interact", "search"],
+        "opened_description": "The note reads: 'Day 4,382. Still alone. They say my stare kills. It doesn't. I'm staring at this note right now and it's fine. I just want someone to talk to.'"
+      }
+    },
+    "npc_freddista": {
+      "passable": true,
+      "description": "A shoe stands in the middle of the shack. Her laces are frayed, her sole is torn, and she is covered with dirt and mud. Despite everything, her eyes are kind.",
+      "npc": {
+        "name": "Freddista",
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "\"Oh my gosh! We have visitors!\" The mysterious shoe introduces herself as Freddista. You look at her in shock. This is the terrifying monster everyone warned you about?"
+          },
+          {
+            "stage": 1,
+            "text": "\"You are Freddista?\" you stammer, \"I always thought of you as a giant terrifying monster.\" Freddista laughs. \"I was exiled into this forest because people thought I wasn't fit for society. Then they started saying my stare kills. That isn't true — I'm staring at you right now.\""
+          },
+          {
+            "stage": 2,
+            "text": "\"Someone stole my pasta and potatoes!\" you screech. Freddista gives you a concerned look. \"You came here just because of THAT? I have no idea who stole them, but you should check Breakfastopia. You never know what happens there.\" \"Breakfastopia EXISTS?!\" you exclaim."
+          },
+          {
+            "stage": 3,
+            "text": "\"Can you please come with me?\" you interrupt, now on your knees (if shoes had knees). \"I guess I have nothing to do,\" grumbles Freddista. She grabs the old lantern and heads for the door. Freddista has joined your party!",
+            "onComplete": {
+              "action": "set_flag",
+              "flagSet": "freddista_joined"
+            }
+          },
+          {
+            "stage": 4,
+            "text": "\"Well, what are we waiting for? Let's head back through Shoeboxlandia and find your lunch. I hope the shoes there don't glare too much...\" She pauses. \"Actually, they will. Let's go anyway.\""
+          }
+        ]
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {
+    "freddista_joined": false
+  }
+}

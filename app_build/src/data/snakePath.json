@@ -1,0 +1,62 @@
+{
+  "room_id": "snake_path",
+  "world_coord": "15,18,0",
+  "room_name": "Shoelace Snake Path",
+  "theme": "Shoelace_Forest",
+  "description": "The narrow dirt path is crawling with hissing shoelace snakes. Their frayed tongues flick menacingly as they slither between the shoe-tree roots. Fred nervously trodded past them in the story — but you'll have to deal with at least one. A wild potato sits conspicuously on a rock.",
+  "grid": [
+    ["edge_n",       "edge_n",       "edge_n",        "edge_n",       "edge_n"],
+    ["wall",         "floor",        "floor",         "floor",        "wall"],
+    ["wall",         "floor",        "enemy_snake",   "item_potato",  "wall"],
+    ["wall",         "floor",        "floor",         "floor",        "wall"],
+    ["wall",         "wall",         "exit_south",    "wall",         "wall"]
+  ],
+  "player_start": { "x": 2, "y": 1 },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "Knotted laces form a dense barrier. Something slithers just behind them."
+    },
+    "floor": {
+      "passable": true,
+      "description": "The dirt path is covered with shed lace-scales. Each step makes a crunching sound that draws attention."
+    },
+    "edge_n": {
+      "passable": true,
+      "description": "The path leads back north toward the forest entrance. Safety beckons.",
+      "targetRoomId": "forest_entrance",
+      "targetPosition": { "x": 2, "y": 3 }
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "Past the snakes, the path continues south. Through the trees you can just make out a small shack.",
+      "targetRoomId": "freddista_shack",
+      "targetPosition": { "x": 2, "y": 0 }
+    },
+    "enemy_snake": {
+      "passable": true,
+      "description": "A coiled Shoelace Snake blocks the center of the path. Its frayed tongue flicks menacingly, and it hisses a warning as you approach.",
+      "enemy": {
+        "name": "Shoelace Snake",
+        "hp": 3,
+        "damage": 1,
+        "linger_timer_seconds": 5,
+        "defeat_message": "The Shoelace Snake unravels into a harmless pile of laces! You step over the remains and continue south.",
+        "scream_vulnerable": true
+      }
+    },
+    "item_potato": {
+      "passable": true,
+      "description": "A large, wild potato sits on a flat rock, looking remarkably fresh. How did a potato end up in a forest full of snakes?",
+      "item": {
+        "name": "Wild Potato",
+        "itemId": "food_potato",
+        "actions": ["interact", "search"]
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {
+    "snake_defeated": false
+  }
+}
