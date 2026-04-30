@@ -14,7 +14,7 @@ const DIRECTION_ALIASES = {
 const ACTION_ALIASES = {
   look:     'look',     l: 'look',     examine: 'look',
   move:     'move',     go: 'move',    walk: 'move',
-  interact: 'interact', use: 'interact', open: 'interact', search: 'interact', touch: 'interact',
+  interact: 'interact', open: 'interact', search: 'interact', touch: 'interact',
   scream:   'scream',   yell: 'scream', shout: 'scream',
   inventory:'inventory', i: 'inventory', items: 'inventory',
   help:     'help',     '?': 'help',   commands: 'help',

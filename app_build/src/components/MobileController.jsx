@@ -59,7 +59,11 @@ export default function MobileController({ onSubmit, disabled }) {
           <button
             key={action.id}
             className={`action-btn btn-${action.id}`}
-            onClick={() => handleAction(action.id)}
+            onPointerDown={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleAction(action.id);
+            }}
             disabled={action.id === 'use' && inventory.length === 0}
             aria-label={action.label}
           >
@@ -72,32 +76,45 @@ export default function MobileController({ onSubmit, disabled }) {
       {/* Item Selection Menu */}
       <div className={`action-menu item-selection-menu ${showItemSelection ? 'is-visible' : ''}`}>
         <div className="menu-header">Use what?</div>
-        {inventory.map((item, idx) => (
-          <button
-            key={`${item.itemId}-${idx}`}
-            className="action-btn item-btn"
-            onClick={() => handleUseItem(item)}
-          >
-            <span className="action-label">{item.name}</span>
-          </button>
-        ))}
-        <button className="action-btn cancel-btn" onClick={() => setShowItemSelection(false)}>
+        <div className="item-list">
+          {inventory.map((item, idx) => (
+            <button
+              key={`${item.itemId}-${idx}`}
+              className="action-btn item-btn"
+              onPointerDown={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleUseItem(item);
+              }}
+            >
+              <span className="action-label">{item.name}</span>
+            </button>
+          ))}
+        </div>
+        <button 
+          className="action-btn cancel-btn" 
+          onPointerDown={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setShowItemSelection(false);
+          }}
+        >
           <span className="action-label">Back</span>
         </button>
       </div>
 
       {/* D-Pad controls */}
-      <div className="dpad-container">
+      <div className="dpad-container" onPointerDown={e => e.stopPropagation()}>
         <button 
           className="dpad-btn dpad-n" 
-          onClick={() => handleMove('north')}
+          onPointerDown={(e) => { e.preventDefault(); handleMove('north'); }}
           aria-label="Move North"
         >
           <span className="arrow">▲</span>
         </button>
         <button 
           className="dpad-btn dpad-w" 
-          onClick={() => handleMove('west')}
+          onPointerDown={(e) => { e.preventDefault(); handleMove('west'); }}
           aria-label="Move West"
         >
           <span className="arrow">◀</span>
@@ -106,7 +123,9 @@ export default function MobileController({ onSubmit, disabled }) {
         {/* Central Action Toggle */}
         <button 
           className={`dpad-center ${(showActions || showItemSelection) ? 'is-active' : ''}`}
-          onClick={() => {
+          onPointerDown={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
             if (showItemSelection) {
               setShowItemSelection(false);
             } else {
@@ -122,14 +141,14 @@ export default function MobileController({ onSubmit, disabled }) {
 
         <button 
           className="dpad-btn dpad-e" 
-          onClick={() => handleMove('east')}
+          onPointerDown={(e) => { e.preventDefault(); handleMove('east'); }}
           aria-label="Move East"
         >
           <span className="arrow">▶</span>
         </button>
         <button 
           className="dpad-btn dpad-s" 
-          onClick={() => handleMove('south')}
+          onPointerDown={(e) => { e.preventDefault(); handleMove('south'); }}
           aria-label="Move South"
         >
           <span className="arrow">▼</span>
