@@ -598,34 +598,51 @@ function handleTalk(state, messages, globalItems = {}) {
   // Increment stage tracker for this NPC to allow progression on next talk
   finalNpcStages[npcKey] = Math.min(bestStageIdx + 1, dialogueStages.length - 1);
 
-  // Handle Rewards (Gives Item)
-  if (bestStage.givesItem) {
-    const rewardKey = `${npcKey}_reward_${bestStage.stage || bestStageIdx}`;
-    if (!finalFlags[rewardKey]) {
-      finalInventory.push({ ...bestStage.givesItem });
-      finalFlags[rewardKey] = true;
+  // Helper to handle item rewards with duplicate prevention
+  const giveReward = (item, sourceName, uniqueKey) => {
+    if (!finalFlags[uniqueKey]) {
+      finalInventory.push(item);
+      finalFlags[uniqueKey] = true;
       messages.push({ 
-        text: `🎁 ${tileData.name || npcData.name} gave you: ${bestStage.givesItem.name}!`, 
+        text: `🎁 ${sourceName} gave you: ${item.name}!`, 
         type: 'loot' 
       });
+      return true;
     }
+    return false;
+  };
+
+  // Handle Rewards (New format: givesItem)
+  if (bestStage.givesItem) {
+    const rewardKey = `reward_${npcKey}_stage${bestStageIdx}_item`;
+    giveReward(
+      { ...bestStage.givesItem }, 
+      tileData.name || npcData.name, 
+      rewardKey
+    );
   }
 
-  // Handle setFlag
-  if (bestStage.setFlag) {
-    finalFlags[bestStage.setFlag] = true;
-  }
-
-  // Legacy/Custom onComplete support
+  // Handle onComplete actions (Standard format)
   if (bestStage.onComplete) {
     const { action, itemId, flagSet, msg } = bestStage.onComplete;
+    
     if (action === 'give_item' && itemId && globalItems[itemId]) {
-      finalInventory.push({ ...globalItems[itemId], itemId });
-      messages.push({ text: msg || `🎁 ${tileData.name || npcData.name} gave you: ${globalItems[itemId].name}!`, type: 'loot' });
+      const rewardKey = `reward_${npcKey}_stage${bestStageIdx}_${itemId}`;
+      giveReward(
+        { ...globalItems[itemId], itemId }, 
+        tileData.name || npcData.name, 
+        rewardKey
+      );
     }
+    
     if (action === 'set_flag' && flagSet) {
       finalFlags[flagSet] = true;
     }
+  }
+
+  // Handle direct setFlag
+  if (bestStage.setFlag) {
+    finalFlags[bestStage.setFlag] = true;
   }
 
   return {

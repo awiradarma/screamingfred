@@ -9,8 +9,13 @@ export default function PlayerHUD({ playerHP, maxHP, inventory, position, roomNa
   const hpPercent = Math.max(0, (playerHP / maxHP) * 100);
   const hpColor = hpPercent > 60 ? 'var(--color-hp-high)' : hpPercent > 30 ? 'var(--color-hp-mid)' : 'var(--color-hp-low)';
 
-  const pastaCount = inventory.filter(i => i.type === 'pasta').length;
-  const potatoCount = inventory.filter(i => i.type === 'potato').length;
+  const pastaCount = inventory.filter(i => 
+    i.type === 'pasta' || i.itemId?.includes('pasta') || i.name?.toLowerCase().includes('pasta')
+  ).length;
+  
+  const foodCount = inventory.filter(i => 
+    (i.type === 'food' || i.type === 'potato') && !i.name?.toLowerCase().includes('pasta')
+  ).length;
 
   const handleItemClick = (item) => {
     if (onCommand) {
@@ -23,6 +28,7 @@ export default function PlayerHUD({ playerHP, maxHP, inventory, position, roomNa
     const n = name.toLowerCase();
     if (n.includes('pasta') || type === 'pasta') return '🍝';
     if (n.includes('potato') || type === 'potato') return '🥔';
+    if (n.includes('bread') || n.includes('roll') || type === 'food') return '🥪';
     if (n.includes('key')) return '🔑';
     if (n.includes('potion') || n.includes('drink')) return '🧪';
     if (n.includes('map')) return '🗺️';
@@ -51,7 +57,7 @@ export default function PlayerHUD({ playerHP, maxHP, inventory, position, roomNa
 
       <div className="hud-section hud-inventory" onClick={() => setIsSelectorOpen(!isSelectorOpen)}>
         <span className="inv-item" title="Pasta collected">🍝 {pastaCount}</span>
-        <span className="inv-item" title="Potatoes collected">🥔 {potatoCount}</span>
+        <span className="inv-item" title="Food collected">🥪 {foodCount}</span>
         <span className="inv-item inv-total" title="Total items">📦 {inventory.length}</span>
         <span className="inv-arrow">{isSelectorOpen ? '▲' : '▼'}</span>
 

@@ -251,12 +251,12 @@
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  min-width: 220px;
+  min-width: 260px;
   background: var(--bg-panel);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  z-index: 2000;
   overflow: hidden;
   animation: slideDownFade 0.2s ease-out;
   backdrop-filter: blur(16px);
@@ -800,4 +800,25 @@
     font-size: 0.7rem;
     padding: 2px 5px;
   }
+
+  .inventory-selector {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 32px);
+    max-width: 300px;
+    max-height: 70vh;
+    box-shadow: 0 0 100px rgba(0, 0, 0, 0.8);
+    animation: zoomInFade 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .selector-list {
+    max-height: calc(70vh - 60px);
+  }
+}
+
+@keyframes zoomInFade {
+  from { opacity: 0; transform: translate(-50%, -45%) scale(0.95); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
