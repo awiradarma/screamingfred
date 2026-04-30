@@ -118,6 +118,7 @@ export default function App() {
         position={gameState.playerPosition}
         roomName={gameState.room.room_name}
         theme={gameState.room.theme}
+        onCommand={submitCommand}
       />
 
       <main className="game-layout">

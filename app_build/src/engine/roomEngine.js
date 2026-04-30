@@ -510,7 +510,6 @@ function handleInteract(state, target, messages, globalItems = {}) {
     return { state, messages };
   }
 
-  messages.push({ text: `You ${verb} ${formatEntityName(tileData.name || 'object')}...`, type: 'narrative' });
   if (tileData.revealMessage) {
     messages.push({ text: tileData.revealMessage, type: 'narrative' });
   }

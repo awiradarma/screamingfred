@@ -229,6 +229,130 @@
   font-weight: 500;
 }
 
+/* ── Inventory Selector ──────────────────────── */
+.hud-inventory {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.hud-inventory:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.inv-arrow {
+  font-size: 0.6rem;
+  opacity: 0.4;
+  margin-left: -4px;
+}
+
+.inventory-selector {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 220px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  overflow: hidden;
+  animation: slideDownFade 0.2s ease-out;
+  backdrop-filter: blur(16px);
+}
+
+@keyframes slideDownFade {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.selector-header {
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.selector-close {
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.selector-close:hover {
+  opacity: 1;
+}
+
+.selector-list {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 6px;
+}
+
+.selector-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.selector-item:hover {
+  background: rgba(0, 229, 255, 0.08);
+  border-color: rgba(0, 229, 255, 0.2);
+}
+
+.selector-item-icon {
+  font-size: 1.2rem;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+}
+
+.selector-item-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.selector-item-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-bright);
+}
+
+.selector-item-type {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.use-hint {
+  font-size: 0.8rem;
+  color: var(--accent-gold);
+  animation: pulse 2s infinite;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+}
+
+.selector-empty {
+  padding: 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-style: italic;
+  opacity: 0.7;
+}
+
 /* ── Game Layout (Two-Panel) ────────────────── */
 .game-layout {
   display: grid;
