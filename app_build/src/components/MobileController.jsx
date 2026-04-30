@@ -14,16 +14,16 @@ export default function MobileController({ onSubmit, disabled }) {
   
   // Track last interaction time to prevent ghost clicks/rapid fire
   const lastActionTime = useRef(0);
-
-  const isBlocking = () => {
+  const isBlocking = (update = true) => {
     const now = Date.now();
-    if (now - lastActionTime.current < 300) return true;
-    lastActionTime.current = now;
+    // Reduced delay slightly for better feel, but still prevents ghost taps
+    if (now - lastActionTime.current < 150) return true;
+    if (update) lastActionTime.current = now;
     return false;
   };
 
   const handleMove = (dir) => {
-    if (disabled || isBlocking()) return;
+    if (disabled || isBlocking(true)) return;
     onSubmit(dir);
     setShowActions(false);
     setShowItemSelection(false);
@@ -55,7 +55,8 @@ export default function MobileController({ onSubmit, disabled }) {
 
   const toggleActions = (e) => {
     e.stopPropagation();
-    if (disabled || isBlocking()) return;
+    // Don't update the timer for menu toggles, just check it
+    if (disabled || isBlocking(false)) return;
     
     if (showItemSelection) {
       setShowItemSelection(false);

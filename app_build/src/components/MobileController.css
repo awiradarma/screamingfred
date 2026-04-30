@@ -267,10 +267,14 @@
   }
 
   .item-selection-menu {
-    left: auto !important;
-    right: 15px !important;
-    bottom: 220px !important; /* Above the D-Pad */
-    width: 180px;
+    left: 20px !important; /* Align with Action Menu */
+    right: auto !important;
+    bottom: 20px !important; /* Same base as Action Menu */
+    width: 200px;
+    background: rgba(0, 0, 0, 0.95);
+    border: 2px solid var(--accent-color);
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+    z-index: 10001;
     max-height: 50vh;
     padding: 15px;
     flex-direction: column !important;
