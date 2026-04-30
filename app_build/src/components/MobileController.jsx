@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useStore } from '../store/useStore';
 import './MobileController.css';
 
@@ -11,20 +11,29 @@ export default function MobileController({ onSubmit, disabled }) {
   const [showItemSelection, setShowItemSelection] = useState(false);
   const { gameState } = useStore();
   const inventory = gameState?.inventory || [];
+  
+  // Track last interaction time to prevent ghost clicks/rapid fire
+  const lastActionTime = useRef(0);
+
+  const isBlocking = () => {
+    const now = Date.now();
+    if (now - lastActionTime.current < 300) return true;
+    lastActionTime.current = now;
+    return false;
+  };
 
   const handleMove = (dir) => {
-    if (disabled) return;
+    if (disabled || isBlocking()) return;
     onSubmit(dir);
     setShowActions(false);
     setShowItemSelection(false);
   };
 
   const handleAction = (action) => {
-    if (disabled) return;
+    if (disabled || isBlocking()) return;
     
     if (action === 'use') {
       if (inventory.length === 0) {
-        // No items, just close menu
         setShowActions(false);
         return;
       }
@@ -38,7 +47,24 @@ export default function MobileController({ onSubmit, disabled }) {
   };
 
   const handleUseItem = (item) => {
+    if (disabled || isBlocking()) return;
     onSubmit(`use ${item.name}`);
+    setShowActions(false);
+    setShowItemSelection(false);
+  };
+
+  const toggleActions = (e) => {
+    e.stopPropagation();
+    if (disabled || isBlocking()) return;
+    
+    if (showItemSelection) {
+      setShowItemSelection(false);
+    } else {
+      setShowActions(!showActions);
+    }
+  };
+
+  const closeMenus = () => {
     setShowActions(false);
     setShowItemSelection(false);
   };
@@ -53,7 +79,13 @@ export default function MobileController({ onSubmit, disabled }) {
 
   return (
     <div className={`mobile-controller ${disabled ? 'is-disabled' : ''}`}>
-      {/* Action Menu */}
+      {/* Backdrop for catching stray clicks and closing menus */}
+      <div 
+        className={`controller-backdrop ${(showActions || showItemSelection) ? 'is-visible' : ''}`}
+        onClick={closeMenus}
+      />
+
+      {/* Action Menu (Main) - Positioned Left */}
       <div className={`action-menu ${showActions && !showItemSelection ? 'is-visible' : ''}`}>
         {actions.map(action => (
           <button
@@ -72,7 +104,7 @@ export default function MobileController({ onSubmit, disabled }) {
         ))}
       </div>
 
-      {/* Item Selection Menu */}
+      {/* Item Selection Menu - Positioned Right (Above D-Pad) */}
       <div className={`action-menu item-selection-menu ${showItemSelection ? 'is-visible' : ''}`}>
         <div className="menu-header">Use what?</div>
         <div className="item-list-scroll">
@@ -90,7 +122,7 @@ export default function MobileController({ onSubmit, disabled }) {
           ))}
         </div>
         <button 
-          className="action-btn cancel-btn" 
+          className="action-btn cancel-btn btn-back" 
           onClick={(e) => {
             e.stopPropagation();
             setShowItemSelection(false);
@@ -120,14 +152,7 @@ export default function MobileController({ onSubmit, disabled }) {
         {/* Central Action Toggle */}
         <button 
           className={`dpad-center ${(showActions || showItemSelection) ? 'is-active' : ''}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (showItemSelection) {
-              setShowItemSelection(false);
-            } else {
-              setShowActions(!showActions);
-            }
-          }}
+          onClick={toggleActions}
           aria-label="Toggle Actions"
         >
           <div className="btn-inner">

@@ -34,22 +34,24 @@
 /* Action Menu */
 .action-menu {
   position: absolute;
-  bottom: calc(210px + env(safe-area-inset-bottom, 0px)); /* Lifted higher to clear D-Pad */
-  right: calc(15px + env(safe-area-inset-right, 0px));
+  bottom: calc(210px + env(safe-area-inset-bottom, 0px));
+  left: calc(15px + env(safe-area-inset-left, 0px));
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  opacity: 0;
-  transform: translateY(10px) scale(0.9);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-direction: column-reverse;
+  gap: 10px;
+  z-index: 1000;
   pointer-events: none;
-  filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.3));
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(20px);
+  opacity: 0;
 }
 
 .action-menu.is-visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
   pointer-events: auto;
+  visibility: visible;
+  transform: translateY(0);
+  opacity: 1;
 }
 
 .action-btn {
@@ -84,17 +86,38 @@
   min-width: 160px;
 }
 
-.menu-header {
+.item-selection-menu h3 {
   font-family: var(--font-display);
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
+  font-size: 0.9rem;
   color: var(--accent-cyan);
-  padding: 0 0 8px 0;
-  margin-bottom: 8px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 15px;
   text-align: center;
-  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.btn-back {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  margin-top: 5px;
+}
+
+.controller-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(2px);
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.controller-backdrop.is-visible {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .item-btn {
@@ -236,31 +259,31 @@
   }
 
   .action-menu {
-    bottom: 20px; /* Positioned at the bottom left */
+    bottom: 20px;
     left: 15px;
     right: auto;
-    flex-direction: column-reverse; /* Scream at the top of the list now */
-    gap: 12px; /* Increased gap for better precision */
+    flex-direction: column-reverse;
+    gap: 12px;
   }
 
   .item-selection-menu {
-    flex-direction: column !important;
-    gap: 8px;
-    max-height: 70vh; /* Allow it to be taller if needed */
+    left: auto !important;
+    right: 15px !important;
+    bottom: 220px !important; /* Above the D-Pad */
     width: 180px;
+    max-height: 50vh;
     padding: 15px;
-    bottom: 20px;
-    left: 15px;
+    flex-direction: column !important;
   }
 
   .item-list-scroll {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    max-height: 40vh;
+    max-height: 35vh;
     overflow-y: auto;
     margin-bottom: 10px;
-    padding-right: 5px; /* Space for scrollbar */
+    padding-right: 5px;
   }
 
   /* Custom scrollbar for better look */
