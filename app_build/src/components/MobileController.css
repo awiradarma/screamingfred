@@ -244,11 +244,32 @@
   }
 
   .item-selection-menu {
-    flex-direction: column !important; /* Keep items in normal order for selection */
+    flex-direction: column !important;
     gap: 8px;
-    max-height: 50vh;
+    max-height: 70vh; /* Allow it to be taller if needed */
+    width: 180px;
+    padding: 15px;
+    bottom: 20px;
+    left: 15px;
+  }
+
+  .item-list-scroll {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 40vh;
     overflow-y: auto;
-    pointer-events: auto !important;
+    margin-bottom: 10px;
+    padding-right: 5px; /* Space for scrollbar */
+  }
+
+  /* Custom scrollbar for better look */
+  .item-list-scroll::-webkit-scrollbar {
+    width: 4px;
+  }
+  .item-list-scroll::-webkit-scrollbar-thumb {
+    background: var(--accent-cyan-dim);
+    border-radius: 2px;
   }
   
   .action-btn {

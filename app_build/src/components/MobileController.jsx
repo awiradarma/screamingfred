@@ -75,7 +75,7 @@ export default function MobileController({ onSubmit, disabled }) {
       {/* Item Selection Menu */}
       <div className={`action-menu item-selection-menu ${showItemSelection ? 'is-visible' : ''}`}>
         <div className="menu-header">Use what?</div>
-        <div className="item-list">
+        <div className="item-list-scroll">
           {inventory.map((item, idx) => (
             <button
               key={`${item.itemId}-${idx}`}
