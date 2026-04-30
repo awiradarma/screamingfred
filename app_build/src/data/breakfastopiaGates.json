@@ -1,0 +1,95 @@
+{
+  "room_id": "breakfastopia_gates",
+  "world_coord": "17,16,0",
+  "room_name": "Breakfastopia Gates",
+  "theme": "Breakfastopia",
+  "description": "A massive gate constructed from three colossal cereal boxes towers before you. Beyond it, you can see the sprawling city of Breakfastopia: bakeries, town halls, restaurants, shops, and even shoe stores. The air is thick with the smell of butter and maple syrup.",
+  "grid": [
+    ["cereal_box_wall", "cereal_box_wall", "cereal_box_wall", "cereal_box_wall", "cereal_box_wall"],
+    ["cereal_box_wall", "pancake_path",    "npc_tuxedo",      "pancake_path",    "cereal_box_wall"],
+    ["exit_west",       "pancake_path",    "pancake_path",    "npc_willy",       "pancake_path"],
+    ["cereal_box_wall", "pancake_path",    "pancake_path",    "pancake_path",    "cereal_box_wall"],
+    ["cereal_box_wall", "cereal_box_wall", "pancake_path",    "cereal_box_wall", "cereal_box_wall"]
+  ],
+  "player_start": { "x": 1, "y": 2 },
+  "tiles": {
+    "cereal_box_wall": {
+      "passable": false,
+      "description": "A massive wall made entirely out of brightly colored, sugary cereal boxes."
+    },
+    "pancake_path": {
+      "passable": true,
+      "description": "A fluffy, slightly sticky path made of interlocking pancakes."
+    },
+    "exit_west": {
+      "passable": true,
+      "description": "The path leads back to Shoeboxlandia.",
+      "targetRoomId": "path_to_breakfastopia",
+      "targetPosition": { "x": 3, "y": 2 }
+    },
+    "npc_tuxedo": {
+      "passable": true,
+      "description": "A friendly pancake wearing a sharp tuxedo.",
+      "npc": {
+        "name": "Tuxedo Pancake",
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "\"Welcome to Breakfastopia!\" he exclaims, \"home of the first meal of the day!\"",
+            "hint": "Talk again to demand answers."
+          },
+          {
+            "stage": 1,
+            "text": "Fred steps forward angrily. \"We have come to extract the food you have STOLEN!\"",
+            "hint": "Talk again to see his response."
+          },
+          {
+            "stage": 2,
+            "text": "The pancake looks confused. \"What makes you believe that we have stolen your food?\"",
+            "hint": "Let Freddista handle this."
+          },
+          {
+            "stage": 3,
+            "text": "Freddista shoves Fred aside. \"What my friend meant to say was, we are looking for some pasta and potatoes, that might have accidentally fallen into your hands. Have you received any lately?\""
+          },
+          {
+            "stage": 4,
+            "text": "\"No,\" says the pancake, \"however, it happens we have the most skilled detective in Sentientworldia! Allow me to introduce him.\""
+          }
+        ]
+      }
+    },
+    "npc_willy": {
+      "passable": true,
+      "description": "A waffle carrying a magnifying glass and a briefcase. He stands near a pedestal embroidered with pretzels.",
+      "npc": {
+        "name": "Willy the Waffle",
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "The Tuxedo Pancake points at the waffle. \"This is the famous detective, Willy the Waffle!\"",
+            "hint": "Talk to Willy to seek his help."
+          },
+          {
+            "stage": 1,
+            "text": "Willy adjusts his magnifying glass. \"Lost food, you say? The trail points beyond Breakfastopia. You must venture into the Electric Desert if you wish to find answers.\""
+          },
+          {
+            "stage": 2,
+            "text": "\"Be warned,\" Willy adds, \"the Electric Desert is unforgiving. Take this map to guide you.\"",
+            "onComplete": {
+              "action": "give_item",
+              "itemId": "map_electric_desert"
+            }
+          },
+          {
+            "stage": 3,
+            "text": "\"Safe travels, friends. The truth is out there, probably covered in sand.\""
+          }
+        ]
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {}
+}

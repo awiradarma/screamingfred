@@ -6,9 +6,9 @@
   "description": "You step onto the main street of Shoeboxlandia. Neat rows of shoebox houses line the road, each one identical and perfectly aligned. Countless eyes glare at you from behind curtains — probably because of the karaoke last night. A shopkeeper's stall and a wise old slipper catch your attention.",
   "grid": [
     ["edge_n",       "edge_n",       "edge_n",        "edge_n",       "edge_n"],
-    ["wall",         "npc_shopkeeper","floor",         "item_signpost","wall"],
+    ["wall",         "npc_shopkeeper","floor",         "item_signpost","trash_can"],
     ["wall",         "floor",        "floor",         "floor",        "wall"],
-    ["wall",         "floor",        "npc_elder",     "floor",        "wall"],
+    ["wall",         "floor",        "npc_elder",     "dark_corner",  "exit_east"],
     ["wall",         "wall",         "exit_south",    "wall",         "wall"]
   ],
   "player_start": { "x": 2, "y": 2 },
@@ -41,6 +41,49 @@
         "itemId": "flavor_signpost",
         "actions": ["interact", "search"]
       }
+    },
+    "trash_can": {
+      "passable": true,
+      "description": "A smelly metal trash can. It looks like it hasn't been emptied in weeks.",
+      "interactionVerb": "SEARCH",
+      "item": {
+        "contains": {
+          "name": "Flashlight",
+          "type": "tool",
+          "onUse": {
+            "action": "unlock",
+            "target": "dark_corner",
+            "flagSet": "corner_illuminated",
+            "successMessage": "The flashlight beam cuts through the darkness. The corner is now illuminated!",
+            "failureMessage": "You shine the flashlight around, but see nothing of interest here."
+          }
+        },
+        "onCollect": "You found a working Flashlight hidden under some old shoelaces!"
+      }
+    },
+    "dark_corner": {
+      "passable": true,
+      "description": "A corner. It used to be pitch black, but now your flashlight reveals the dust and debris.",
+      "conditions": {
+        "requiredFlag": "corner_illuminated",
+        "failMessage": "It's pitch black. You'll stumble if you try to step in there without a light source."
+      },
+      "interactionVerb": "SEARCH",
+      "item": {
+        "contains": { "name": "Hidden Golden Potato", "type": "resource" },
+        "onCollect": "You pick up the shiny Golden Potato hidden in the dust.",
+        "setFlag": "golden_potato_found"
+      }
+    },
+    "exit_east": {
+      "passable": true,
+      "description": "A small crack in the eastern wall. It looks like it leads to a new area.",
+      "conditions": {
+        "requiredFlag": "freddista_joined",
+        "failMessage": "The crack is too tight to squeeze through alone. If only you had someone to help you push through..."
+      },
+      "targetRoomId": "path_to_breakfastopia",
+      "targetPosition": { "x": 0, "y": 2 }
     },
     "npc_shopkeeper": {
       "passable": true,

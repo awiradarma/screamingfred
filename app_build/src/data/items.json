@@ -61,5 +61,15 @@
     "name": "Freddista's Note",
     "description": "A crumpled note from Freddista: 'Day 4,382. Still alone. They say my stare kills. It doesn't.'",
     "type": "quest"
+  },
+  "tool_flashlight": {
+    "name": "Flashlight",
+    "description": "A sturdy flashlight with full batteries. Useful for seeing hidden things in the dark.",
+    "type": "tool"
+  },
+  "map_electric_desert": {
+    "name": "Map of the Electric Desert",
+    "description": "A scribbled map pointing towards the treacherous Electric Desert.",
+    "type": "quest"
   }
 }

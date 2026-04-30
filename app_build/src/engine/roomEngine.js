@@ -532,7 +532,7 @@ function handleInteract(state, target, messages, globalItems = {}) {
       const itmNames = itemToCollect.name.split(',').map(s => s.trim());
       itmNames.forEach(name => {
         if (name) {
-          newState.inventory = [...newState.inventory, { name, type: 'resource' }];
+          newState.inventory = [...newState.inventory, { ...itemToCollect, name, type: itemToCollect.type || 'resource' }];
           messages.push({ 
             text: `You found: ${name}!`,
             type: 'loot' 

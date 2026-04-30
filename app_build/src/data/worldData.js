@@ -3,6 +3,8 @@ import shoeboxlandia_street from './shoeboxlandiaStreet.json';
 import forest_entrance from './forestEntrance.json';
 import snake_path from './snakePath.json';
 import freddista_shack from './freddistaShack.json';
+import path_to_breakfastopia from './pathToBreakfastopia.json';
+import breakfastopia_gates from './breakfastopiaGates.json';
 
 export const WORLD_SIZE = 30;
 export const COORD_MIN = 0;
@@ -18,6 +20,8 @@ export const worldCoordinateRegistry = {
   "15,17,0": "forest_entrance",
   "15,18,0": "snake_path",
   "15,19,0": "freddista_shack",
+  "16,16,0": "path_to_breakfastopia",
+  "17,16,0": "breakfastopia_gates",
 };
 
 export const worldData = {
@@ -26,6 +30,8 @@ export const worldData = {
   forest_entrance,
   snake_path,
   freddista_shack,
+  path_to_breakfastopia,
+  breakfastopia_gates,
 };
 
 /**
