@@ -63,8 +63,19 @@ export function describeRoom(roomData) {
 /**
  * Generate tile-specific description.
  */
-export function describeTile(tileType, tileData, stateFlags) {
+export function describeTile(tileType, tileData, stateFlags, roomTiles = {}) {
   if (!tileData) return 'Nothing unremarkable here.';
+
+  // Check visibility condition
+  if (tileData.visibleIf && !stateFlags[tileData.visibleIf]) {
+    // If hidden, describe the fallback tile instead (e.g. floor)
+    const fallbackType = tileData.hiddenTileType || 'floor';
+    const fallbackData = roomTiles[fallbackType];
+    if (fallbackData && fallbackData !== tileData) {
+      return describeTile(fallbackType, fallbackData, stateFlags, roomTiles);
+    }
+    return tileData.hiddenDescription || 'Nothing remarkable here.';
+  }
 
   // Check if item has been opened
   if (tileData.item && stateFlags[`item_${tileName(tileType)}_opened`]) {

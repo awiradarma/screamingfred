@@ -251,7 +251,7 @@ function handleLook(state, messages) {
   // Current tile description
   const tileType = getCurrentTile(state);
   const tileData = getTileData(state.room, tileType);
-  const tileDesc = describeTile(tileType, tileData, state.stateFlags);
+  const tileDesc = describeTile(tileType, tileData, state.stateFlags, state.room.tiles);
   messages.push({ text: tileDesc, type: 'narrative' });
 
   // Show available actions hint
@@ -355,7 +355,7 @@ export function handleMove(state, direction, messages) {
   const finalTileData = getTileData(finalState.room, finalTileType);
   
   if (finalTileData) {
-    const tileDesc = describeTile(finalTileType, finalTileData, finalState.stateFlags);
+    const tileDesc = describeTile(finalTileType, finalTileData, finalState.stateFlags, finalState.room.tiles);
     messages.push({ text: tileDesc, type: 'narrative' });
   }
 
@@ -503,6 +503,12 @@ function handleInteract(state, target, messages, globalItems = {}) {
     return { state, messages };
   }
 
+  // Visibility Check
+  if (tileData.visibleIf && !state.stateFlags[tileData.visibleIf]) {
+    messages.push({ text: 'There\'s nothing to interact with here.', type: 'system' });
+    return { state, messages };
+  }
+
   const verb = tileData.interactionVerb || 'SEARCH';
   const flagKey = `${tileType}_opened`;
   if (state.stateFlags[flagKey]) {
@@ -557,6 +563,12 @@ function handleTalk(state, messages, globalItems = {}) {
   const tileData = getTileData(state.room, tileType);
 
   if (!tileData?.npc) {
+    messages.push({ text: 'There\'s nobody here to talk to.', type: 'system' });
+    return { state, messages };
+  }
+
+  // Visibility Check
+  if (tileData.visibleIf && !state.stateFlags[tileData.visibleIf]) {
     messages.push({ text: 'There\'s nobody here to talk to.', type: 'system' });
     return { state, messages };
   }

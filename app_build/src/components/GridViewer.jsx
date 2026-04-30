@@ -29,6 +29,12 @@ function getTileConfig(tileType, stateFlags, roomTiles = {}) {
   // Check room-specific metadata first
   const roomMeta = roomTiles[tileType];
   
+  // Visibility Check
+  if (roomMeta && roomMeta.visibleIf && !stateFlags[roomMeta.visibleIf]) {
+    const fallbackType = roomMeta.hiddenTileType || 'floor';
+    return getTileConfig(fallbackType, stateFlags, roomTiles);
+  }
+
   // Check if enemy is defeated
   if (tileType.startsWith('enemy_') && stateFlags[`${tileType.replace(/^enemy_/, '')}_defeated`]) {
     return { icon: '·', label: 'Clear', className: 'tile-floor tile-cleared' };

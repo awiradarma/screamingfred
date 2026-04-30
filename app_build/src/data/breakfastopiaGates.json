@@ -7,7 +7,7 @@
   "grid": [
     ["cereal_box_wall", "cereal_box_wall", "cereal_box_wall", "cereal_box_wall", "cereal_box_wall"],
     ["cereal_box_wall", "pancake_path",    "npc_tuxedo",      "pancake_path",    "cereal_box_wall"],
-    ["exit_west",       "pancake_path",    "pancake_path",    "npc_willy",       "pancake_path"],
+    ["exit_west",       "pancake_path",    "pancake_path",    "npc_willy",       "exit_east"],
     ["cereal_box_wall", "pancake_path",    "pancake_path",    "pancake_path",    "cereal_box_wall"],
     ["cereal_box_wall", "cereal_box_wall", "pancake_path",    "cereal_box_wall", "cereal_box_wall"]
   ],
@@ -26,6 +26,16 @@
       "description": "The path leads back to Shoeboxlandia.",
       "targetRoomId": "path_to_breakfastopia",
       "targetPosition": { "x": 3, "y": 2 }
+    },
+    "exit_east": {
+      "passable": true,
+      "description": "The path leads east toward a shimmering, static-filled horizon.",
+      "conditions": {
+        "requiredFlag": "willy_joined",
+        "failMessage": "You shouldn't venture further without the detective. He knows the way."
+      },
+      "targetRoomId": "electric_desert_entrance",
+      "targetPosition": { "x": 0, "y": 2 }
     },
     "npc_tuxedo": {
       "passable": true,
@@ -54,37 +64,50 @@
           },
           {
             "stage": 4,
-            "text": "\"No,\" says the pancake, \"however, it happens we have the most skilled detective in Sentientworldia! Allow me to introduce him.\""
+            "text": "\"No,\" says the pancake, \"however, it happens we have the most skilled detective in Sentientworldia! Allow me to introduce him.\"",
+            "onComplete": {
+              "action": "set_flag",
+              "flagSet": "tuxedo_introduced_willy"
+            }
           }
         ]
       }
     },
     "npc_willy": {
       "passable": true,
+      "visibleIf": "tuxedo_introduced_willy",
+      "hiddenTileType": "pancake_path",
       "description": "A waffle carrying a magnifying glass and a briefcase. He stands near a pedestal embroidered with pretzels.",
       "npc": {
         "name": "Willy the Waffle",
         "dialogue": [
           {
             "stage": 0,
-            "text": "The Tuxedo Pancake points at the waffle. \"This is the famous detective, Willy the Waffle!\"",
-            "hint": "Talk to Willy to seek his help."
+            "text": "\"My expiration date is expired,\" mutters the waffle as he approaches the pedestal.",
+            "hint": "Ask him about the stolen lunch."
           },
           {
             "stage": 1,
-            "text": "Willy adjusts his magnifying glass. \"Lost food, you say? The trail points beyond Breakfastopia. You must venture into the Electric Desert if you wish to find answers.\""
+            "text": "Fred asks, \"Do you have any idea who stole my lunch?\" Willy sighs, \"I am afraid your lunch is lost. However, there is a way of making some new pasta and potatoes.\"",
+            "hint": "Listen to his plan."
           },
           {
             "stage": 2,
-            "text": "\"Be warned,\" Willy adds, \"the Electric Desert is unforgiving. Take this map to guide you.\"",
-            "onComplete": {
-              "action": "give_item",
-              "itemId": "map_electric_desert"
-            }
+            "text": "Willy panted, \"First, we head through the Electric Desert, past the Mountains of Misery, through the Hidden Hideout and the Glassy Castle. Then into the Great Noodle Factory for pasta, across the Scary Scrapyard, and through the Swamp of Rotten Apples... finally back to Shoeboxlandia.\"",
+            "hint": "Respond to the long journey."
           },
           {
             "stage": 3,
-            "text": "\"Safe travels, friends. The truth is out there, probably covered in sand.\""
+            "text": "Fred whines, \"That will take so long!\" Freddista mutters, \"It's not that long.\" Willy adjusts his glass: \"Well, we better stop complaining, and head to the desert.\"",
+            "onComplete": {
+              "action": "set_flag",
+              "flagSet": "willy_joined"
+            }
+          },
+          {
+            "stage": 4,
+            "text": "\"Remember, be careful with the electric sand,\" cautioned Willy, \"It will zap you in an instant.\"",
+            "hint": "The path to the Electric Desert is now open to the East."
           }
         ]
       }

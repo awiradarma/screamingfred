@@ -1,0 +1,36 @@
+{
+  "room_id": "electric_desert_entrance",
+  "world_coord": "18,16,0",
+  "room_name": "Electric Desert Entrance",
+  "theme": "Electric Desert",
+  "description": "The air crackles with static electricity. Shimmering dunes of crystalline sand stretch out before you, glowing with a faint, pulsing blue light. Occasional bolts of lightning arc between the peaks of the dunes.",
+  "grid": [
+    ["electric_sand", "electric_sand", "electric_sand", "electric_sand", "electric_sand"],
+    ["electric_sand", "sand_path",      "sand_path",      "sand_path",      "electric_sand"],
+    ["exit_west",     "sand_path",      "sand_path",      "sand_path",      "sand_path"],
+    ["electric_sand", "sand_path",      "sand_path",      "sand_path",      "electric_sand"],
+    ["electric_sand", "electric_sand", "electric_sand", "electric_sand", "electric_sand"]
+  ],
+  "player_start": { "x": 1, "y": 2 },
+  "tiles": {
+    "electric_sand": {
+      "passable": true,
+      "effect": "damage",
+      "damageAmount": 2,
+      "effectMessage": "The electric sand zaps you!",
+      "description": "Glowing blue sand that crackles with electricity."
+    },
+    "sand_path": {
+      "passable": true,
+      "description": "A relatively safe path through the crackling dunes."
+    },
+    "exit_west": {
+      "passable": true,
+      "description": "The path leads back to the Breakfastopia Gates.",
+      "targetRoomId": "breakfastopia_gates",
+      "targetPosition": { "x": 3, "y": 2 }
+    }
+  },
+  "entities": [],
+  "state_flags": {}
+}

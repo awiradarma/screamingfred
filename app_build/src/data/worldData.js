@@ -5,6 +5,7 @@ import snake_path from './snakePath.json';
 import freddista_shack from './freddistaShack.json';
 import path_to_breakfastopia from './pathToBreakfastopia.json';
 import breakfastopia_gates from './breakfastopiaGates.json';
+import electric_desert_entrance from './electric_desert_entrance.json';
 
 export const WORLD_SIZE = 30;
 export const COORD_MIN = 0;
@@ -22,6 +23,7 @@ export const worldCoordinateRegistry = {
   "15,19,0": "freddista_shack",
   "16,16,0": "path_to_breakfastopia",
   "17,16,0": "breakfastopia_gates",
+  "18,16,0": "electric_desert_entrance",
 };
 
 export const worldData = {
@@ -32,6 +34,7 @@ export const worldData = {
   freddista_shack,
   path_to_breakfastopia,
   breakfastopia_gates,
+  electric_desert_entrance,
 };
 
 /**
