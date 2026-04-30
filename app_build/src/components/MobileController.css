@@ -9,6 +9,7 @@
 /* Base button properties for interactivity */
 .mobile-controller button {
   pointer-events: auto;
+  touch-action: manipulation;
   cursor: pointer;
   border: none;
   outline: none;

@@ -59,8 +59,7 @@ export default function MobileController({ onSubmit, disabled }) {
           <button
             key={action.id}
             className={`action-btn btn-${action.id}`}
-            onPointerDown={(e) => {
-              e.preventDefault();
+            onClick={(e) => {
               e.stopPropagation();
               handleAction(action.id);
             }}
@@ -81,8 +80,7 @@ export default function MobileController({ onSubmit, disabled }) {
             <button
               key={`${item.itemId}-${idx}`}
               className="action-btn item-btn"
-              onPointerDown={(e) => {
-                e.preventDefault();
+              onClick={(e) => {
                 e.stopPropagation();
                 handleUseItem(item);
               }}
@@ -93,8 +91,7 @@ export default function MobileController({ onSubmit, disabled }) {
         </div>
         <button 
           className="action-btn cancel-btn" 
-          onPointerDown={(e) => {
-            e.preventDefault();
+          onClick={(e) => {
             e.stopPropagation();
             setShowItemSelection(false);
           }}
@@ -104,17 +101,17 @@ export default function MobileController({ onSubmit, disabled }) {
       </div>
 
       {/* D-Pad controls */}
-      <div className="dpad-container" onPointerDown={e => e.stopPropagation()}>
+      <div className="dpad-container" onClick={e => e.stopPropagation()}>
         <button 
           className="dpad-btn dpad-n" 
-          onPointerDown={(e) => { e.preventDefault(); handleMove('north'); }}
+          onClick={() => handleMove('north')}
           aria-label="Move North"
         >
           <span className="arrow">▲</span>
         </button>
         <button 
           className="dpad-btn dpad-w" 
-          onPointerDown={(e) => { e.preventDefault(); handleMove('west'); }}
+          onClick={() => handleMove('west')}
           aria-label="Move West"
         >
           <span className="arrow">◀</span>
@@ -123,8 +120,7 @@ export default function MobileController({ onSubmit, disabled }) {
         {/* Central Action Toggle */}
         <button 
           className={`dpad-center ${(showActions || showItemSelection) ? 'is-active' : ''}`}
-          onPointerDown={(e) => {
-            e.preventDefault();
+          onClick={(e) => {
             e.stopPropagation();
             if (showItemSelection) {
               setShowItemSelection(false);
@@ -141,14 +137,14 @@ export default function MobileController({ onSubmit, disabled }) {
 
         <button 
           className="dpad-btn dpad-e" 
-          onPointerDown={(e) => { e.preventDefault(); handleMove('east'); }}
+          onClick={() => handleMove('east')}
           aria-label="Move East"
         >
           <span className="arrow">▶</span>
         </button>
         <button 
           className="dpad-btn dpad-s" 
-          onPointerDown={(e) => { e.preventDefault(); handleMove('south'); }}
+          onClick={() => handleMove('south')}
           aria-label="Move South"
         >
           <span className="arrow">▼</span>
