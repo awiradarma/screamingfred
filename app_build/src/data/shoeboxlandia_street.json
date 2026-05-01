@@ -120,6 +120,8 @@
     "exit_east": {
       "passable": true,
       "description": "A small crack in the eastern wall. It looks like it leads to a new area.",
+      "visibleIf": "corner_illuminated",
+      "hiddenTileType": "wall",
       "conditions": {
         "requiredFlag": "freddista_joined",
         "failMessage": "The crack is too tight to squeeze through alone. If only you had someone to help you push through..."

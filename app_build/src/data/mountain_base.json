@@ -144,7 +144,7 @@
           },
           {
             "stage": 6,
-            "text": "Willy looks at the ruined Magnifying Glass. \"Well, he's gone. But my glass is toast. At least we don't have to sit in that creepy chair.\"",
+            "text": "Willy looks at the ruined Magnifying Glass. \"Well, he's gone. But the glass is toast. At least we don't have to sit in that creepy chair.\"",
             "onComplete": {
               "action": "remove_item",
               "itemId": "tool_magnifying_glass"

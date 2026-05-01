@@ -274,7 +274,13 @@ export function handleMove(state, direction, messages) {
   const newY = state.playerPosition.y + dy;
 
   const targetTile = getTileAt(state.room, newX, newY);
-  const tileData = targetTile ? getTileData(state.room, targetTile) : null;
+  let tileData = targetTile ? getTileData(state.room, targetTile) : null;
+
+  // Resolve visibility fallback for movement
+  if (tileData && tileData.visibleIf && !state.stateFlags[tileData.visibleIf]) {
+    const fallbackType = tileData.hiddenTileType || 'floor';
+    tileData = getTileData(state.room, fallbackType);
+  }
 
   // Check for world edge transition if no tile exists at target
   let transitionRoom = null;
@@ -367,12 +373,19 @@ export function handleMove(state, direction, messages) {
   }
 
   if (transitionRoom) {
+    const coordKey = transitionRoom.world_coord;
+    let newDiscovered = finalState.discoveredRooms || [];
+    if (coordKey && !newDiscovered.includes(coordKey)) {
+      newDiscovered = [...newDiscovered, coordKey];
+    }
+
     messages.push({ text: `⚡ Transitioning to ${transitionRoom.room_name}...`, type: 'system' });
     return {
       state: {
         ...finalState,
         room: transitionRoom,
         playerPosition: transitionPos || { ...transitionRoom.player_start },
+        discoveredRooms: newDiscovered
       },
       messages: [
         ...messages,

@@ -15,7 +15,7 @@
     [
       "wall",
       "floor",
-      "floor",
+      "item_fridge",
       "floor",
       "exit_east"
     ],
@@ -49,6 +49,16 @@
     "wall": {
       "passable": false,
       "description": "A sturdy cardboard wall. It smells faintly of new shoes."
+    },
+    "item_fridge": {
+      "passable": false,
+      "description": "Fred's refrigerator, made of a folded playing card.",
+      "interactionVerb": "SEARCH",
+      "item": {
+        "name": "Empty Fridge",
+        "description": "It's completely empty! The pasta and potatoes you saved for lunch are gone! There are muddy footprints leading outside...",
+        "itemId": "clue_empty_fridge"
+      }
     },
     "floor": {
       "passable": true,
