@@ -84,6 +84,10 @@
           {
             "stage": 2,
             "text": "\"You're actually going after her? You're braver than I thought. Or dumber. Head south through town — the forest is past the edge of Shoeboxlandia. And stop screaming at night!\""
+          },
+          {
+            "stage": 3,
+            "text": "\"We've already talked about this. Just head south and leave me alone, Fred. My sole hurts just thinking about your screaming.\""
           }
         ]
       }

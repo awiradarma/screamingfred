@@ -155,6 +155,10 @@
           {
             "stage": 2,
             "text": "\"That's all I've got for ya, Fred. Good luck out there — and try not to scream TOO much. Well, actually, scream all you want.\""
+          },
+          {
+            "stage": 3,
+            "text": "\"Business is business, Fred, and we're all out of free samples. Head south and show those forest creatures what a real scream sounds like!\""
           }
         ]
       }
@@ -181,6 +185,10 @@
           {
             "stage": 3,
             "text": "\"One more thing, Fred. There are lands beyond this one — Breakfastopia, the Electric Desert, places I've only heard of in children's tales. But maybe... maybe they're not just tales. Now go, before I fall asleep.\""
+          },
+          {
+            "stage": 4,
+            "text": "\"Zzz... *snore*... we've talked... zzz... forest is south... *snort*... leave an old slipper to his dreams, boy.\""
           }
         ]
       }

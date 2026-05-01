@@ -124,6 +124,10 @@
           {
             "stage": 4,
             "text": "\"Well, what are we waiting for? Let's head back through Shoeboxlandia and find your lunch. I hope the shoes there don't glare too much...\" She pauses. \"Actually, they will. Let's go anyway.\""
+          },
+          {
+            "stage": 5,
+            "text": "\"I'm already in your party, Fred! Let's stay focused and find that lunch of yours. I've got my eye on the path ahead.\""
           }
         ]
       }

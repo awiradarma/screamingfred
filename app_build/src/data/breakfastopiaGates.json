@@ -78,6 +78,10 @@
               "action": "set_flag",
               "flagSet": "tuxedo_introduced_willy"
             }
+          },
+          {
+            "stage": 5,
+            "text": "\"The detective is right there, Fred! I have no more information for you. Enjoy your time in Breakfastopia!\""
           }
         ]
       }
@@ -117,6 +121,10 @@
             "stage": 4,
             "text": "\"Remember, be careful with the electric sand,\" cautioned Willy, \"It will zap you in an instant.\"",
             "hint": "The path to the Electric Desert is now open to the East."
+          },
+          {
+            "stage": 5,
+            "text": "\"We have talked enough, Fred. The desert awaits, and my briefcase isn't going to carry itself. Let's move out!\""
           }
         ]
       }

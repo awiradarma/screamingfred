@@ -182,7 +182,7 @@ export const useStore = create((set, get) => ({
 
     const normalized = rawInput.toLowerCase().trim();
     if (normalized === 'restart') {
-      if (window.confirm('Restart the game? All current progress will be lost.')) {
+      if (window.confirm('Are you sure you want to restart your adventure? All current progress will be lost.')) {
         resetGame();
       }
       return;
