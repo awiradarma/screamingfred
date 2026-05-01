@@ -82,24 +82,24 @@ export default function App() {
         </div>
         
         <div className="header-right">
-          {isAdmin && (
-            <nav className="admin-nav">
-              <button 
-                className={`nav-btn ${activeView === 'game' ? 'active' : ''}`}
-                onClick={() => setView('game')}
-                title="Play"
-              >
-                <span className="nav-icon">🎮</span>
-                <span className="nav-text">Play</span>
-              </button>
-              <button 
-                className={`nav-btn ${activeView === 'world_map' ? 'active' : ''}`}
-                onClick={() => setView('world_map')}
-                title="Map"
-              >
-                <span className="nav-icon">🗺️</span>
-                <span className="nav-text">Map</span>
-              </button>
+          <nav className="admin-nav">
+            <button 
+              className={`nav-btn ${activeView === 'game' ? 'active' : ''}`}
+              onClick={() => setView('game')}
+              title="Play"
+            >
+              <span className="nav-icon">🎮</span>
+              <span className="nav-text">Play</span>
+            </button>
+            <button 
+              className={`nav-btn ${activeView === 'world_map' ? 'active' : ''}`}
+              onClick={() => setView('world_map')}
+              title="Map"
+            >
+              <span className="nav-icon">🗺️</span>
+              <span className="nav-text">Map</span>
+            </button>
+            {isAdmin && (
               <button 
                 className={`nav-btn ${activeView === 'editor' ? 'active' : ''}`}
                 onClick={() => setView('editor')}
@@ -108,8 +108,8 @@ export default function App() {
                 <span className="nav-icon">🛠️</span>
                 <span className="nav-text">Editor</span>
               </button>
-            </nav>
-          )}
+            )}
+          </nav>
           <button className="restart-btn" onClick={() => {
             console.log('Restart button requested');
             setShowRestartConfirm(true);
