@@ -83,6 +83,8 @@ export function isTileVisible(tileData, stateFlags) {
 
   return true;
 }
+
+/**
  * Get the current tile type the player is standing on.
  */
 function getCurrentTile(state) {
