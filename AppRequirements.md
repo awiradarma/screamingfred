@@ -67,3 +67,8 @@ A tactical PWA (Progressive Web App) based on the "Screaming Fred" IP. The game 
 
 ## 8. Dev Guidelines
 - [IMPORTANT] Always bump the `version` field in `package.json` before committing and pushing changes. This ensures cache-busting and easy verification of the latest build.
+
+## 9. Backlog & Future Enhancements
+- [ ] **Collectible Abilities**: Implement system for players to unlock and toggle abilities (e.g., Float on Water, Zap Immunity, Increased Agility) via items or NPC interactions.
+- [ ] **Temporary Enchantments**: Develop a "Status Effect" system to handle temporary buffs/debuffs (e.g., double damage, increased HP gain from food) with turn-based timers.
+- [ ] **Enhanced Movement**: Explore "Dash" mechanics and diagonal movement to improve traversal, ensuring compatibility with the mobile virtual D-pad.
