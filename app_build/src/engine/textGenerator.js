@@ -4,6 +4,8 @@
  * Generates descriptive prose for rooms, items, NPCs, events, and combat.
  */
 
+import { isTileVisible } from './roomEngine.js';
+
 const SCREAM_FLAVOR = [
   'Fred lets out an earth-shattering scream! The lace-vines tremble!',
   'A sonic wave erupts from Fred! Nearby objects rattle!',
@@ -67,7 +69,7 @@ export function describeTile(tileType, tileData, stateFlags, roomTiles = {}) {
   if (!tileData) return 'Nothing unremarkable here.';
 
   // Check visibility condition
-  if (tileData.visibleIf && !stateFlags[tileData.visibleIf]) {
+  if (!isTileVisible(tileData, stateFlags)) {
     // If hidden, describe the fallback tile instead (e.g. floor)
     const fallbackType = tileData.hiddenTileType || 'floor';
     const fallbackData = roomTiles[fallbackType];

@@ -58,6 +58,31 @@ function getTileData(room, tileType) {
 }
 
 /**
+ * Check if a tile is currently visible based on its conditions.
+ * Supports visibleIf (requires flag) and hiddenIf (flag hides it).
+ * Both support "!" prefix for negation.
+ */
+export function isTileVisible(tileData, stateFlags) {
+  if (!tileData) return true;
+
+  if (tileData.visibleIf) {
+    const flag = tileData.visibleIf;
+    const isNegated = flag.startsWith('!');
+    const actualFlag = isNegated ? flag.substring(1) : flag;
+    const flagValue = !!stateFlags[actualFlag];
+    if (isNegated ? flagValue : !flagValue) return false;
+  }
+
+  if (tileData.hiddenIf) {
+    const flag = tileData.hiddenIf;
+    const isNegated = flag.startsWith('!');
+    const actualFlag = isNegated ? flag.substring(1) : flag;
+    const flagValue = !!stateFlags[actualFlag];
+    if (isNegated ? !flagValue : flagValue) return false;
+  }
+
+  return true;
+}
  * Get the current tile type the player is standing on.
  */
 function getCurrentTile(state) {
@@ -299,7 +324,7 @@ export function handleMove(state, direction, messages) {
   let tileData = targetTile ? getTileData(state.room, targetTile) : null;
 
   // Resolve visibility fallback for movement
-  const isTargetVisible = !tileData?.visibleIf || state.stateFlags[tileData.visibleIf];
+  const isTargetVisible = isTileVisible(tileData, state.stateFlags);
   if (tileData && !isTargetVisible) {
     const fallbackType = tileData.hiddenTileType || 'floor';
     tileData = getTileData(state.room, fallbackType);
@@ -547,7 +572,7 @@ function handleInteract(state, target, messages, globalItems = {}) {
   }
 
   // Visibility Check
-  if (tileData.visibleIf && !state.stateFlags[tileData.visibleIf]) {
+  if (!isTileVisible(tileData, state.stateFlags)) {
     messages.push({ text: 'There\'s nothing to interact with here.', type: 'system' });
     return { state, messages };
   }
@@ -618,7 +643,7 @@ function handleTalk(state, messages, globalItems = {}) {
   }
 
   // Visibility Check
-  if (tileData.visibleIf && !state.stateFlags[tileData.visibleIf]) {
+  if (!isTileVisible(tileData, state.stateFlags)) {
     messages.push({ text: 'There\'s nobody here to talk to.', type: 'system' });
     return { state, messages };
   }

@@ -97,6 +97,8 @@
     },
     "npc_freddista": {
       "passable": true,
+      "hiddenIf": "freddista_joined",
+      "hiddenTileType": "floor",
       "description": "A shoe stands in the middle of the shack. Her laces are frayed, her sole is torn, and she is covered with dirt and mud. Despite everything, her eyes are kind.",
       "npc": {
         "name": "Freddista",
