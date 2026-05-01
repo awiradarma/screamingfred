@@ -24,7 +24,7 @@
       "grass",
       "grass",
       "grass",
-      "exit_east"
+      "wall"
     ],
     [
       "exit_west",
@@ -79,15 +79,6 @@
       "targetPosition": {
         "x": 4,
         "y": 3
-      }
-    },
-    "exit_east": {
-      "passable": true,
-      "description": "The path leads east toward the Breakfastopia gates.",
-      "targetRoomId": "breakfastopia_gates",
-      "targetPosition": {
-        "x": 0,
-        "y": 2
       }
     },
     "exit_south": {
