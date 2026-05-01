@@ -1,0 +1,90 @@
+{
+  "room_id": "window_sill",
+  "world_coord": "17,14,0",
+  "room_name": "Window Sill",
+  "theme": "Shoeboxlandia",
+  "description": "You are standing on a narrow ledge outside the attic window. The wind whistles through your eyelets. Below you, the world of Shoeboxlandia stretches out like a toy set.",
+  "grid": [
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ],
+    [
+      "wall",
+      "ledge_floor",
+      "ledge_floor",
+      "ledge_floor",
+      "wall"
+    ],
+    [
+      "exit_west",
+      "ledge_floor",
+      "item_pollen",
+      "ledge_floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "ledge_floor",
+      "ledge_floor",
+      "ledge_floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "wall",
+      "wall",
+      "exit_south",
+      "wall"
+    ]
+  ],
+  "player_start": {
+    "x": 1,
+    "y": 2
+  },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "The brick wall of the house. It's cold and rough."
+    },
+    "ledge_floor": {
+      "passable": true,
+      "description": "A narrow stone ledge, covered in a thin layer of soot."
+    },
+    "exit_west": {
+      "passable": true,
+      "description": "The ledge leads back through the window to the shoe rack.",
+      "targetRoomId": "shoe_rack",
+      "targetPosition": {
+        "x": 4,
+        "y": 2
+      }
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "A precarious climb down leads to the garden path.",
+      "targetRoomId": "garden_path",
+      "targetPosition": {
+        "x": 3,
+        "y": 0
+      }
+    },
+    "item_pollen": {
+      "passable": true,
+      "description": "A clump of bright yellow pollen has gathered in the corner.",
+      "item": {
+        "name": "Yellow Pollen",
+        "itemId": "item_pollen",
+        "actions": [
+          "interact",
+          "search"
+        ]
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {}
+}

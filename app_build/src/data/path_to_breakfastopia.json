@@ -5,13 +5,46 @@
   "theme": "Breakfastopia",
   "description": "A dirt path flanked by towering velcro mountains. You can hear the gurgling of a sticky syrup river nearby. The air smells strangely of maple and old sneakers.",
   "grid": [
-    ["velcro_mountain", "velcro_mountain", "velcro_mountain", "velcro_mountain", "velcro_mountain"],
-    ["velcro_mountain", "syrup_river",     "syrup_river",     "syrup_river",     "velcro_mountain"],
-    ["exit_west",       "dirt_path",       "bacon_strip",     "dirt_path",       "exit_east"],
-    ["velcro_mountain", "dirt_path",       "item_potato",     "dirt_path",       "velcro_mountain"],
-    ["velcro_mountain", "velcro_mountain", "velcro_mountain", "velcro_mountain", "velcro_mountain"]
+    [
+      "velcro_mountain",
+      "velcro_mountain",
+      "velcro_mountain",
+      "velcro_mountain",
+      "velcro_mountain"
+    ],
+    [
+      "exit_west",
+      "syrup_river",
+      "syrup_river",
+      "syrup_river",
+      "exit_east"
+    ],
+    [
+      "velcro_mountain",
+      "dirt_path",
+      "bacon_strip",
+      "dirt_path",
+      "velcro_mountain"
+    ],
+    [
+      "velcro_mountain",
+      "dirt_path",
+      "item_potato",
+      "dirt_path",
+      "velcro_mountain"
+    ],
+    [
+      "velcro_mountain",
+      "velcro_mountain",
+      "velcro_mountain",
+      "velcro_mountain",
+      "velcro_mountain"
+    ]
   ],
-  "player_start": { "x": 1, "y": 2 },
+  "player_start": {
+    "x": 1,
+    "y": 2
+  },
   "tiles": {
     "velcro_mountain": {
       "passable": false,
@@ -34,7 +67,10 @@
       "item": {
         "name": "Velcro Potato",
         "itemId": "food_potato",
-        "actions": ["interact", "search"]
+        "actions": [
+          "interact",
+          "search"
+        ]
       }
     },
     "bacon_strip": {
@@ -42,7 +78,10 @@
       "description": "A piece of bacon lies on the ground, baking in the sun.",
       "interactionVerb": "EAT",
       "item": {
-        "contains": { "name": "Concrete Bacon", "type": "food" },
+        "contains": {
+          "name": "Concrete Bacon",
+          "type": "food"
+        },
         "onCollect": "You try a bite... BLERGH! It tastes like concrete! Freddista gives you a disgusted look. \"You do know those have been out in the sun and been stepped on right?\"",
         "setFlag": "tasted_bacon"
       }
@@ -51,13 +90,19 @@
       "passable": true,
       "description": "The path leads back through the small crack to Shoeboxlandia Street.",
       "targetRoomId": "shoeboxlandia_street",
-      "targetPosition": { "x": 3, "y": 3 }
+      "targetPosition": {
+        "x": 4,
+        "y": 1
+      }
     },
     "exit_east": {
       "passable": true,
       "description": "The path continues toward a massive structure made of cereal boxes in the distance.",
       "targetRoomId": "breakfastopia_gates",
-      "targetPosition": { "x": 1, "y": 2 }
+      "targetPosition": {
+        "x": 0,
+        "y": 1
+      }
     }
   },
   "entities": [],

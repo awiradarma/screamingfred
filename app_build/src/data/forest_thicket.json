@@ -1,0 +1,90 @@
+{
+  "room_id": "forest_thicket",
+  "world_coord": "15,18,0",
+  "room_name": "Forest Thicket",
+  "theme": "Forest",
+  "description": "A dense tangle of thorny shoelace bushes. You have to be careful not to snag your eyelets.",
+  "grid": [
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ],
+    [
+      "wall",
+      "ground",
+      "ground",
+      "ground",
+      "wall"
+    ],
+    [
+      "wall",
+      "ground",
+      "item_berries",
+      "ground",
+      "exit_east"
+    ],
+    [
+      "wall",
+      "ground",
+      "ground",
+      "ground",
+      "wall"
+    ],
+    [
+      "wall",
+      "wall",
+      "exit_south",
+      "wall",
+      "wall"
+    ]
+  ],
+  "player_start": {
+    "x": 3,
+    "y": 1
+  },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "Imprenetable thorny bushes."
+    },
+    "ground": {
+      "passable": true,
+      "description": "A floor of dried leaves and leather scraps."
+    },
+    "exit_east": {
+      "passable": true,
+      "description": "The path leads east back to the deep forest.",
+      "targetRoomId": "forest_deep",
+      "targetPosition": {
+        "x": 0,
+        "y": 2
+      }
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "The path leads south toward a small creek.",
+      "targetRoomId": "forest_creek",
+      "targetPosition": {
+        "x": 2,
+        "y": 0
+      }
+    },
+    "item_berries": {
+      "passable": true,
+      "description": "A bush full of small, blue rubbery berries.",
+      "item": {
+        "name": "Rubber Berries",
+        "itemId": "item_berries",
+        "actions": [
+          "interact",
+          "search"
+        ]
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {}
+}

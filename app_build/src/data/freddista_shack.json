@@ -1,16 +1,16 @@
 {
   "room_id": "freddista_shack",
-  "world_coord": "15,19,0",
+  "world_coord": "15,20,0",
   "room_name": "Freddista's Shack",
   "theme": "Shoelace_Forest",
   "description": "At the end of the winding forest path stands a small, crooked shack made of mismatched wood and old shoebox scraps. The door hangs slightly open. Whoever lives here has been alone for a very long time. This is where the rumors say the 'monster' Freddista dwells.",
   "grid": [
     [
+      "wall",
       "edge_n",
-      "edge_n",
-      "edge_n",
-      "edge_n",
-      "edge_n"
+      "wall",
+      "wall",
+      "wall"
     ],
     [
       "wall",
@@ -59,8 +59,8 @@
       "description": "The forest path leads back north through the snake-infested trail.",
       "targetRoomId": "snake_path",
       "targetPosition": {
-        "x": 2,
-        "y": 3
+        "x": 1,
+        "y": 4
       }
     },
     "item_lantern": {

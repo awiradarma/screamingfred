@@ -5,13 +5,46 @@
   "theme": "Electric Desert",
   "description": "The air crackles with static electricity. Shimmering dunes of crystalline sand stretch out before you, glowing with a faint, pulsing blue light. Occasional bolts of lightning arc between the peaks of the dunes.",
   "grid": [
-    ["electric_sand", "electric_sand", "electric_sand", "electric_sand", "electric_sand"],
-    ["electric_sand", "sand_path",      "item_potato",    "sand_path",      "electric_sand"],
-    ["exit_west",     "sand_path",      "sand_path",      "sand_path",      "sand_path"],
-    ["electric_sand", "sand_path",      "sand_path",      "sand_path",      "electric_sand"],
-    ["electric_sand", "electric_sand", "electric_sand", "electric_sand", "electric_sand"]
+    [
+      "electric_sand",
+      "electric_sand",
+      "electric_sand",
+      "electric_sand",
+      "electric_sand"
+    ],
+    [
+      "exit_west",
+      "sand_path",
+      "item_potato",
+      "sand_path",
+      "exit_east"
+    ],
+    [
+      "electric_sand",
+      "sand_path",
+      "sand_path",
+      "sand_path",
+      "electric_sand"
+    ],
+    [
+      "electric_sand",
+      "sand_path",
+      "warning_sign",
+      "sand_path",
+      "electric_sand"
+    ],
+    [
+      "electric_sand",
+      "electric_sand",
+      "electric_sand",
+      "electric_sand",
+      "electric_sand"
+    ]
   ],
-  "player_start": { "x": 1, "y": 2 },
+  "player_start": {
+    "x": 1,
+    "y": 2
+  },
   "tiles": {
     "electric_sand": {
       "passable": true,
@@ -30,14 +63,46 @@
       "item": {
         "name": "Electric Potato",
         "itemId": "food_potato",
-        "actions": ["interact", "search"]
+        "actions": [
+          "interact",
+          "search"
+        ]
+      }
+    },
+    "warning_sign": {
+      "passable": true,
+      "description": "A metal signpost that emits small sparks. It looks like it was recently hammered into the sand.",
+      "npc": {
+        "name": "Sparking Sign",
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "The sign reads: '⚠ OFFICIAL NOTICE FROM BARRY THE BATTERY: Standing is strictly prohibited in this sector. All travelers must find a chair and SIT DOWN immediately to conserve vital energy for the grid (and for me).'"
+          },
+          {
+            "stage": 1,
+            "text": "There's a smaller note at the bottom: 'If you are caught standing, you will be considered a rebel and will be force-sat. — B.B.'"
+          }
+        ]
       }
     },
     "exit_west": {
       "passable": true,
       "description": "The path leads back to the Breakfastopia Gates.",
       "targetRoomId": "breakfastopia_gates",
-      "targetPosition": { "x": 3, "y": 2 }
+      "targetPosition": {
+        "x": 4,
+        "y": 1
+      }
+    },
+    "exit_east": {
+      "passable": true,
+      "description": "The path continues deeper into the humming desert toward a large structure.",
+      "targetRoomId": "microphone_stage",
+      "targetPosition": {
+        "x": 0,
+        "y": 1
+      }
     }
   },
   "entities": [],

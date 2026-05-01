@@ -5,13 +5,46 @@
   "theme": "Breakfastopia",
   "description": "A massive gate constructed from three colossal cereal boxes towers before you. Beyond it, you can see the sprawling city of Breakfastopia: bakeries, town halls, restaurants, shops, and even shoe stores. The air is thick with the smell of butter and maple syrup.",
   "grid": [
-    ["cereal_box_wall", "cereal_box_wall", "cereal_box_wall", "cereal_box_wall", "cereal_box_wall"],
-    ["cereal_box_wall", "pancake_path",    "npc_tuxedo",      "pancake_path",    "cereal_box_wall"],
-    ["exit_west",       "pancake_path",    "pancake_path",    "npc_willy",       "exit_east"],
-    ["cereal_box_wall", "item_potato",     "pancake_path",    "pancake_path",    "cereal_box_wall"],
-    ["cereal_box_wall", "cereal_box_wall", "pancake_path",    "cereal_box_wall", "cereal_box_wall"]
+    [
+      "cereal_box_wall",
+      "cereal_box_wall",
+      "cereal_box_wall",
+      "cereal_box_wall",
+      "cereal_box_wall"
+    ],
+    [
+      "exit_west",
+      "pancake_path",
+      "npc_tuxedo",
+      "pancake_path",
+      "exit_east"
+    ],
+    [
+      "cereal_box_wall",
+      "pancake_path",
+      "pancake_path",
+      "npc_willy",
+      "cereal_box_wall"
+    ],
+    [
+      "cereal_box_wall",
+      "item_potato",
+      "pancake_path",
+      "pancake_path",
+      "cereal_box_wall"
+    ],
+    [
+      "cereal_box_wall",
+      "cereal_box_wall",
+      "pancake_path",
+      "cereal_box_wall",
+      "cereal_box_wall"
+    ]
   ],
-  "player_start": { "x": 1, "y": 2 },
+  "player_start": {
+    "x": 1,
+    "y": 1
+  },
   "tiles": {
     "cereal_box_wall": {
       "passable": false,
@@ -27,14 +60,20 @@
       "item": {
         "name": "Pancake Potato",
         "itemId": "food_potato",
-        "actions": ["interact", "search"]
+        "actions": [
+          "interact",
+          "search"
+        ]
       }
     },
     "exit_west": {
       "passable": true,
       "description": "The path leads back to Shoeboxlandia.",
       "targetRoomId": "path_to_breakfastopia",
-      "targetPosition": { "x": 3, "y": 2 }
+      "targetPosition": {
+        "x": 4,
+        "y": 1
+      }
     },
     "exit_east": {
       "passable": true,
@@ -44,7 +83,10 @@
         "failMessage": "You shouldn't venture further without the detective. He knows the way."
       },
       "targetRoomId": "electric_desert_entrance",
-      "targetPosition": { "x": 0, "y": 2 }
+      "targetPosition": {
+        "x": 0,
+        "y": 1
+      }
     },
     "npc_tuxedo": {
       "passable": true,
@@ -54,18 +96,15 @@
         "dialogue": [
           {
             "stage": 0,
-            "text": "\"Welcome to Breakfastopia!\" he exclaims, \"home of the first meal of the day!\"",
-            "hint": "Talk again to demand answers."
+            "text": "\"Welcome to Breakfastopia!\" he exclaims, \"home of the first meal of the day!\""
           },
           {
             "stage": 1,
-            "text": "Fred steps forward angrily. \"We have come to extract the food you have STOLEN!\"",
-            "hint": "Talk again to see his response."
+            "text": "Fred steps forward angrily. \"We have come to extract the food you have STOLEN!\""
           },
           {
             "stage": 2,
-            "text": "The pancake looks confused. \"What makes you believe that we have stolen your food?\"",
-            "hint": "Let Freddista handle this."
+            "text": "The pancake looks confused. \"What makes you believe that we have stolen your food?\""
           },
           {
             "stage": 3,
@@ -90,28 +129,25 @@
       "passable": true,
       "visibleIf": "tuxedo_introduced_willy",
       "hiddenTileType": "pancake_path",
-      "description": "A waffle carrying a magnifying glass and a briefcase. He stands near a pedestal embroidered with pretzels.",
+      "description": "A waffle carrying a briefcase. He stands near a pedestal embroidered with pretzels.",
       "npc": {
         "name": "Willy the Waffle",
         "dialogue": [
           {
             "stage": 0,
-            "text": "\"My expiration date is expired,\" mutters the waffle as he approaches the pedestal.",
-            "hint": "Ask him about the stolen lunch."
+            "text": "\"My expiration date is expired,\" mutters the waffle as he approaches the pedestal."
           },
           {
             "stage": 1,
-            "text": "Fred asks, \"Do you have any idea who stole my lunch?\" Willy sighs, \"I am afraid your lunch is lost. However, there is a way of making some new pasta and potatoes.\"",
-            "hint": "Listen to his plan."
+            "text": "Fred asks, \"Do you have any idea who stole my lunch?\" Willy sighs, \"I am afraid your lunch is lost. However, there is a way of making some new pasta and potatoes.\""
           },
           {
             "stage": 2,
-            "text": "Willy panted, \"First, we head through the Electric Desert, past the Mountains of Misery, through the Hidden Hideout and the Glassy Castle. Then into the Great Noodle Factory for pasta, across the Scary Scrapyard, and through the Swamp of Rotten Apples... finally back to Shoeboxlandia.\"",
-            "hint": "Respond to the long journey."
+            "text": "Willy panted, \"First, we head through the Electric Desert, past the Mountains of Misery, through the Hidden Hideout and the Glassy Castle. Then into the Great Noodle Factory for pasta, across the Scary Scrapyard, and through the Swamp of Rotten Apples... finally back to Shoeboxlandia.\""
           },
           {
             "stage": 3,
-            "text": "Fred whines, \"That will take so long!\" Freddista mutters, \"It's not that long.\" Willy adjusts his glass: \"Well, we better stop complaining, and head to the desert.\"",
+            "text": "Fred whines, \"That will take so long!\" Freddista mutters, \"It's not that long.\" Willy adjusts his glasses: \"Well, we better stop complaining, and head to the desert.\"",
             "onComplete": {
               "action": "set_flag",
               "flagSet": "willy_joined"
@@ -119,8 +155,7 @@
           },
           {
             "stage": 4,
-            "text": "\"Remember, be careful with the electric sand,\" cautioned Willy, \"It will zap you in an instant.\"",
-            "hint": "The path to the Electric Desert is now open to the East."
+            "text": "\"Remember, be careful with the electric sand,\" cautioned Willy, \"It will zap you in an instant.\""
           },
           {
             "stage": 5,

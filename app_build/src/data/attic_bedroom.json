@@ -1,0 +1,90 @@
+{
+  "room_id": "attic_bedroom",
+  "world_coord": "15,15,1",
+  "room_name": "Attic Bedroom",
+  "theme": "Shoeboxlandia",
+  "description": "A cozy, if somewhat dusty, bedroom tucked away in the attic. A small window allows a sliver of moonlight to fall across the floor.",
+  "grid": [
+    [
+      "wall",
+      "wall",
+      "exit_north",
+      "wall",
+      "wall"
+    ],
+    [
+      "wall",
+      "floor",
+      "floor",
+      "floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "floor",
+      "item_pillow",
+      "floor",
+      "exit_east"
+    ],
+    [
+      "wall",
+      "floor",
+      "floor",
+      "floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ]
+  ],
+  "player_start": {
+    "x": 2,
+    "y": 2
+  },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "A wallpapered wall with a pattern of tiny buttons."
+    },
+    "floor": {
+      "passable": true,
+      "description": "A soft, carpeted floor."
+    },
+    "exit_north": {
+      "passable": true,
+      "description": "A small hole leads up to the attic corner.",
+      "targetRoomId": "attic_corner",
+      "targetPosition": {
+        "x": 2,
+        "y": 4
+      }
+    },
+    "exit_east": {
+      "passable": true,
+      "description": "A door leads back to the main house.",
+      "targetRoomId": "freds_house",
+      "targetPosition": {
+        "x": 0,
+        "y": 2
+      }
+    },
+    "item_pillow": {
+      "passable": true,
+      "description": "A tiny pillow made of a single cotton ball.",
+      "item": {
+        "name": "Soft Pillow",
+        "itemId": "item_pillow",
+        "actions": [
+          "interact",
+          "search"
+        ]
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {}
+}

@@ -1,0 +1,117 @@
+{
+  "room_id": "forest_entrance",
+  "world_coord": "15,17,0",
+  "room_name": "Shoelace Forest Entrance",
+  "theme": "Forest",
+  "description": "The trees here are made of twisted leather and giant shoelaces. The ground is a soft moss of lint. A dark path leads deeper into the forest to the south, while another trail heads east.",
+  "grid": [
+    [
+      "wall",
+      "wall",
+      "exit_north_street",
+      "exit_north_path",
+      "wall"
+    ],
+    [
+      "wall",
+      "lint_moss",
+      "lint_moss",
+      "lint_moss",
+      "wall"
+    ],
+    [
+      "wall",
+      "lint_moss",
+      "npc_snake",
+      "lint_moss",
+      "exit_east"
+    ],
+    [
+      "wall",
+      "lint_moss",
+      "lint_moss",
+      "lint_moss",
+      "wall"
+    ],
+    [
+      "wall",
+      "exit_south",
+      "wall",
+      "wall",
+      "wall"
+    ]
+  ],
+  "player_start": {
+    "x": 2,
+    "y": 1
+  },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "Dense shoelace trees. Their roots are tangled knots."
+    },
+    "lint_moss": {
+      "passable": true,
+      "description": "A soft, springy layer of lint moss."
+    },
+    "exit_north_path": {
+      "passable": true,
+      "description": "The trail leads back to the garden path.",
+      "targetRoomId": "garden_path",
+      "targetPosition": {
+        "x": 3,
+        "y": 4
+      }
+    },
+    "exit_north_street": {
+      "passable": true,
+      "description": "The main road leads back to Shoeboxlandia Street.",
+      "targetRoomId": "shoeboxlandia_street",
+      "targetPosition": {
+        "x": 2,
+        "y": 4
+      }
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "The path leads deeper into the dark Shoelace Forest.",
+      "targetRoomId": "forest_deep",
+      "targetPosition": {
+        "x": 1,
+        "y": 0
+      }
+    },
+    "exit_east": {
+      "passable": true,
+      "description": "The path leads east toward the Whispering Cave.",
+      "targetRoomId": "secret_cave",
+      "targetPosition": {
+        "x": 0,
+        "y": 2
+      }
+    },
+    "npc_snake": {
+      "passable": true,
+      "description": "A shoelace snake is coiled around a leather tree, hissing softly.",
+      "npc": {
+        "name": "Shoelace Snake",
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "\"Sssss... a new shoe in the foresssst... how tsssss-ty...\""
+          },
+          {
+            "stage": 1,
+            "text": "Fred screams at the snake. The snake recoils in shock. \"Ssss-top that! My ear-holesssss!\""
+          },
+          {
+            "stage": 2,
+            "text": "\"Fine, fine... passsss through, loud shoe. But watch your sssss-tep in the deep foresssst. Thingsssss are much more hungry there.\""
+          }
+        ]
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {}
+}

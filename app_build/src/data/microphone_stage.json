@@ -1,0 +1,126 @@
+{
+  "room_id": "microphone_stage",
+  "world_coord": "19,16,0",
+  "room_name": "Massive Microphone's Stage",
+  "theme": "Electric Desert",
+  "description": "A colossal microphone stands in the center of a naturally formed amphitheater of glowing dunes. The air here vibrates with a low, melodic hum. A spotlight of pure static electricity shines down from the cloudless sky onto the stage.",
+  "grid": [
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ],
+    [
+      "exit_west",
+      "floor",
+      "floor",
+      "floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "floor",
+      "npc_microphone",
+      "floor",
+      "exit_east"
+    ],
+    [
+      "wall",
+      "floor",
+      "floor",
+      "floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ]
+  ],
+  "player_start": {
+    "x": 1,
+    "y": 2
+  },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "Steep dunes of shimmering sand that pulse with rhythmic light."
+    },
+    "floor": {
+      "passable": true,
+      "description": "The sand here is packed hard, like a dance floor. It tingles under your soles."
+    },
+    "exit_west": {
+      "passable": true,
+      "description": "The path leads back toward the entrance of the Electric Desert.",
+      "targetRoomId": "electric_desert_entrance",
+      "targetPosition": {
+        "x": 4,
+        "y": 1
+      }
+    },
+    "exit_east": {
+      "passable": true,
+      "description": "The path leads toward the jagged silhouettes of the Mountains of Misery.",
+      "conditions": {
+        "requiredFlag": "microphone_satisfied",
+        "failMessage": "The microphone's booming voice stops you: 'THE SHOW IS NOT OVER! SING FOR ME!'"
+      },
+      "targetRoomId": "mountain_base",
+      "targetPosition": {
+        "x": 0,
+        "y": 2
+      }
+    },
+    "npc_microphone": {
+      "passable": true,
+      "description": "A massive microphone, at least three stories tall. It seems to be waiting for something.",
+      "npc": {
+        "name": "The Great Mic",
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "\"In order for you to pass this area, you must sing to me your best choice of music,\" the microphone explains optimistically."
+          },
+          {
+            "stage": 1,
+            "text": "Freddista groans, \"Urrrrg, okay I'll hold off that battery guy, you guys- use those vocal chords!\" Willy looks at you. \"I don't have any musical talent, what about you Fred?\""
+          },
+          {
+            "stage": 2,
+            "text": "Fred clears his throat. \"OHHH OHh UMM Large microphone thingy, can you um please let us throoooough... If you won't that battery guy will catch us... What more could you want AHHHHHHHH!\"",
+            "hint": "Use the SCREAM action to satisfy the microphone."
+          },
+          {
+            "stage": 3,
+            "text": "\"That's good enough,\" remarks the microphone. \"Take this electric lantern as a token of my appreciation for such a... unique performance.\"",
+            "onComplete": {
+              "action": "give_item",
+              "itemId": "tool_electric_lantern"
+            }
+          },
+          {
+            "stage": 4,
+            "text": "\"The Mountains of Misery lie to the East. Go forth and sing your way to destiny!\"",
+            "onComplete": {
+              "action": "set_flag",
+              "flagSet": "microphone_satisfied"
+            }
+          },
+          {
+            "stage": 5,
+            "text": "\"Your performance was... unforgettable, Fred. Truly. Now move along before I change my mind about your encore.\""
+          }
+        ]
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {
+    "microphone_satisfied": false
+  }
+}

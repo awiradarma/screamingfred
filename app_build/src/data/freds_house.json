@@ -1,0 +1,120 @@
+{
+  "room_id": "freds_house",
+  "world_coord": "15,15,0",
+  "room_name": "Fred's Shoebox",
+  "theme": "Shoeboxlandia",
+  "description": "The interior of Fred's humble shoebox. It is sparsely furnished with a discarded cotton ball for a bed and a plastic lace-tip for a table. The walls are made of cardboard. It is very quiet here—too quiet.",
+  "grid": [
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ],
+    [
+      "wall",
+      "floor",
+      "floor",
+      "floor",
+      "exit_east"
+    ],
+    [
+      "wall",
+      "floor",
+      "item_bed",
+      "npc_freddista",
+      "wall"
+    ],
+    [
+      "wall",
+      "floor",
+      "floor",
+      "floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "wall",
+      "exit_south",
+      "wall",
+      "wall"
+    ]
+  ],
+  "player_start": {
+    "x": 2,
+    "y": 2
+  },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "A sturdy cardboard wall. It smells faintly of new shoes."
+    },
+    "floor": {
+      "passable": true,
+      "description": "A soft, slightly fuzzy floor made of recycled tissue paper."
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "The exit leads out to the street of Shoeboxlandia.",
+      "targetRoomId": "shoeboxlandia_street",
+      "targetPosition": {
+        "x": 2,
+        "y": 0
+      }
+    },
+    "exit_east": {
+      "passable": true,
+      "description": "A small crack in the wall leads to your neighbor's shoebox.",
+      "targetRoomId": "neighbors_house",
+      "targetPosition": {
+        "x": 0,
+        "y": 1
+      }
+    },
+    "item_bed": {
+      "passable": true,
+      "description": "A soft cotton ball bed. It's not much, but it's home.",
+      "interactionVerb": "SEARCH",
+      "item": {
+        "name": "Note",
+        "description": "A handwritten note: 'Fred, don't forget to scream today! - Mom'"
+      }
+    },
+    "npc_freddista": {
+      "passable": true,
+      "description": "Freddista is standing by the wall, her high-heeled silhouette looking formidable.",
+      "npc": {
+        "name": "Freddista",
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "\"Fred! You're finally awake. Someone stole your lunch while you were dreaming about being a sneaker.\""
+          },
+          {
+            "stage": 1,
+            "text": "Fred lets out a long, high-pitched scream. \"Whaaaat?! My pasta and potatoes?! Gone?!\""
+          },
+          {
+            "stage": 2,
+            "text": "Freddista sighs. \"Yes, Fred. I think it was that waffle from Breakfastopia. He looked suspicious. Let's go find him. I'll come with you—you can't navigate the world without my stare.\"",
+            "onComplete": {
+              "action": "set_flag",
+              "flagSet": "freddista_joined"
+            }
+          },
+          {
+            "stage": 3,
+            "text": "\"Well, what are you waiting for? Let's go out to the street! Breakfastopia is just past the city gates.\""
+          },
+          {
+            "stage": 4,
+            "text": "\"The world is dangerous, Fred. Keep your laces tied and your tongue ready. Now, move it!\""
+          }
+        ]
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {}
+}

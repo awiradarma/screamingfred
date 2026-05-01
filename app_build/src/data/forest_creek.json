@@ -1,0 +1,84 @@
+{
+  "room_id": "forest_creek",
+  "world_coord": "14,18,0",
+  "room_name": "Forest Creek",
+  "theme": "Forest",
+  "description": "A small creek of liquid rubber flows slowly between the trees. The sound is a dull, rhythmic thudding.",
+  "grid": [
+    [
+      "wall",
+      "wall",
+      "exit_north",
+      "wall",
+      "wall"
+    ],
+    [
+      "wall",
+      "ground",
+      "ground",
+      "ground",
+      "wall"
+    ],
+    [
+      "wall",
+      "ground",
+      "creek",
+      "ground",
+      "exit_east"
+    ],
+    [
+      "wall",
+      "ground",
+      "ground",
+      "ground",
+      "wall"
+    ],
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ]
+  ],
+  "player_start": {
+    "x": 2,
+    "y": 1
+  },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "Dense trees lining the creek."
+    },
+    "ground": {
+      "passable": true,
+      "description": "The muddy bank of the rubber creek."
+    },
+    "creek": {
+      "passable": true,
+      "description": "A slow-moving stream of thick, black liquid rubber.",
+      "effect": "slow",
+      "effectMessage": "The rubber is thick and hard to walk through!"
+    },
+    "exit_north": {
+      "passable": true,
+      "description": "The path leads back to the thorny thicket.",
+      "targetRoomId": "forest_thicket",
+      "targetPosition": {
+        "x": 2,
+        "y": 4
+      }
+    },
+    "exit_east": {
+      "passable": true,
+      "description": "The path leads east toward the forest exit.",
+      "targetRoomId": "forest_exit",
+      "targetPosition": {
+        "x": 0,
+        "y": 2
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {}
+}

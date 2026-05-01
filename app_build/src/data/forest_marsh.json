@@ -1,0 +1,90 @@
+{
+  "room_id": "forest_marsh",
+  "world_coord": "17,19,0",
+  "room_name": "Forest Marsh",
+  "theme": "Forest",
+  "description": "A damp, misty area of the forest. The ground is a soggy mix of lint and liquid rubber. Large, bloated shoelace vines hang from the trees.",
+  "grid": [
+    [
+      "wall",
+      "wall",
+      "exit_north",
+      "wall",
+      "wall"
+    ],
+    [
+      "wall",
+      "marsh_ground",
+      "marsh_ground",
+      "marsh_ground",
+      "wall"
+    ],
+    [
+      "wall",
+      "marsh_ground",
+      "item_vine",
+      "marsh_ground",
+      "wall"
+    ],
+    [
+      "exit_west",
+      "marsh_ground",
+      "marsh_ground",
+      "marsh_ground",
+      "wall"
+    ],
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ]
+  ],
+  "player_start": {
+    "x": 2,
+    "y": 1
+  },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "Dripping, mossy shoelace trees."
+    },
+    "marsh_ground": {
+      "passable": true,
+      "description": "Soggy, yielding lint-marsh."
+    },
+    "exit_north": {
+      "passable": true,
+      "description": "The path leads back to the sunlit clearing.",
+      "targetRoomId": "forest_clearing",
+      "targetPosition": {
+        "x": 2,
+        "y": 4
+      }
+    },
+    "exit_west": {
+      "passable": true,
+      "description": "The path leads west toward the forest exit.",
+      "targetRoomId": "forest_exit",
+      "targetPosition": {
+        "x": 4,
+        "y": 3
+      }
+    },
+    "item_vine": {
+      "passable": true,
+      "description": "A thick, pulse-like shoelace vine.",
+      "item": {
+        "name": "Pulsing Vine",
+        "itemId": "item_vine",
+        "actions": [
+          "interact",
+          "search"
+        ]
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {}
+}

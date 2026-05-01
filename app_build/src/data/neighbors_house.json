@@ -1,0 +1,108 @@
+{
+  "room_id": "neighbors_house",
+  "world_coord": "16,15,0",
+  "room_name": "Neighbor's Shoebox",
+  "theme": "Shoeboxlandia",
+  "description": "This shoebox is much messier than Fred's. Loose threads and lint balls are scattered everywhere. Your neighbor, a grumpy old boot, is currently napping in the corner.",
+  "grid": [
+    [
+      "wall",
+      "wall",
+      "edge_n",
+      "wall",
+      "wall"
+    ],
+    [
+      "exit_west",
+      "floor",
+      "floor",
+      "floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "floor",
+      "npc_neighbor",
+      "floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "floor",
+      "floor",
+      "floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "exit_south",
+      "wall",
+      "wall",
+      "wall"
+    ]
+  ],
+  "player_start": {
+    "x": 1,
+    "y": 2
+  },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "A dusty cardboard wall."
+    },
+    "floor": {
+      "passable": true,
+      "description": "A floor covered in lint and loose threads."
+    },
+    "exit_west": {
+      "passable": true,
+      "description": "The crack leads back to your own shoebox.",
+      "targetRoomId": "freds_house",
+      "targetPosition": {
+        "x": 4,
+        "y": 1
+      }
+    },
+    "edge_n": {
+      "passable": true,
+      "description": "A hole in the ceiling leads up to the Shoe Rack.",
+      "targetRoomId": "shoe_rack",
+      "targetPosition": {
+        "x": 2,
+        "y": 4
+      }
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "A door leads out to the garden path.",
+      "targetRoomId": "garden_path",
+      "targetPosition": {
+        "x": 1,
+        "y": 0
+      }
+    },
+    "npc_neighbor": {
+      "passable": true,
+      "description": "A grumpy old boot is snoring loudly.",
+      "npc": {
+        "name": "Grumpy Boot",
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "\"Zzz... keep it down... some of us are trying to hibernate... zzz...\""
+          },
+          {
+            "stage": 1,
+            "text": "\"You again, Fred? Still screaming at the moon? Bah! When I was your age, we only screamed at things that deserved it, like muddy puddles!\""
+          },
+          {
+            "stage": 2,
+            "text": "\"If you're looking for that waffle, I saw him heading toward the gates. Now bugger off!\""
+          }
+        ]
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {}
+}

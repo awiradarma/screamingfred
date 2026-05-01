@@ -1,0 +1,90 @@
+{
+  "room_id": "attic_corner",
+  "world_coord": "15,14,0",
+  "room_name": "Attic Corner",
+  "theme": "Shoeboxlandia",
+  "description": "A dark, cobweb-filled corner of the attic. The air is stagnant and smells of mothballs. You can hear the faint scratching of something behind the walls.",
+  "grid": [
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ],
+    [
+      "wall",
+      "floor",
+      "floor",
+      "floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "floor",
+      "item_chest",
+      "floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "floor",
+      "floor",
+      "floor",
+      "exit_east"
+    ],
+    [
+      "wall",
+      "wall",
+      "exit_south",
+      "wall",
+      "wall"
+    ]
+  ],
+  "player_start": {
+    "x": 2,
+    "y": 1
+  },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "A wall covered in thick, sticky cobwebs."
+    },
+    "floor": {
+      "passable": true,
+      "description": "A floor covered in a thick layer of grey dust."
+    },
+    "exit_east": {
+      "passable": true,
+      "description": "The shelf continues east back toward the shoe rack.",
+      "targetRoomId": "shoe_rack",
+      "targetPosition": {
+        "x": 0,
+        "y": 3
+      }
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "A small hole leads down to the bedroom.",
+      "targetRoomId": "attic_bedroom",
+      "targetPosition": {
+        "x": 2,
+        "y": 0
+      }
+    },
+    "item_chest": {
+      "passable": true,
+      "description": "An old, locked jewelry box (sized for a shoe).",
+      "interactionVerb": "SCREAM",
+      "item": {
+        "contains": {
+          "name": "Silver Eyelet",
+          "type": "treasure"
+        },
+        "onCollect": "Your piercing scream vibrates the lock until it pops open! Inside is a shiny silver eyelet."
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {}
+}

@@ -1,0 +1,108 @@
+{
+  "room_id": "forest_deep",
+  "world_coord": "16,18,0",
+  "room_name": "Deep Shoelace Forest",
+  "theme": "Forest",
+  "description": "The shoelace trees are so thick here that only a few beams of moonlight filter through. The ground is covered in sticky lint and discarded rubber bits. You feel like you're being watched.",
+  "grid": [
+    [
+      "wall",
+      "exit_north",
+      "wall",
+      "wall",
+      "wall"
+    ],
+    [
+      "wall",
+      "lint_ground",
+      "lint_ground",
+      "lint_ground",
+      "wall"
+    ],
+    [
+      "exit_west",
+      "lint_ground",
+      "item_rubber",
+      "lint_ground",
+      "exit_east"
+    ],
+    [
+      "wall",
+      "lint_ground",
+      "lint_ground",
+      "lint_ground",
+      "wall"
+    ],
+    [
+      "wall",
+      "wall",
+      "exit_south",
+      "wall",
+      "wall"
+    ]
+  ],
+  "player_start": {
+    "x": 2,
+    "y": 2
+  },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "An impassable wall of knotted shoelaces."
+    },
+    "lint_ground": {
+      "passable": true,
+      "description": "Dirty, grey lint ground."
+    },
+    "exit_north": {
+      "passable": true,
+      "description": "The path leads back to the forest entrance.",
+      "targetRoomId": "forest_entrance",
+      "targetPosition": {
+        "x": 1,
+        "y": 4
+      }
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "The path continues deeper into the forest.",
+      "targetRoomId": "forest_exit",
+      "targetPosition": {
+        "x": 2,
+        "y": 0
+      }
+    },
+    "exit_east": {
+      "passable": true,
+      "description": "The path leads to a sunlit clearing.",
+      "targetRoomId": "forest_clearing",
+      "targetPosition": {
+        "x": 0,
+        "y": 2
+      }
+    },
+    "exit_west": {
+      "passable": true,
+      "description": "The path leads to a dense thicket.",
+      "targetRoomId": "forest_thicket",
+      "targetPosition": {
+        "x": 4,
+        "y": 2
+      }
+    },
+    "item_rubber": {
+      "passable": true,
+      "description": "A piece of vulcanized rubber is half-buried in the lint.",
+      "item": {
+        "name": "Rubber Piece",
+        "itemId": "item_rubber",
+        "actions": [
+          "interact",
+          "search"
+        ]
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {}
+}

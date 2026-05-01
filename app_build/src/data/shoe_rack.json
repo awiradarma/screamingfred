@@ -1,0 +1,99 @@
+{
+  "room_id": "shoe_rack",
+  "world_coord": "16,14,0",
+  "room_name": "The Shoe Rack",
+  "theme": "Shoeboxlandia",
+  "description": "You are perched on a precarious wooden shelf high above the floor. Dusty slippers and forgotten flip-flops rest here in eternal silence. The view is dizzying.",
+  "grid": [
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ],
+    [
+      "wall",
+      "shelf_floor",
+      "shelf_floor",
+      "shelf_floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "shelf_floor",
+      "item_lace",
+      "shelf_floor",
+      "exit_east"
+    ],
+    [
+      "exit_west",
+      "shelf_floor",
+      "shelf_floor",
+      "shelf_floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "wall",
+      "exit_south",
+      "wall",
+      "wall"
+    ]
+  ],
+  "player_start": {
+    "x": 2,
+    "y": 2
+  },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "The back of the wooden shelf. It's solid and splintery."
+    },
+    "shelf_floor": {
+      "passable": true,
+      "description": "The smooth, dusty wood of the shelf."
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "A hole in the shelf leads back down to the neighbor's house.",
+      "targetRoomId": "neighbors_house",
+      "targetPosition": {
+        "x": 2,
+        "y": 0
+      }
+    },
+    "exit_west": {
+      "passable": true,
+      "description": "The shelf continues west to a dark corner.",
+      "targetRoomId": "attic_corner",
+      "targetPosition": {
+        "x": 4,
+        "y": 3
+      }
+    },
+    "exit_east": {
+      "passable": true,
+      "description": "A narrow ledge leads east toward the window.",
+      "targetRoomId": "window_sill",
+      "targetPosition": {
+        "x": 0,
+        "y": 2
+      }
+    },
+    "item_lace": {
+      "passable": true,
+      "description": "A pristine, extra-long shoelace is coiled neatly here.",
+      "item": {
+        "name": "Long Shoelace",
+        "itemId": "tool_lace",
+        "actions": [
+          "interact",
+          "search"
+        ]
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {}
+}

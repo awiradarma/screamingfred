@@ -1,0 +1,90 @@
+{
+  "room_id": "forest_clearing",
+  "world_coord": "17,18,0",
+  "room_name": "Forest Clearing",
+  "theme": "Forest",
+  "description": "A rare open space in the forest. A circle of mushrooms grows in the center. The air is slightly fresher here.",
+  "grid": [
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ],
+    [
+      "wall",
+      "grass",
+      "grass",
+      "grass",
+      "wall"
+    ],
+    [
+      "exit_west",
+      "grass",
+      "item_mushrooms",
+      "grass",
+      "wall"
+    ],
+    [
+      "wall",
+      "grass",
+      "grass",
+      "grass",
+      "wall"
+    ],
+    [
+      "wall",
+      "wall",
+      "exit_south",
+      "wall",
+      "wall"
+    ]
+  ],
+  "player_start": {
+    "x": 1,
+    "y": 2
+  },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "The surrounding trees are slightly thinner here, but still impassable."
+    },
+    "grass": {
+      "passable": true,
+      "description": "Short, green grass."
+    },
+    "exit_west": {
+      "passable": true,
+      "description": "The path leads back into the deep forest.",
+      "targetRoomId": "forest_deep",
+      "targetPosition": {
+        "x": 4,
+        "y": 2
+      }
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "The path leads south toward a damp marsh.",
+      "targetRoomId": "forest_marsh",
+      "targetPosition": {
+        "x": 2,
+        "y": 0
+      }
+    },
+    "item_mushrooms": {
+      "passable": true,
+      "description": "A circle of glowing mushrooms. They look slightly magical.",
+      "item": {
+        "name": "Glowing Mushrooms",
+        "itemId": "item_mushrooms",
+        "actions": [
+          "interact",
+          "search"
+        ]
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {}
+}

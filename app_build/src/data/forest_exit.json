@@ -1,0 +1,96 @@
+{
+  "room_id": "forest_exit",
+  "world_coord": "16,19,0",
+  "room_name": "Forest Path's End",
+  "theme": "Forest",
+  "description": "The trees begin to thin out. To the south, you can see the shimmering horizon of the Electric Desert. The air is starting to feel warm and static-charged.",
+  "grid": [
+    [
+      "wall",
+      "wall",
+      "exit_north",
+      "wall",
+      "wall"
+    ],
+    [
+      "wall",
+      "ground",
+      "ground",
+      "ground",
+      "wall"
+    ],
+    [
+      "exit_west",
+      "ground",
+      "ground",
+      "ground",
+      "wall"
+    ],
+    [
+      "wall",
+      "ground",
+      "ground",
+      "ground",
+      "exit_east"
+    ],
+    [
+      "wall",
+      "wall",
+      "exit_south",
+      "wall",
+      "wall"
+    ]
+  ],
+  "player_start": {
+    "x": 2,
+    "y": 1
+  },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "The last few shoelace trees of the forest."
+    },
+    "ground": {
+      "passable": true,
+      "description": "The ground is becoming more sandy and dry."
+    },
+    "exit_north": {
+      "passable": true,
+      "description": "The path leads back into the deep forest.",
+      "targetRoomId": "forest_deep",
+      "targetPosition": {
+        "x": 2,
+        "y": 4
+      }
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "The path leads south into the Electric Desert.",
+      "targetRoomId": "electric_desert_entrance",
+      "targetPosition": {
+        "x": 2,
+        "y": 0
+      }
+    },
+    "exit_east": {
+      "passable": true,
+      "description": "The path leads east toward the marshy edge of the forest.",
+      "targetRoomId": "forest_marsh",
+      "targetPosition": {
+        "x": 0,
+        "y": 3
+      }
+    },
+    "exit_west": {
+      "passable": true,
+      "description": "The path leads west toward a small creek.",
+      "targetRoomId": "forest_creek",
+      "targetPosition": {
+        "x": 4,
+        "y": 2
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {}
+}

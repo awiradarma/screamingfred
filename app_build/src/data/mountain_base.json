@@ -1,0 +1,161 @@
+{
+  "room_id": "mountain_base",
+  "world_coord": "20,16,0",
+  "room_name": "Foot of the Mountains of Misery",
+  "theme": "Mountains_of_Misery",
+  "description": "The flat desert gives way to jagged, dark peaks that pierce the sky like broken glass. The air is cold and thin. In the distance, you can see Barry the Battery lunging toward you, sparks flying from his angry casing!",
+  "grid": [
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ],
+    [
+      "wall",
+      "floor",
+      "floor",
+      "floor",
+      "wall"
+    ],
+    [
+      "exit_west",
+      "floor",
+      "npc_barry",
+      "floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "cursed_chair",
+      "floor",
+      "floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ]
+  ],
+  "player_start": {
+    "x": 1,
+    "y": 1
+  },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "Sharp, jagged rock faces that look impossible to climb without proper gear."
+    },
+    "floor": {
+      "passable": true,
+      "description": "Cold, grey stone covered in a thin layer of crystalline frost."
+    },
+    "cursed_chair": {
+      "passable": true,
+      "description": "A rickety wooden chair that seems to be vibrating with dark energy. It looks incredibly uncomfortable, yet strangely inviting.",
+      "interactionVerb": "SIT",
+      "onInteract": "You sit down. A cold shock runs through your sole, locking you in place for a moment. You feel a strange connection to the ground. Barry laughs hysterically.",
+      "item": {
+        "onCollect": "You can't carry a chair!",
+        "contains": null,
+        "actions": [
+          "interact"
+        ],
+        "onInteract": {
+          "action": "set_flag",
+          "flagSet": "sat_in_chair"
+        }
+      }
+    },
+    "exit_west": {
+      "passable": true,
+      "description": "The path leads back to the Microphone's Stage.",
+      "targetRoomId": "microphone_stage",
+      "targetPosition": {
+        "x": 4,
+        "y": 2
+      }
+    },
+    "exit_east": {
+      "passable": true,
+      "description": "The path continues upward into the higher cliffs of the Mountains of Misery.",
+      "conditions": {
+        "requiredFlag": "barry_burned",
+        "failMessage": "Barry blocks the way! You need to deal with him before you can proceed."
+      },
+      "targetRoomId": "mountain_pass",
+      "targetPosition": {
+        "x": 0,
+        "y": 2
+      }
+    },
+    "npc_barry": {
+      "passable": true,
+      "description": "A massive, sparking battery with a face full of rage. He looks ready to lunge!",
+      "npc": {
+        "name": "Barry the Battery",
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "\"WHY ARE YOU STILL STANDING?!\" Barry screeches, his terminals glowing a violent red. \"DO YOU HAVE ANY IDEA HOW MUCH POTENTIAL ENERGY YOU'RE WASTING BY MAINTAINING AN UPRIGHT POSTURE?!\""
+          },
+          {
+            "stage": 1,
+            "text": "\"SIT! DOWN! NOW!\" he commands. \"If everyone just sat down and stayed still, I could drain... I mean, CONSERVE your energy so much more efficiently! Look at that chair! It's perfectly good! SIT!\""
+          },
+          {
+            "stage": 2,
+            "text": "Barry lunges and zaps you! \"I SAID SIT! IN THE CHAIR!\"",
+            "conditions": {
+              "requiredFlag": "!sat_in_chair"
+            },
+            "onComplete": {
+              "action": "damage_player",
+              "value": 2
+            },
+            "hint": "You need to interact with the Cursed Chair to satisfy his demand!"
+          },
+          {
+            "stage": 3,
+            "text": "\"Ah, finally sitting down. Excellent...\" Barry's glow stabilizes. Willy whispers, \"I think he's serious about the chair, Fred. He's a total control freak!\"",
+            "conditions": {
+              "requiredFlag": "sat_in_chair"
+            }
+          },
+          {
+            "stage": 4,
+            "text": "Barry starts to hum menacingly. \"NOW I CAN DRAIN YOU PROPERLY!\" Freddista quickly grabs the Magnifying Glass and focuses the sun's rays!",
+            "conditions": {
+              "requiredItem": "tool_magnifying_glass"
+            },
+            "hint": "You need the Magnifying Glass from the Secret Cave to stop him!"
+          },
+          {
+            "stage": 5,
+            "text": "Barry starts to smoke. \"MY CASING! IT'S MELTING! I'M OVERHEATING! I NEED TO SIT DOWN IN SOMETHING COLD!\" He rolls away frantically toward a distant puddle.",
+            "onComplete": {
+              "action": "set_flag",
+              "flagSet": "barry_burned"
+            }
+          },
+          {
+            "stage": 6,
+            "text": "Willy looks at the ruined Magnifying Glass. \"Well, he's gone. But my glass is toast. At least we don't have to sit in that creepy chair.\"",
+            "onComplete": {
+              "action": "remove_item",
+              "itemId": "tool_magnifying_glass"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {
+    "barry_burned": false
+  }
+}

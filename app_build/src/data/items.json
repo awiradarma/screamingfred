@@ -89,5 +89,27 @@
       "consume": true,
       "successMessage": "You consume the Ultra Golden Potato. A surge of pure, starchy energy flows through you! Your HP is boosted to 50!"
     }
+  },
+  "tool_magnifying_glass": {
+    "name": "Magnifying Glass",
+    "description": "A thick glass lens with a brass handle. It makes small things look large, or can focus light into a burning point.",
+    "type": "tool"
+  },
+  "tool_electric_lantern": {
+    "name": "Electric Lantern",
+    "description": "A high-tech lantern found in the Electric Desert. It hums with a steady, blue glow.",
+    "type": "tool",
+    "onUse": {
+      "action": "unlock",
+      "target": "dark_corner",
+      "flagSet": "corner_illuminated",
+      "successMessage": "The electric lantern's blue light pierces the gloom!",
+      "failureMessage": "The blue light reveals nothing hidden here."
+    }
+  },
+  "tool_strong_shoelace": {
+    "name": "Strong Shoelace",
+    "description": "A thick, durable shoelace found in the Secret Cave. It's strong enough to tie anything together — maybe even a broken bridge.",
+    "type": "tool"
   }
 }

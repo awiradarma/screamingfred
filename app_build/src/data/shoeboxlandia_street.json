@@ -6,32 +6,32 @@
   "description": "You step onto the main street of Shoeboxlandia. Neat rows of shoebox houses line the road, each one identical and perfectly aligned. Countless eyes glare at you from behind curtains — probably because of the karaoke last night. A shopkeeper's stall and a wise old slipper catch your attention.",
   "grid": [
     [
+      "wall",
+      "wall",
       "edge_n",
-      "edge_n",
-      "edge_n",
-      "edge_n",
-      "edge_n"
+      "wall",
+      "wall"
     ],
     [
       "wall",
       "npc_shopkeeper",
       "floor",
       "item_signpost",
-      "trash_can"
+      "exit_east"
     ],
     [
       "wall",
       "floor",
       "floor",
       "floor",
-      "wall"
+      "trash_can"
     ],
     [
       "wall",
       "floor",
       "npc_elder",
       "dark_corner",
-      "exit_east"
+      "wall"
     ],
     [
       "wall",
@@ -60,7 +60,7 @@
       "targetRoomId": "freds_house",
       "targetPosition": {
         "x": 2,
-        "y": 3
+        "y": 4
       }
     },
     "exit_south": {
@@ -127,7 +127,7 @@
       "targetRoomId": "path_to_breakfastopia",
       "targetPosition": {
         "x": 0,
-        "y": 2
+        "y": 1
       }
     },
     "npc_shopkeeper": {
@@ -138,8 +138,7 @@
         "dialogue": [
           {
             "stage": 0,
-            "text": "\"Welcome to Sal's! Business has been slow — nobody in Shoeboxlandia wants anything new. Say, you're that screaming shoe, aren't you? Give me a good SCREAM and I'll toss in a snack for free!\"",
-            "hint": "Try using SCREAM near Sal."
+            "text": "\"Welcome to Sal's! Business has been slow — nobody in Shoeboxlandia wants anything new. Say, you're that screaming shoe, aren't you? Give me a good SCREAM and I'll toss in a snack for free!\""
           },
           {
             "stage": 1,
@@ -168,8 +167,7 @@
         "dialogue": [
           {
             "stage": 0,
-            "text": "\"Ah, young Fred. I've lived in Shoeboxlandia longer than anyone. Every shoe has its place here, they say. But you... you've never quite fit in, have you?\"",
-            "hint": "Talk to Elder Velvet again for directions."
+            "text": "\"Ah, young Fred. I've lived in Shoeboxlandia longer than anyone. Every shoe has its place here, they say. But you... you've never quite fit in, have you?\""
           },
           {
             "stage": 1,

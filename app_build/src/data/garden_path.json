@@ -1,0 +1,105 @@
+{
+  "room_id": "garden_path",
+  "world_coord": "14,16,0",
+  "room_name": "Garden Path",
+  "theme": "Shoeboxlandia",
+  "description": "A overgrown garden path between the shoebox houses. Tall blades of grass (well, tall for a shoe) sway in the breeze. The path branches off in several directions.",
+  "grid": [
+    [
+      "wall",
+      "exit_north",
+      "wall",
+      "exit_window",
+      "wall"
+    ],
+    [
+      "wall",
+      "grass",
+      "grass",
+      "grass",
+      "wall"
+    ],
+    [
+      "wall",
+      "grass",
+      "grass",
+      "grass",
+      "exit_east"
+    ],
+    [
+      "exit_west",
+      "grass",
+      "grass",
+      "grass",
+      "wall"
+    ],
+    [
+      "wall",
+      "wall",
+      "wall",
+      "exit_south",
+      "wall"
+    ]
+  ],
+  "player_start": {
+    "x": 2,
+    "y": 2
+  },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "A dense thicket of weeds and dandelion stems."
+    },
+    "grass": {
+      "passable": true,
+      "description": "Soft, green grass that feels like velvet under your sole."
+    },
+    "exit_north": {
+      "passable": true,
+      "description": "The path leads north back to the neighbor's house.",
+      "targetRoomId": "neighbors_house",
+      "targetPosition": {
+        "x": 1,
+        "y": 4
+      }
+    },
+    "exit_window": {
+      "passable": true,
+      "description": "A precarious-looking trellis leads up toward the attic window sill.",
+      "targetRoomId": "window_sill",
+      "targetPosition": {
+        "x": 3,
+        "y": 4
+      }
+    },
+    "exit_west": {
+      "passable": true,
+      "description": "The path leads west back to the main street.",
+      "targetRoomId": "shoeboxlandia_street",
+      "targetPosition": {
+        "x": 4,
+        "y": 3
+      }
+    },
+    "exit_east": {
+      "passable": true,
+      "description": "The path leads east toward the Breakfastopia gates.",
+      "targetRoomId": "breakfastopia_gates",
+      "targetPosition": {
+        "x": 0,
+        "y": 2
+      }
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "The path leads south toward the forest entrance.",
+      "targetRoomId": "forest_entrance",
+      "targetPosition": {
+        "x": 3,
+        "y": 0
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {}
+}
