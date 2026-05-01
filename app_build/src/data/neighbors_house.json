@@ -8,21 +8,21 @@
     [
       "wall",
       "wall",
-      "edge_n",
       "wall",
-      "wall"
-    ],
-    [
-      "exit_west",
-      "floor",
-      "floor",
-      "floor",
+      "wall",
       "wall"
     ],
     [
       "wall",
       "floor",
-      "npc_neighbor",
+      "floor",
+      "floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "floor",
+      "floor",
       "floor",
       "wall"
     ],

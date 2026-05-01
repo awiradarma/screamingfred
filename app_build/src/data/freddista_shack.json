@@ -128,6 +128,14 @@
           {
             "stage": 5,
             "text": "\"I'm already in your party, Fred! Let's stay focused and find that lunch of yours. I've got my eye on the path ahead.\""
+          },
+          {
+            "stage": 6,
+            "text": "Freddista's eyes suddenly flare with an otherworldly intensity. \"I told you... they say my stare kills. Do you want to see if they were right?\" Everything goes dark.",
+            "onComplete": {
+              "action": "damage_player",
+              "value": 100
+            }
           }
         ]
       }

@@ -32,10 +32,9 @@ export const useStore = create((set, get) => ({
     // 1. Ensure Registry is loaded
     let registry = get().itemRegistry;
     if (Object.keys(registry).length === 0) {
-      registry = await loadRegistryFromLocal();
-      if (Object.keys(registry).length === 0) {
-        registry = staticItems; // final fallback
-      }
+      const localRegistry = await loadRegistryFromLocal();
+      // Merge static items as base to ensure new items are available
+      registry = { ...staticItems, ...localRegistry };
       set({ itemRegistry: registry });
     }
 
@@ -96,7 +95,7 @@ export const useStore = create((set, get) => ({
       ]);
       set({ 
         worldRooms: rooms,
-        itemRegistry: Object.keys(items).length > 0 ? items : get().itemRegistry
+        itemRegistry: { ...staticItems, ...(Object.keys(items).length > 0 ? items : get().itemRegistry) }
       });
     } catch (e) {
       console.error("Failed to load world data:", e);

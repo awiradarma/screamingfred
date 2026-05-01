@@ -92,6 +92,28 @@ function getAdjacentTiles(state) {
 }
 
 /**
+ * Modify player HP (damage or heal) and handle death messages.
+ * @param {object} state - Current game state (modified in-place)
+ * @param {number} amount - Positive for heal, negative for damage
+ * @param {Array} messages - Message log to push to
+ * @returns {number} The actual change in HP
+ */
+function modifyPlayerHP(state, amount, messages) {
+  const oldHP = state.playerHP;
+  state.playerHP = Math.max(0, Math.min(state.maxHP, state.playerHP + amount));
+  const diff = state.playerHP - oldHP;
+
+  if (state.playerHP <= 0 && oldHP > 0) {
+    messages.push({ 
+      text: "⚠️ Everything goes cold... the light of the world flickers and dies. Fred has fallen. The void consumes all. 💀 Fred collapses! The world fades to black...", 
+      type: 'danger' 
+    });
+  }
+  
+  return diff;
+}
+
+/**
  * Process a raw input string and return updated state + message array.
  * @param {object} state - Current game state
  * @param {string} rawInput - Player's typed input
@@ -228,7 +250,7 @@ function processLivingEntities(state, messages) {
     // Trigger Combat if entity moves onto Fred
     if (nextX === player.x && nextY === player.y) {
       const damage = entity.damage || 1;
-      newState.playerHP = Math.max(0, newState.playerHP - damage);
+      modifyPlayerHP(newState, -damage, messages);
       messages.push({ 
         text: `⚠️ ${formatEntityName(entity.name, true)} catches up to you and attacks, dealing ${damage} damage!`, 
         type: 'danger' 
@@ -436,7 +458,7 @@ function applyTileEffects(state, x, y, messages, direction) {
     // 1. Damage Effects (Lava, Lake, Toxic)
     if (tileData.effect === 'damage' || ['lava', 'lake', 'toxic_pit'].includes(tileType) || tileType.includes('lava') || tileType.includes('lake')) {
       const damage = tileData.damageAmount || 1;
-      newState.playerHP = Math.max(0, newState.playerHP - damage);
+      modifyPlayerHP(newState, -damage, messages);
       const msg = tileData.effectMessage || (tileType.includes('lava') ? "Sizzle! The lava burns!" : "Gurgle! The water is deep and cold.");
       messages.push({ text: `⚠️ ${msg} (-${damage} HP)`, type: 'danger' });
     }
@@ -670,6 +692,10 @@ function handleTalk(state, messages, globalItems = {}) {
     if (action === 'set_flag' && flagSet) {
       finalFlags[flagSet] = true;
     }
+
+    if (action === 'damage_player' && value) {
+      modifyPlayerHP(state, -value, messages);
+    }
   }
 
   // Handle direct setFlag
@@ -799,13 +825,8 @@ function handleAttack(state, messages, globalItems = {}) {
     };
   } else {
     // Enemy counter-attacks
-    const newPlayerHP = state.playerHP - target.damage;
+    modifyPlayerHP(state, -target.damage, messages);
     messages.push({ text: describeEnemyAttacks(target), type: 'danger' });
-    newState = { ...newState, playerHP: Math.max(0, newPlayerHP) };
-
-    if (newPlayerHP <= 0) {
-      messages.push({ text: '💀 Fred collapses! The world fades to black...', type: 'danger' });
-    }
   }
 
   return { state: newState, messages };
@@ -850,7 +871,12 @@ function handleUse(state, itemTarget, messages, globalItems = {}) {
 
   switch (action) {
     case 'heal':
-      newState.playerHP = Math.min(state.maxHP, state.playerHP + (value || 0));
+      const healAmount = value || 0;
+      // Boost maxHP if the heal amount is higher than current maxHP (e.g., Ultra Golden Potato)
+      if (healAmount > newState.maxHP) {
+        newState.maxHP = healAmount;
+      }
+      modifyPlayerHP(newState, healAmount, messages);
       messages.push({ text: successMessage || `You use ${formatEntityName(item.name)} and feel revitalized!`, type: 'hint' });
       usedSuccessfully = true;
       break;
@@ -986,7 +1012,7 @@ export function getEnemyIdleAttacks(state) {
   if (enemy) {
     // Player is at risk! Deal damage.
     const damage = enemy.damage || 1;
-    newState.playerHP = Math.max(0, newState.playerHP - damage);
+    modifyPlayerHP(newState, -damage, messages);
     
     messages.push({ 
       text: `[IDLE WARNING] ${formatEntityName(enemy.name, true)} bites you while you stand still!`, 
@@ -996,10 +1022,6 @@ export function getEnemyIdleAttacks(state) {
       text: describeEnemyAttacks(enemy), 
       type: 'danger' 
     });
-
-    if (newState.playerHP <= 0) {
-      messages.push({ text: '💀 Fred collapses! The world fades to black...', type: 'danger' });
-    }
   }
 
   return { state: newState, messages };

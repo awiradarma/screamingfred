@@ -3,7 +3,7 @@
   "world_coord": "16,19,0",
   "room_name": "Forest Path's End",
   "theme": "Forest",
-  "description": "The trees begin to thin out. To the south, you can see the shimmering horizon of the Electric Desert. The air is starting to feel warm and static-charged.",
+  "description": "The trees begin to thin out. To the south, you can see the shimmering horizon of the Electric Desert. The air is starting to feel warm and static-charged, but the path forward seems blocked by a dense, tangled thicket of shoelaces.",
   "grid": [
     [
       "wall",
@@ -64,13 +64,8 @@
       }
     },
     "exit_south": {
-      "passable": true,
-      "description": "The path leads south into the Electric Desert.",
-      "targetRoomId": "electric_desert_entrance",
-      "targetPosition": {
-        "x": 2,
-        "y": 0
-      }
+      "passable": false,
+      "description": "The shimmering heat of the Electric Desert is visible, but a massive barrier of tangled shoelaces prevents you from going south. There must be another way around."
     },
     "exit_east": {
       "passable": true,
