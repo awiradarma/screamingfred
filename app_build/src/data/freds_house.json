@@ -51,7 +51,7 @@
       "description": "A sturdy cardboard wall. It smells faintly of new shoes."
     },
     "item_fridge": {
-      "passable": false,
+      "passable": true,
       "description": "Fred's refrigerator, made of a folded playing card.",
       "interactionVerb": "SEARCH",
       "item": {

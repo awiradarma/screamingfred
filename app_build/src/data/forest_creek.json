@@ -8,7 +8,7 @@
     [
       "wall",
       "wall",
-      "exit_north",
+      "wall",
       "wall",
       "wall"
     ],
@@ -60,19 +60,10 @@
       "effect": "slow",
       "effectMessage": "The rubber is thick and hard to walk through!"
     },
-    "exit_north": {
-      "passable": true,
-      "description": "The path leads back to the thorny thicket.",
-      "targetRoomId": "forest_thicket",
-      "targetPosition": {
-        "x": 2,
-        "y": 4
-      }
-    },
     "exit_east": {
       "passable": true,
-      "description": "The path leads east toward the forest exit.",
-      "targetRoomId": "forest_exit",
+      "description": "The path leads east toward the thorny thicket.",
+      "targetRoomId": "forest_thicket",
       "targetPosition": {
         "x": 0,
         "y": 2

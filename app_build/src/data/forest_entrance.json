@@ -9,7 +9,7 @@
       "wall",
       "wall",
       "exit_north_street",
-      "exit_north_path",
+      "wall",
       "wall"
     ],
     [
@@ -54,15 +54,7 @@
       "passable": true,
       "description": "A soft, springy layer of lint moss."
     },
-    "exit_north_path": {
-      "passable": true,
-      "description": "The trail leads back to the garden path.",
-      "targetRoomId": "garden_path",
-      "targetPosition": {
-        "x": 3,
-        "y": 4
-      }
-    },
+
     "exit_north_street": {
       "passable": true,
       "description": "The main road leads back to Shoeboxlandia Street.",
@@ -75,9 +67,9 @@
     "exit_south": {
       "passable": true,
       "description": "The path leads deeper into the dark Shoelace Forest.",
-      "targetRoomId": "forest_deep",
+      "targetRoomId": "forest_thicket",
       "targetPosition": {
-        "x": 1,
+        "x": 2,
         "y": 0
       }
     },

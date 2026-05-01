@@ -29,13 +29,20 @@
     [
       "wall",
       "floor",
+      "npc_neighbor",
+      "floor",
+      "exit_east"
+    ],
+    [
+      "wall",
+      "floor",
       "floor",
       "floor",
       "wall"
     ],
     [
       "wall",
-      "exit_south",
+      "wall",
       "wall",
       "wall",
       "wall"
@@ -72,13 +79,13 @@
         "y": 4
       }
     },
-    "exit_south": {
+    "exit_east": {
       "passable": true,
-      "description": "A door leads out to the garden path.",
+      "description": "A door leads east out to the garden path.",
       "targetRoomId": "garden_path",
       "targetPosition": {
-        "x": 1,
-        "y": 0
+        "x": 0,
+        "y": 2
       }
     },
     "npc_neighbor": {

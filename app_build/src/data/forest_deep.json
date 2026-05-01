@@ -7,7 +7,7 @@
   "grid": [
     [
       "wall",
-      "exit_north",
+      "wall",
       "wall",
       "wall",
       "wall"
@@ -54,15 +54,7 @@
       "passable": true,
       "description": "Dirty, grey lint ground."
     },
-    "exit_north": {
-      "passable": true,
-      "description": "The path leads back to the forest entrance.",
-      "targetRoomId": "forest_entrance",
-      "targetPosition": {
-        "x": 1,
-        "y": 4
-      }
-    },
+
     "exit_south": {
       "passable": true,
       "description": "The path continues deeper into the forest.",

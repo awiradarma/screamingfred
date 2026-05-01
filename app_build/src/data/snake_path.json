@@ -68,10 +68,10 @@
     },
     "edge_n": {
       "passable": true,
-      "description": "The path leads back north toward the forest entrance. Safety beckons.",
-      "targetRoomId": "forest_entrance",
+      "description": "The path leads back north toward the forest thicket.",
+      "targetRoomId": "forest_thicket",
       "targetPosition": {
-        "x": 3,
+        "x": 2,
         "y": 4
       }
     },

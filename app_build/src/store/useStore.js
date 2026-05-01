@@ -186,8 +186,8 @@ export const useStore = create((set, get) => ({
    * Process a player command string.
    */
   submitCommand: (rawInput) => {
-    const { gameState, gameLog, resetGame, addMessage } = get();
-    if (!gameState) return;
+    const { resetGame, addMessage } = get();
+    if (!rawInput) return;
 
     const normalized = rawInput.toLowerCase().trim();
     if (normalized === 'restart') {
@@ -198,34 +198,48 @@ export const useStore = create((set, get) => ({
     }
 
     if (normalized === '/admin') {
-      const newAdminState = !get().isAdmin;
-      set({ isAdmin: newAdminState });
-      addMessage(`Admin mode is now ${newAdminState ? 'ON' : 'OFF'}.`, 'system');
+      set(state => {
+        const newAdminState = !state.isAdmin;
+        const msg = { text: `Admin mode is now ${newAdminState ? 'ON' : 'OFF'}.`, type: 'system', timestamp: Date.now() };
+        return { isAdmin: newAdminState, gameLog: [...state.gameLog, msg] };
+      });
       return;
     }
 
-    // Guard: Prevent actions if player is dead
-    if (gameState.playerHP <= 0) {
-      addMessage("You are incapacitated! You must RESTART to continue.", "danger");
-      return;
-    }
+    // Process game command with functional update to avoid stale state bugs
+    set(state => {
+      const { gameState, gameLog, itemRegistry } = state;
+      if (!gameState) return {};
 
-    // Echo the player's command
-    const echoMsg = { text: rawInput, type: 'player', timestamp: Date.now() };
+      // Guard: Prevent actions if player is dead
+      if (gameState.playerHP <= 0) {
+        const deadMsg = { 
+          text: "You are incapacitated! You must RESTART to continue.", 
+          type: "danger", 
+          timestamp: Date.now() 
+        };
+        return { gameLog: [...gameLog, deadMsg] };
+      }
 
-    // Process through the engine
-    const { state: newState, messages } = processCommand(gameState, rawInput, get().itemRegistry);
-    const timestampedMessages = messages.map(m => ({ ...m, timestamp: Date.now() }));
+      // Echo the player's command
+      const echoMsg = { text: rawInput, type: 'player', timestamp: Date.now() };
 
-    set({
-      gameState: newState,
-      gameLog: [...gameLog, echoMsg, ...timestampedMessages],
+      // Process through the engine
+      const { state: newState, messages } = processCommand(gameState, rawInput, itemRegistry);
+      const timestampedMessages = messages.map(m => ({ ...m, timestamp: Date.now() }));
+
+      return {
+        gameState: newState,
+        gameLog: [...gameLog, echoMsg, ...timestampedMessages],
+      };
     });
 
-    // Auto-save to cloud
-    savePlayerSession(newState);
-
-    get().startIdleTimer();
+    // Side effects after state is updated
+    const updatedState = get().gameState;
+    if (updatedState) {
+      savePlayerSession(updatedState);
+      get().startIdleTimer();
+    }
   },
 
   /**

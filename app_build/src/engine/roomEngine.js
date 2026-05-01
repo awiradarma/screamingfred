@@ -548,11 +548,14 @@ function handleInteract(state, target, messages, globalItems = {}) {
       };
     } else if (tileData.item.contains) {
       itemToCollect = { ...tileData.item.contains };
+    } else if (tileData.item.name) {
+      // Fallback: Use the item definition itself if it has a name (inline item)
+      itemToCollect = { ...tileData.item };
     }
 
-    if (itemToCollect) {
+    if (itemToCollect && itemToCollect.name) {
       // Support comma separated list of items
-      const itmNames = itemToCollect.name.split(',').map(s => s.trim());
+      const itmNames = String(itemToCollect.name).split(',').map(s => s.trim());
       itmNames.forEach(name => {
         if (name) {
           newState.inventory = [...newState.inventory, { ...itemToCollect, name, type: itemToCollect.type || 'resource' }];

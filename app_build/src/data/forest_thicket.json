@@ -7,7 +7,7 @@
   "grid": [
     [
       "wall",
-      "wall",
+      "exit_north",
       "wall",
       "wall",
       "wall"
@@ -20,7 +20,7 @@
       "wall"
     ],
     [
-      "wall",
+      "exit_west",
       "ground",
       "item_berries",
       "ground",
@@ -63,13 +63,31 @@
         "y": 2
       }
     },
+    "exit_north": {
+      "passable": true,
+      "description": "The path leads north back to the forest entrance.",
+      "targetRoomId": "forest_entrance",
+      "targetPosition": {
+        "x": 1,
+        "y": 4
+      }
+    },
     "exit_south": {
       "passable": true,
-      "description": "The path leads south toward a small creek.",
+      "description": "The path leads south toward the snake path.",
+      "targetRoomId": "snake_path",
+      "targetPosition": {
+        "x": 3,
+        "y": 0
+      }
+    },
+    "exit_west": {
+      "passable": true,
+      "description": "The path leads west toward a small creek.",
       "targetRoomId": "forest_creek",
       "targetPosition": {
-        "x": 2,
-        "y": 0
+        "x": 4,
+        "y": 2
       }
     },
     "item_berries": {
