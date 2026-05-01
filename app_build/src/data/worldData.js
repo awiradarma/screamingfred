@@ -49,7 +49,7 @@ export const worldCoordinateRegistry = {
 
   // Forest
   "15,17,0": "forest_entrance",
-  "15,17,1": "secret_cave",
+  "15,17,-1": "secret_cave",
   "15,18,0": "forest_thicket",
   "16,18,0": "forest_deep",
   "17,18,0": "forest_clearing",
@@ -109,6 +109,6 @@ export function isValidCoordinate(x, y, z = 0) {
   return (
     x >= COORD_MIN && x <= COORD_MAX &&
     y >= COORD_MIN && y <= COORD_MAX &&
-    (z === 0 || z === 1) // Support surface and underground
+    (z === -1 || z === 0 || z === 1) // Support underground, surface, and upstairs
   );
 }

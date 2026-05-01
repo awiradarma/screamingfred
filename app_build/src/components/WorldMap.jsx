@@ -69,8 +69,9 @@ const WorldMap = () => {
   };
 
   const Z_LEVELS = [
+    { id: 1, name: 'Upstairs', icon: '☁️' },
     { id: 0, name: 'Surface', icon: '🌍' },
-    { id: 1, name: 'Underground', icon: '🌋' },
+    { id: -1, name: 'Underground', icon: '🌋' },
   ];
 
   return (
