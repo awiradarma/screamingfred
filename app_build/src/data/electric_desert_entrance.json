@@ -6,7 +6,7 @@
   "description": "The air crackles with static electricity. Shimmering dunes of crystalline sand stretch out before you, glowing with a faint, pulsing blue light. Occasional bolts of lightning arc between the peaks of the dunes.",
   "grid": [
     ["electric_sand", "electric_sand", "electric_sand", "electric_sand", "electric_sand"],
-    ["electric_sand", "sand_path",      "sand_path",      "sand_path",      "electric_sand"],
+    ["electric_sand", "sand_path",      "item_potato",    "sand_path",      "electric_sand"],
     ["exit_west",     "sand_path",      "sand_path",      "sand_path",      "sand_path"],
     ["electric_sand", "sand_path",      "sand_path",      "sand_path",      "electric_sand"],
     ["electric_sand", "electric_sand", "electric_sand", "electric_sand", "electric_sand"]
@@ -23,6 +23,15 @@
     "sand_path": {
       "passable": true,
       "description": "A relatively safe path through the crackling dunes."
+    },
+    "item_potato": {
+      "passable": true,
+      "description": "Something is glowing under the sand here... it's a potato! But it's humming with static energy.",
+      "item": {
+        "name": "Electric Potato",
+        "itemId": "food_potato",
+        "actions": ["interact", "search"]
+      }
     },
     "exit_west": {
       "passable": true,

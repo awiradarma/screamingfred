@@ -5,13 +5,46 @@
   "theme": "Shoelace_Forest",
   "description": "At the end of the winding forest path stands a small, crooked shack made of mismatched wood and old shoebox scraps. The door hangs slightly open. Whoever lives here has been alone for a very long time. This is where the rumors say the 'monster' Freddista dwells.",
   "grid": [
-    ["edge_n",       "edge_n",       "edge_n",        "edge_n",       "edge_n"],
-    ["wall",         "item_lantern", "floor",         "floor",        "wall"],
-    ["wall",         "floor",        "npc_freddista", "floor",        "wall"],
-    ["wall",         "floor",        "floor",         "item_note",    "wall"],
-    ["wall",         "wall",         "wall",          "wall",         "wall"]
+    [
+      "edge_n",
+      "edge_n",
+      "edge_n",
+      "edge_n",
+      "edge_n"
+    ],
+    [
+      "wall",
+      "item_lantern",
+      "floor",
+      "floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "floor",
+      "npc_freddista",
+      "floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "floor",
+      "floor",
+      "item_note",
+      "wall"
+    ],
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ]
   ],
-  "player_start": { "x": 2, "y": 1 },
+  "player_start": {
+    "x": 2,
+    "y": 1
+  },
   "tiles": {
     "wall": {
       "passable": false,
@@ -25,7 +58,10 @@
       "passable": true,
       "description": "The forest path leads back north through the snake-infested trail.",
       "targetRoomId": "snake_path",
-      "targetPosition": { "x": 2, "y": 3 }
+      "targetPosition": {
+        "x": 2,
+        "y": 3
+      }
     },
     "item_lantern": {
       "passable": true,
@@ -33,7 +69,17 @@
       "item": {
         "name": "Old Lantern",
         "itemId": "tool_lantern",
-        "actions": ["interact", "search"]
+        "actions": [
+          "interact",
+          "search"
+        ],
+        "onUse": {
+          "action": "unlock",
+          "target": "dark_corner",
+          "flagSet": "corner_illuminated",
+          "successMessage": "The lantern illuminates the corner!",
+          "failureMessage": "The lantern illuminates the area, but there's nothing interesting to see there!"
+        }
       }
     },
     "item_note": {
@@ -42,7 +88,10 @@
       "item": {
         "name": "Freddista's Note",
         "itemId": "quest_note",
-        "actions": ["interact", "search"],
+        "actions": [
+          "interact",
+          "search"
+        ],
         "opened_description": "The note reads: 'Day 4,382. Still alone. They say my stare kills. It doesn't. I'm staring at this note right now and it's fine. I just want someone to talk to.'"
       }
     },
@@ -66,7 +115,7 @@
           },
           {
             "stage": 3,
-            "text": "\"Can you please come with me?\" you interrupt, now on your knees (if shoes had knees). \"I guess I have nothing to do,\" grumbles Freddista. She grabs the old lantern and heads for the door. Freddista has joined your party!",
+            "text": "\"Can you please come with me?\" you interrupt, now on your knees (if shoes had knees). \"I guess I have nothing to do,\" grumbles Freddista. \"Well, what are we waiting for? Grab that old lantern on the wall and let's head back to Shoeboxlandia!\" Freddista has joined your party!",
             "onComplete": {
               "action": "set_flag",
               "flagSet": "freddista_joined"

@@ -5,13 +5,46 @@
   "theme": "Shoelace_Forest",
   "description": "The neat brick road of Shoeboxlandia gives way to a narrow dirt path. Towering shoe-trees rise on either side, their tangled laces hanging like vines. The air smells of leather polish and something faintly reptilian. A warped wooden sign stands at the trailhead.",
   "grid": [
-    ["edge_n",       "edge_n",       "edge_n",        "edge_n",       "edge_n"],
-    ["wall",         "floor",        "floor",         "item_stick",   "wall"],
-    ["wall",         "npc_sign",     "floor",         "floor",        "wall"],
-    ["wall",         "floor",        "floor",         "floor",        "wall"],
-    ["wall",         "wall",         "exit_south",    "wall",         "wall"]
+    [
+      "edge_n",
+      "edge_n",
+      "edge_n",
+      "edge_n",
+      "edge_n"
+    ],
+    [
+      "wall",
+      "floor",
+      "floor",
+      "item_stick",
+      "wall"
+    ],
+    [
+      "wall",
+      "npc_sign",
+      "item_potato",
+      "floor",
+      "wall"
+    ],
+    [
+      "secret_cave_entrance",
+      "floor",
+      "floor",
+      "floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "wall",
+      "exit_south",
+      "wall",
+      "wall"
+    ]
   ],
-  "player_start": { "x": 2, "y": 2 },
+  "player_start": {
+    "x": 2,
+    "y": 2
+  },
   "tiles": {
     "wall": {
       "passable": false,
@@ -21,17 +54,44 @@
       "passable": true,
       "description": "A narrow dirt path, scuffed by few soles. Most shoes know better than to come this way."
     },
+    "secret_cave_entrance": {
+      "passable": true,
+      "description": "A dark, gaping hole in the base of a massive shoe-tree. It looks like it leads deep underground into a secret cave.",
+      "targetRoomId": "secret_cave",
+      "targetPosition": {
+        "x": 3,
+        "y": 3
+      }
+    },
+    "item_potato": {
+      "passable": true,
+      "description": "A fresh-looking potato is partially hidden under a cluster of lace-vines. How lucky!",
+      "item": {
+        "name": "Bush Potato",
+        "itemId": "food_potato",
+        "actions": [
+          "interact",
+          "search"
+        ]
+      }
+    },
     "edge_n": {
       "passable": true,
       "description": "The path opens back north toward the safety of Shoeboxlandia.",
       "targetRoomId": "shoeboxlandia_street",
-      "targetPosition": { "x": 2, "y": 3 }
+      "targetPosition": {
+        "x": 2,
+        "y": 3
+      }
     },
     "exit_south": {
       "passable": true,
       "description": "The dirt path plunges deeper south into the Shoelace Forest. You can hear hissing ahead — lots of it.",
       "targetRoomId": "snake_path",
-      "targetPosition": { "x": 2, "y": 0 }
+      "targetPosition": {
+        "x": 2,
+        "y": 0
+      }
     },
     "npc_sign": {
       "passable": true,
@@ -56,7 +116,10 @@
       "item": {
         "name": "Sturdy Stick",
         "itemId": "weapon_stick",
-        "actions": ["interact", "search"]
+        "actions": [
+          "interact",
+          "search"
+        ]
       }
     }
   },

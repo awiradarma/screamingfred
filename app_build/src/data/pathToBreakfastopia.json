@@ -8,7 +8,7 @@
     ["velcro_mountain", "velcro_mountain", "velcro_mountain", "velcro_mountain", "velcro_mountain"],
     ["velcro_mountain", "syrup_river",     "syrup_river",     "syrup_river",     "velcro_mountain"],
     ["exit_west",       "dirt_path",       "bacon_strip",     "dirt_path",       "exit_east"],
-    ["velcro_mountain", "dirt_path",       "dirt_path",       "dirt_path",       "velcro_mountain"],
+    ["velcro_mountain", "dirt_path",       "item_potato",     "dirt_path",       "velcro_mountain"],
     ["velcro_mountain", "velcro_mountain", "velcro_mountain", "velcro_mountain", "velcro_mountain"]
   ],
   "player_start": { "x": 1, "y": 2 },
@@ -27,6 +27,15 @@
     "dirt_path": {
       "passable": true,
       "description": "A simple dirt trail leading eastward."
+    },
+    "item_potato": {
+      "passable": true,
+      "description": "A potato is stuck to a patch of velcro on the side of the path. It takes a good tug to pull it off.",
+      "item": {
+        "name": "Velcro Potato",
+        "itemId": "food_potato",
+        "actions": ["interact", "search"]
+      }
     },
     "bacon_strip": {
       "passable": true,

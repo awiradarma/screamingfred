@@ -8,7 +8,7 @@
     ["wall",         "wall",         "wall",          "wall",         "wall"],
     ["wall",         "item_karaoke", "floor",         "item_fridge",  "wall"],
     ["wall",         "floor",        "floor",         "floor",        "wall"],
-    ["wall",         "npc_neighbor", "floor",         "item_photo",   "wall"],
+    ["wall",         "npc_neighbor", "item_potato",   "item_photo",   "wall"],
     ["wall",         "wall",         "exit_south",    "wall",         "wall"]
   ],
   "player_start": { "x": 2, "y": 2 },
@@ -20,6 +20,15 @@
     "floor": {
       "passable": true,
       "description": "Scuffed linoleum flooring. You can see the marks from last night's dance moves."
+    },
+    "item_potato": {
+      "passable": true,
+      "description": "A stray potato rolls around near the shelf. It must have fallen out when you were frantically searching for your lunch.",
+      "item": {
+        "name": "Stray Potato",
+        "itemId": "food_potato",
+        "actions": ["interact", "search"]
+      }
     },
     "exit_south": {
       "passable": true,

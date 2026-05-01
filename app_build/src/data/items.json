@@ -55,7 +55,14 @@
   "tool_lantern": {
     "name": "Old Lantern",
     "description": "A battered lantern from Freddista's shack. It gives off a faint, warm glow.",
-    "type": "tool"
+    "type": "tool",
+    "onUse": {
+      "action": "unlock",
+      "target": "dark_corner",
+      "flagSet": "corner_illuminated",
+      "successMessage": "The lantern illuminates the corner!",
+      "failureMessage": "The lantern illuminates the area, but there's nothing interesting to see there!"
+    }
   },
   "quest_note": {
     "name": "Freddista's Note",

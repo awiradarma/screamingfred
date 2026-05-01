@@ -5,13 +5,46 @@
   "theme": "Shoeboxlandia",
   "description": "You step onto the main street of Shoeboxlandia. Neat rows of shoebox houses line the road, each one identical and perfectly aligned. Countless eyes glare at you from behind curtains — probably because of the karaoke last night. A shopkeeper's stall and a wise old slipper catch your attention.",
   "grid": [
-    ["edge_n",       "edge_n",       "edge_n",        "edge_n",       "edge_n"],
-    ["wall",         "npc_shopkeeper","floor",         "item_signpost","trash_can"],
-    ["wall",         "floor",        "floor",         "floor",        "wall"],
-    ["wall",         "floor",        "npc_elder",     "dark_corner",  "exit_east"],
-    ["wall",         "wall",         "exit_south",    "wall",         "wall"]
+    [
+      "edge_n",
+      "edge_n",
+      "edge_n",
+      "edge_n",
+      "edge_n"
+    ],
+    [
+      "wall",
+      "npc_shopkeeper",
+      "floor",
+      "item_signpost",
+      "trash_can"
+    ],
+    [
+      "wall",
+      "floor",
+      "floor",
+      "floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "floor",
+      "npc_elder",
+      "dark_corner",
+      "exit_east"
+    ],
+    [
+      "wall",
+      "wall",
+      "exit_south",
+      "wall",
+      "wall"
+    ]
   ],
-  "player_start": { "x": 2, "y": 2 },
+  "player_start": {
+    "x": 2,
+    "y": 2
+  },
   "tiles": {
     "wall": {
       "passable": false,
@@ -25,13 +58,19 @@
       "passable": true,
       "description": "The street continues north, back toward Fred's house.",
       "targetRoomId": "freds_house",
-      "targetPosition": { "x": 2, "y": 3 }
+      "targetPosition": {
+        "x": 2,
+        "y": 3
+      }
     },
     "exit_south": {
       "passable": true,
       "description": "The road narrows into a dirt trail heading south. You can see the first trees of the Shoelace Forest in the distance.",
       "targetRoomId": "forest_entrance",
-      "targetPosition": { "x": 2, "y": 0 }
+      "targetPosition": {
+        "x": 2,
+        "y": 0
+      }
     },
     "item_signpost": {
       "passable": true,
@@ -39,7 +78,10 @@
       "item": {
         "name": "Signpost",
         "itemId": "flavor_signpost",
-        "actions": ["interact", "search"]
+        "actions": [
+          "interact",
+          "search"
+        ]
       }
     },
     "trash_can": {
@@ -63,14 +105,17 @@
     },
     "dark_corner": {
       "passable": true,
-      "description": "A corner. It used to be pitch black, but now your flashlight reveals the dust and debris.",
+      "description": "A corner. It used to be pitch black, but now you can see the dust and debris. Oh! and there's a small crack on the wall.",
       "conditions": {
         "requiredFlag": "corner_illuminated",
         "failMessage": "It's pitch black. You'll stumble if you try to step in there without a light source."
       },
       "interactionVerb": "SEARCH",
       "item": {
-        "contains": { "name": "Hidden Golden Potato", "type": "resource" },
+        "contains": {
+          "name": "Hidden Golden Potato",
+          "type": "resource"
+        },
         "onCollect": "You pick up the shiny Golden Potato hidden in the dust.",
         "setFlag": "golden_potato_found"
       }
@@ -83,7 +128,10 @@
         "failMessage": "The crack is too tight to squeeze through alone. If only you had someone to help you push through..."
       },
       "targetRoomId": "path_to_breakfastopia",
-      "targetPosition": { "x": 0, "y": 2 }
+      "targetPosition": {
+        "x": 0,
+        "y": 2
+      }
     },
     "npc_shopkeeper": {
       "passable": true,

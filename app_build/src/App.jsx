@@ -16,6 +16,7 @@ export default function App() {
     initGame, resetGame, submitCommand,
     activeView, setView, isAdmin
   } = useStore();
+  const [showRestartConfirm, setShowRestartConfirm] = React.useState(false);
 
   useEffect(() => {
     const sequence = async () => {
@@ -31,8 +32,14 @@ export default function App() {
     const handleGlobalKeyDown = (e) => {
       if (gameState?.playerHP <= 0) return; // Block all keys if dead
       
-      // Ignore if typing in an input or textarea
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      // Ignore if typing in an input, textarea, or contentEditable element
+      if (
+        e.target.tagName === 'INPUT' || 
+        e.target.tagName === 'TEXTAREA' || 
+        e.target.isContentEditable ||
+        document.activeElement.tagName === 'INPUT' ||
+        document.activeElement.tagName === 'TEXTAREA'
+      ) return;
 
       const key = e.key.toLowerCase();
       if (key === 'arrowup' || key === 'w') submitCommand('north');
@@ -104,12 +111,35 @@ export default function App() {
             </nav>
           )}
           <button className="restart-btn" onClick={() => {
-            if (gameState?.playerHP <= 0 || window.confirm('Restart the game? All current progress will be lost.')) {
-              resetGame();
-            }
+            console.log('Restart button requested');
+            setShowRestartConfirm(true);
           }}>Restart</button>
         </div>
       </header>
+
+      {showRestartConfirm && (
+        <div className="modal-overlay">
+          <div className="confirm-modal title-glow-subtle">
+            <h2>Restart Game?</h2>
+            <p>Are you sure you want to restart? All current progress will be lost forever!</p>
+            <div className="modal-actions">
+              <button className="modal-btn cancel" onClick={() => setShowRestartConfirm(false)}>
+                Stay Here
+              </button>
+              <button className="modal-btn confirm" onClick={() => {
+                console.log('Restart confirmed via custom modal');
+                setShowRestartConfirm(false);
+                resetGame().catch(err => {
+                  console.error('Error during resetGame:', err);
+                  alert('Failed to restart. Please refresh.');
+                });
+              }}>
+                Yes, Restart
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <PlayerHUD
         playerHP={gameState.playerHP}

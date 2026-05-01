@@ -528,7 +528,11 @@ function handleInteract(state, target, messages, globalItems = {}) {
     
     // Resolve item from Global Registry if itemId provided
     if (tileData.item.itemId && globalItems[tileData.item.itemId]) {
-      itemToCollect = { ...globalItems[tileData.item.itemId], itemId: tileData.item.itemId };
+      itemToCollect = { 
+        ...globalItems[tileData.item.itemId], 
+        ...tileData.item, // Merge per-instance properties (like onUse)
+        itemId: tileData.item.itemId 
+      };
     } else if (tileData.item.contains) {
       itemToCollect = { ...tileData.item.contains };
     }
