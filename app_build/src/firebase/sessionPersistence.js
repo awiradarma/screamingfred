@@ -30,6 +30,7 @@ export async function savePlayerSession(gameState) {
       stateFlags: gameState.stateFlags,
       playerPosition: gameState.playerPosition,
       roomCoordinates: gameState.room.world_coord || "(15, 15, 0)", // backup if missing
+      discoveredRooms: gameState.discoveredRooms || [],
       lastUpdated: serverTimestamp()
     };
 
@@ -51,7 +52,10 @@ export async function loadPlayerSession() {
     const snap = await getDoc(sessionDoc);
 
     if (snap.exists()) {
-      return snap.data();
+      const data = snap.data();
+      // Ensure discoveredRooms exists even for older sessions
+      if (!data.discoveredRooms) data.discoveredRooms = [];
+      return data;
     }
     return null;
   } catch (error) {

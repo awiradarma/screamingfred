@@ -22,7 +22,7 @@ export const useStore = create((set, get) => ({
 
   // UI / View State
   activeView: 'game',    // 'game' | 'world_map' | 'editor'
-  isAdmin: true,         // admin mode as requested
+  isAdmin: false,        // admin mode toggled via /admin
 
   /**
    * Initialize the game. Checks for existing sessions first.
@@ -62,6 +62,7 @@ export const useStore = create((set, get) => ({
         enemyHP: {}, 
         entities: (startRoom.entities || []).map(e => ({ ...e })),
         turnCount: 0,
+        discoveredRooms: session.discoveredRooms || [startRoom.world_coord || "15,15,0"],
       };
       
       get().addMessage('Welcome back, Fred! Your progress has been restored.', 'system');
@@ -69,6 +70,7 @@ export const useStore = create((set, get) => ({
       // Start fresh
       startRoom = getRoomAt(15, 15, 0) || worldData.freds_house;
       initialState = initGameState(startRoom);
+      initialState.discoveredRooms = [startRoom.world_coord || "15,15,0"];
       const welcomeMessages = getWelcomeMessages(startRoom);
       set({ gameLog: welcomeMessages.map(m => ({ ...m, timestamp: Date.now() })) });
     }
@@ -139,7 +141,14 @@ export const useStore = create((set, get) => ({
       playerHP: get().gameState?.playerHP || initialState.playerHP,
       inventory: get().gameState?.inventory || initialState.inventory,
       stateFlags: get().gameState?.stateFlags || initialState.stateFlags,
+      discoveredRooms: get().gameState?.discoveredRooms || [],
     };
+
+    // Add current room to discovered rooms if not already present
+    const coordKey = roomData.world_coord || "15,15,0";
+    if (!newState.discoveredRooms.includes(coordKey)) {
+      newState.discoveredRooms = [...newState.discoveredRooms, coordKey];
+    }
 
     set({
       gameState: newState,
@@ -185,6 +194,13 @@ export const useStore = create((set, get) => ({
       if (window.confirm('Are you sure you want to restart your adventure? All current progress will be lost.')) {
         resetGame();
       }
+      return;
+    }
+
+    if (normalized === '/admin') {
+      const newAdminState = !get().isAdmin;
+      set({ isAdmin: newAdminState });
+      addMessage(`Admin mode is now ${newAdminState ? 'ON' : 'OFF'}.`, 'system');
       return;
     }
 

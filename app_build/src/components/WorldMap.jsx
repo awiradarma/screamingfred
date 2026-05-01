@@ -23,6 +23,22 @@ const WorldMap = () => {
     { id: 'Castle', name: 'Castle', icon: '🏰' },
   ];
 
+  const THEME_ICONS = {
+    'Forest': '🌲',
+    'Shoebox_Forest': '🌲',
+    'Meadow': '🌻',
+    'Dungeon': '💀',
+    'Castle': '🏰',
+    'Cave': '🪨',
+    'House': '🏠',
+    'Village': '🏠',
+    'Path': '🛣️',
+    'Street': '🛣️',
+    'Desert': '🌵',
+    'Mountain': '⛰️',
+    'Attic': '📦'
+  };
+
   const handleCellClick = async (x, y) => {
     if (isMapping && selectedTheme) {
       try {
@@ -51,16 +67,23 @@ const WorldMap = () => {
         const roomName = room?.room_name || `(${x}, ${y})`;
         const hasRoom = !!room;
         const isCurrent = x === currentX && y === currentY && currentZ === roomZ;
+        const isDiscovered = gameState?.discoveredRooms?.includes(coordKey);
+        
+        // Render fog if not discovered (and not admin)
+        const showFog = !isDiscovered && !isAdmin;
+        // The emoji for the room
+        const roomEmoji = hasRoom ? (THEME_ICONS[room.theme] || '❓') : null;
 
         cells.push(
           <div 
             key={`${x},${y}`}
-            className={`map-cell ${hasRoom ? 'has-room' : 'empty'} ${isCurrent ? 'is-current' : ''}`}
+            className={`map-cell ${(hasRoom && !showFog) ? 'has-room' : 'empty'} ${isCurrent ? 'is-current' : ''}`}
             onClick={() => handleCellClick(x, y)}
-            title={hasRoom ? `${roomName} (${x}, ${y}, Z:${currentZ})` : `(${x}, ${y}, Z:${currentZ})`}
+            title={(hasRoom && !showFog) ? `${roomName} (${x}, ${y}, Z:${currentZ})` : `Unknown Region (${x}, ${y}, Z:${currentZ})`}
           >
             {isCurrent && <div className="player-indicator" />}
-            {!hasRoom && <div className="orange-fog" />}
+            {showFog && <div className="orange-fog" />}
+            {!showFog && hasRoom && <div className="room-emoji">{roomEmoji}</div>}
           </div>
         );
       }

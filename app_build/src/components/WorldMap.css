@@ -195,7 +195,7 @@
 .orange-fog {
   position: absolute;
   inset: 0;
-  background: rgba(249, 115, 22, 0.1); /* Subtle orange fog */
+  background: rgba(249, 115, 22, 0.6); /* Translucent orange fog */
   pointer-events: none;
 }
 
@@ -222,4 +222,4 @@
 
 .dot.current { background: #a855f7; }
 .dot.room { background: #3b82f6; }
-.dot.fog { background: rgba(249, 115, 22, 0.2); }
+.dot.fog { background: rgba(249, 115, 22, 0.6); }
