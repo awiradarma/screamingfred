@@ -24,7 +24,7 @@
       "floor",
       "item_pillow",
       "floor",
-      "exit_east"
+      "stairs_down"
     ],
     [
       "wall",
@@ -63,12 +63,12 @@
         "y": 4
       }
     },
-    "exit_east": {
+    "stairs_down": {
       "passable": true,
-      "description": "A door leads back to the main house.",
+      "description": "The stairs lead back down to the main floor of Fred's house.",
       "targetRoomId": "freds_house",
       "targetPosition": {
-        "x": 0,
+        "x": 3,
         "y": 2
       }
     },

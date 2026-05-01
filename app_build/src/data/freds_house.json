@@ -23,7 +23,7 @@
       "wall",
       "floor",
       "item_bed",
-      "npc_freddista",
+      "stairs_up",
       "wall"
     ],
     [
@@ -81,37 +81,13 @@
         "description": "A handwritten note: 'Fred, don't forget to scream today! - Mom'"
       }
     },
-    "npc_freddista": {
+    "stairs_up": {
       "passable": true,
-      "description": "Freddista is standing by the wall, her high-heeled silhouette looking formidable.",
-      "npc": {
-        "name": "Freddista",
-        "dialogue": [
-          {
-            "stage": 0,
-            "text": "\"Fred! You're finally awake. Someone stole your lunch while you were dreaming about being a sneaker.\""
-          },
-          {
-            "stage": 1,
-            "text": "Fred lets out a long, high-pitched scream. \"Whaaaat?! My pasta and potatoes?! Gone?!\""
-          },
-          {
-            "stage": 2,
-            "text": "Freddista sighs. \"Yes, Fred. I think it was that waffle from Breakfastopia. He looked suspicious. Let's go find him. I'll come with you—you can't navigate the world without my stare.\"",
-            "onComplete": {
-              "action": "set_flag",
-              "flagSet": "freddista_joined"
-            }
-          },
-          {
-            "stage": 3,
-            "text": "\"Well, what are you waiting for? Let's go out to the street! Breakfastopia is just past the city gates.\""
-          },
-          {
-            "stage": 4,
-            "text": "\"The world is dangerous, Fred. Keep your laces tied and your tongue ready. Now, move it!\""
-          }
-        ]
+      "description": "A rickety staircase leads up to the attic bedroom.",
+      "targetRoomId": "attic_bedroom",
+      "targetPosition": {
+        "x": 4,
+        "y": 2
       }
     }
   },
