@@ -416,7 +416,7 @@ export function handleMove(state, direction, messages) {
   const finalTileData = getTileData(finalState.room, finalTileType);
   
   if (finalTileData) {
-    const tileDesc = describeTile(finalTileType, finalTileData, finalState.stateFlags, finalState.room.tiles);
+    const tileDesc = describeTile(finalTileType, finalTileData, finalState.stateFlags, finalState.room.tiles, finalState.room.room_id);
     messages.push({ text: tileDesc, type: 'narrative' });
   }
 
@@ -578,7 +578,7 @@ function handleInteract(state, target, messages, globalItems = {}) {
   }
 
   const verb = tileData.interactionVerb || 'SEARCH';
-  const flagKey = `${tileType}_opened`;
+  const flagKey = `room_${state.room.room_id}_tile_${tileType}_opened`;
   if (state.stateFlags[flagKey]) {
     messages.push({ text: tileData.item.opened_description || 'Already searched.', type: 'system' });
     return { state, messages };
@@ -1136,7 +1136,7 @@ export function getAvailableActions(state) {
   const entityEnemy = state.entities.find(e => e.x === state.playerPosition.x && e.y === state.playerPosition.y && !state.stateFlags[`${e.id}_defeated`]);
 
   if (tileData?.npc) actions.push('talk');
-  if (tileData?.item && !state.stateFlags[`${tileType}_opened`]) actions.push('interact');
+  if (tileData?.item && !state.stateFlags[`room_${state.room.room_id}_tile_${tileType}_opened`]) actions.push('interact');
   if ((tileData?.enemy && !state.stateFlags[`${tileType.replace(/^enemy_/, '')}_defeated`]) || entityEnemy) {
     actions.push('attack');
   }
@@ -1154,7 +1154,9 @@ export function getWelcomeMessages(roomData) {
     { text: describeTile(
         roomData.grid[roomData.player_start.y][roomData.player_start.x],
         roomData.tiles[roomData.grid[roomData.player_start.y][roomData.player_start.x]],
-        roomData.state_flags
+        roomData.state_flags,
+        roomData.tiles,
+        roomData.room_id
       ), type: 'narrative' },
   ];
 }

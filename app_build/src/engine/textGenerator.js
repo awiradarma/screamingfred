@@ -65,7 +65,7 @@ export function describeRoom(roomData) {
 /**
  * Generate tile-specific description.
  */
-export function describeTile(tileType, tileData, stateFlags, roomTiles = {}) {
+export function describeTile(tileType, tileData, stateFlags, roomTiles = {}, roomId = '') {
   if (!tileData) return 'Nothing unremarkable here.';
 
   // Check visibility condition
@@ -74,13 +74,14 @@ export function describeTile(tileType, tileData, stateFlags, roomTiles = {}) {
     const fallbackType = tileData.hiddenTileType || 'floor';
     const fallbackData = roomTiles[fallbackType];
     if (fallbackData && fallbackData !== tileData) {
-      return describeTile(fallbackType, fallbackData, stateFlags, roomTiles);
+      return describeTile(fallbackType, fallbackData, stateFlags, roomTiles, roomId);
     }
     return tileData.hiddenDescription || 'Nothing remarkable here.';
   }
 
   // Check if item has been opened
-  if (tileData.item && stateFlags[`item_${tileName(tileType)}_opened`]) {
+  const flagKey = roomId ? `room_${roomId}_tile_${tileType}_opened` : `item_${tileName(tileType)}_opened`;
+  if (tileData.item && stateFlags[flagKey]) {
     return tileData.item.opened_description || 'This has already been searched.';
   }
 
