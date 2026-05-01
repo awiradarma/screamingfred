@@ -10,10 +10,11 @@ const WorldMap = () => {
   
   const [selectedTheme, setSelectedTheme] = useState(null);
   const [isMapping, setIsMapping] = useState(false);
+  const [currentZ, setCurrentZ] = useState(0);
 
   const currentRoom = gameState?.room;
   const currentCoords = currentRoom?.world_coord?.split(',').map(Number) || [15, 15, 0];
-  const [currentX, currentY] = currentCoords;
+  const [currentX, currentY, roomZ] = currentCoords;
 
   const THEMES = [
     { id: 'Shoebox_Forest', name: 'Forest', icon: '🌲' },
@@ -31,7 +32,7 @@ const WorldMap = () => {
         addMessage('Theme assignment failed.', 'danger');
       }
     } else {
-      teleportToCoordinate(x, y, 0);
+      teleportToCoordinate(x, y, currentZ);
       setView('game');
     }
   };
@@ -40,18 +41,23 @@ const WorldMap = () => {
     const cells = [];
     for (let y = COORD_MIN; y <= COORD_MAX; y++) {
       for (let x = COORD_MIN; x <= COORD_MAX; x++) {
-        const coordKey = `${x},${y}`;
-        const room = worldRooms[coordKey] || getRoomAt(x, y, 0);
+        const coordKey = `${x},${y},${currentZ}`;
+        
+        // Priority: Static Registry Data -> Firestore Cache -> Fallback
+        const staticRoom = getRoomAt(x, y, currentZ);
+        const dynamicRoom = worldRooms[coordKey] || (currentZ === 0 ? worldRooms[`${x},${y}`] : null);
+        const room = staticRoom || dynamicRoom;
+        
         const roomName = room?.room_name || `(${x}, ${y})`;
         const hasRoom = !!room;
-        const isCurrent = x === currentX && y === currentY;
+        const isCurrent = x === currentX && y === currentY && currentZ === roomZ;
 
         cells.push(
           <div 
             key={`${x},${y}`}
             className={`map-cell ${hasRoom ? 'has-room' : 'empty'} ${isCurrent ? 'is-current' : ''}`}
             onClick={() => handleCellClick(x, y)}
-            title={hasRoom ? `${roomName} (${x}, ${y})` : `(${x}, ${y})`}
+            title={hasRoom ? `${roomName} (${x}, ${y}, Z:${currentZ})` : `(${x}, ${y}, Z:${currentZ})`}
           >
             {isCurrent && <div className="player-indicator" />}
             {!hasRoom && <div className="orange-fog" />}
@@ -62,11 +68,29 @@ const WorldMap = () => {
     return cells;
   };
 
+  const Z_LEVELS = [
+    { id: 0, name: 'Surface', icon: '🌍' },
+    { id: 1, name: 'Underground', icon: '🌋' },
+  ];
+
   return (
     <div className="world-map-container">
       <header className="world-map-header">
         <div className="header-left-tools">
-          <h2>World Map (30x30)</h2>
+          <div className="title-section">
+            <h2>World Map (30x30)</h2>
+            <div className="z-level-toggle">
+              {Z_LEVELS.map(level => (
+                <button
+                  key={level.id}
+                  className={`z-btn ${currentZ === level.id ? 'active' : ''}`}
+                  onClick={() => setCurrentZ(level.id)}
+                >
+                  {level.icon} {level.name}
+                </button>
+              ))}
+            </div>
+          </div>
           {isAdmin && (
             <div className="admin-toolbar">
               <button 

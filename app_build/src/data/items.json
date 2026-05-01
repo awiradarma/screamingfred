@@ -78,5 +78,16 @@
     "name": "Map of the Electric Desert",
     "description": "A scribbled map pointing towards the treacherous Electric Desert.",
     "type": "quest"
+  },
+  "food_ultra_potato": {
+    "name": "Ultra Golden Potato",
+    "description": "A radiant, golden potato that hums with starchy energy. It looks far too precious to eat, but Fred's stomach says otherwise.",
+    "type": "food",
+    "onUse": {
+      "action": "heal",
+      "value": 50,
+      "consume": true,
+      "successMessage": "You consume the Ultra Golden Potato. A surge of pure, starchy energy flows through you! Your HP is boosted to 50!"
+    }
   }
 }

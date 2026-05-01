@@ -8,7 +8,8 @@ const REGION_THEMES_COLLECTION = 'region_themes';
  * Save or update a room at specific world coordinates.
  */
 export const saveRoomToWorld = async (x, y, roomData) => {
-    const coordKey = `${x},${y}`;
+    const z = roomData.world_coord?.split(',')[2] || 0;
+    const coordKey = `${x},${y},${z}`;
     
     try {
         // Deep clone and ensure it's a POJO

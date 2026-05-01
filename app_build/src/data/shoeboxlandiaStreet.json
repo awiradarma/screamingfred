@@ -112,10 +112,7 @@
       },
       "interactionVerb": "SEARCH",
       "item": {
-        "contains": {
-          "name": "Hidden Golden Potato",
-          "type": "resource"
-        },
+        "itemId": "food_ultra_potato",
         "onCollect": "You pick up the shiny Golden Potato hidden in the dust.",
         "setFlag": "golden_potato_found"
       }
