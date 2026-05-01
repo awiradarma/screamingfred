@@ -299,7 +299,8 @@ export function handleMove(state, direction, messages) {
   let tileData = targetTile ? getTileData(state.room, targetTile) : null;
 
   // Resolve visibility fallback for movement
-  if (tileData && tileData.visibleIf && !state.stateFlags[tileData.visibleIf]) {
+  const isTargetVisible = !tileData?.visibleIf || state.stateFlags[tileData.visibleIf];
+  if (tileData && !isTargetVisible) {
     const fallbackType = tileData.hiddenTileType || 'floor';
     tileData = getTileData(state.room, fallbackType);
   }
@@ -329,7 +330,14 @@ export function handleMove(state, direction, messages) {
   }
 
   // If no transition and no tile (or impassable tile), it's blocked
+  // Also block world-edge transitions if the explicit transition at that location is HIDDEN
   if (!transitionRoom && (!targetTile || !tileData?.passable)) {
+    messages.push({ text: describeBlocked(), type: 'warning' });
+    return { state, messages };
+  }
+
+  // Double check: if targetTile exists but is HIDDEN, we should NOT transition to a world-edge room
+  if (transitionRoom && targetTile && !isTargetVisible) {
     messages.push({ text: describeBlocked(), type: 'warning' });
     return { state, messages };
   }
@@ -633,7 +641,13 @@ function handleTalk(state, messages, globalItems = {}) {
 
   for (let i = Math.min(currentStageLimit, dialogueStages.length - 1); i >= 0; i--) {
     const stage = dialogueStages[i];
-    if (!stage.requiresFlag || state.stateFlags[stage.requiresFlag]) {
+    const hasRequiresFlag = !stage.requiresFlag || state.stateFlags[stage.requiresFlag];
+    const hasCondFlag = !stage.conditions?.requiredFlag || 
+                        (stage.conditions.requiredFlag.startsWith('!') ? 
+                         !state.stateFlags[stage.conditions.requiredFlag.substring(1)] : 
+                         state.stateFlags[stage.conditions.requiredFlag]);
+    
+    if (hasRequiresFlag && hasCondFlag) {
       bestStage = stage;
       bestStageIdx = i;
       break;
@@ -650,7 +664,12 @@ function handleTalk(state, messages, globalItems = {}) {
   let finalNpcStages = { ...state.npcStages };
   
   // Increment stage tracker for this NPC to allow progression on next talk
-  finalNpcStages[npcKey] = Math.min(bestStageIdx + 1, dialogueStages.length - 1);
+  // UNLESS the current stage requires a scream to progress
+  if (!bestStage.requiresScream) {
+    finalNpcStages[npcKey] = Math.min(bestStageIdx + 1, dialogueStages.length - 1);
+  } else {
+    messages.push({ text: '(You feel like you should SCREAM to get a reaction...)', type: 'hint' });
+  }
 
   // Helper to handle item rewards with duplicate prevention
   const giveReward = (item, sourceName, uniqueKey) => {
@@ -762,14 +781,31 @@ function handleScream(state, messages, globalItems = {}) {
   // Scream effects on NPCs — advance dialogue
   if (tileData?.npc) {
     const npcKey = tileType;
-    const currentStage = state.npcStages?.[npcKey] || 0;
-    if (currentStage === 0) {
+    const dialogueStages = tileData.npc.dialogue || [];
+    const currentStageIdx = state.npcStages[npcKey] || 0;
+    const currentStage = dialogueStages[currentStageIdx];
+
+    if (currentStage?.requiresScream) {
+      const nextStageIdx = Math.min(currentStageIdx + 1, dialogueStages.length - 1);
       newState = {
         ...newState,
-        npcStages: { ...newState.npcStages, [npcKey]: 1 },
-        stateFlags: { ...newState.stateFlags, sue_clue_given: true },
+        npcStages: { ...newState.npcStages, [npcKey]: nextStageIdx }
       };
-      messages.push({ text: getNPCDialogue(tileData.npc, 1), type: 'dialogue' });
+      
+      // Handle special flags or items from the next stage immediately
+      const nextStage = dialogueStages[nextStageIdx];
+      if (nextStage.onComplete) {
+        const { action, itemId, flagSet } = nextStage.onComplete;
+        if (action === 'give_item' && itemId && globalItems[itemId]) {
+          newState.inventory = [...newState.inventory, { ...globalItems[itemId], itemId }];
+          messages.push({ text: `🎁 ${tileData.npc.name} gave you: ${globalItems[itemId].name}!`, type: 'loot' });
+        }
+        if (action === 'set_flag' && flagSet) {
+          newState.stateFlags = { ...newState.stateFlags, [flagSet]: true };
+        }
+      }
+
+      messages.push({ text: getNPCDialogue(tileData.npc, nextStageIdx), type: 'dialogue' });
     }
   }
 
@@ -921,7 +957,33 @@ function handleUse(state, itemTarget, messages, globalItems = {}) {
     case 'damage_enemy':
       // DYNAMIC TARGETING: If no target specified, or if we want to be flexible, find enemies in room
       let finalTarget = target;
-      if (!finalTarget) {
+      
+      // 1. Look for entities or NPCs matching the target
+      let targetEntity = null;
+      if (finalTarget) {
+        // Look for entities
+        targetEntity = state.entities.find(e => 
+          e.id === finalTarget || 
+          e.name.toLowerCase().includes(finalTarget.toLowerCase())
+        );
+
+        // Look for NPCs on current or adjacent tiles
+        if (!targetEntity) {
+          const checkTiles = [
+            { x: state.playerPosition.x, y: state.playerPosition.y, type: getCurrentTile(state) },
+            ...getAdjacentTiles(state)
+          ];
+          
+          for (const t of checkTiles) {
+            const tData = getTileData(state.room, t.type);
+            if (tData?.npc && (t.type === finalTarget || tData.npc.name.toLowerCase().includes(finalTarget.toLowerCase()))) {
+              targetEntity = { ...tData.npc, id: t.type, isNpc: true };
+              break;
+            }
+          }
+        }
+      } else {
+        // Auto-target closest enemy if no target specified
         const potentialTargets = [];
         state.room.grid.forEach((row, y) => {
           row.forEach((tile, x) => {
@@ -932,34 +994,42 @@ function handleUse(state, itemTarget, messages, globalItems = {}) {
         });
         
         if (potentialTargets.length > 0) {
-          // Auto-target the closest enemy
           const px = state.playerPosition.x;
           const py = state.playerPosition.y;
           potentialTargets.sort((a,b) => (Math.abs(a.x-px)+Math.abs(a.y-py)) - (Math.abs(b.x-px)+Math.abs(b.y-py)));
           finalTarget = potentialTargets[0].type;
+          const tData = getTileData(state.room, finalTarget);
+          targetEntity = { ...tData.enemy, id: finalTarget };
         }
       }
 
-      if (finalTarget && !state.stateFlags[`${finalTarget.replace(/^enemy_/, '')}_defeated`]) {
-        const enemyKeyName = finalTarget;
-        const eData = getTileData(state.room, finalTarget).enemy;
-        const currentHpVal = state.enemyHP[enemyKeyName] ?? eData.hp;
-        const dmgVal = value || 1;
-        const nextHpVal = currentHpVal - dmgVal;
-        
-        messages.push({ text: successMessage || `You use ${formatEntityName(item.name)} against ${formatEntityName(eData.name)}!`, type: 'narrative' });
-        
-        if (nextHpVal <= 0) {
-          messages.push({ text: describeEnemyDefeated(eData), type: 'loot' });
-          newState.stateFlags = { ...newState.stateFlags, [`${finalTarget.replace(/^enemy_/, '')}_defeated`]: true };
-          newState.enemyHP = { ...newState.enemyHP, [enemyKeyName]: 0 };
-        } else {
-          messages.push({ text: `${formatEntityName(eData.name, true)} takes ${dmgVal} damage! (${nextHpVal} HP remaining)`, type: 'narrative' });
-          newState.enemyHP = { ...newState.enemyHP, [enemyKeyName]: nextHpVal };
+      if (targetEntity) {
+        // Apply flag if specified (e.g. for boss triggers like Barry)
+        if (flagSet) {
+          newState.stateFlags = { ...newState.stateFlags, [flagSet]: true };
         }
+
+        // Deal damage if it's a standard enemy with HP
+        if (!targetEntity.isNpc && targetEntity.hp !== undefined) {
+          const enemyKeyName = targetEntity.id;
+          const currentHpVal = state.enemyHP[enemyKeyName] ?? targetEntity.hp;
+          const dmgVal = value || 1;
+          const nextHpVal = currentHpVal - dmgVal;
+          newState.enemyHP = { ...newState.enemyHP, [enemyKeyName]: nextHpVal };
+          
+          if (nextHpVal <= 0) {
+            newState.stateFlags = { ...newState.stateFlags, [`${enemyKeyName.replace(/^enemy_/, '')}_defeated`]: true };
+            messages.push({ text: describeEnemyDefeated(targetEntity), type: 'loot' });
+          }
+        }
+
+        messages.push({ text: successMessage || `You use ${formatEntityName(item.name)} on ${formatEntityName(targetEntity.name)}!`, type: 'loot' });
         usedSuccessfully = true;
+        if (consume) {
+          newState.inventory = state.inventory.filter((_, i) => i !== itemIndex);
+        }
       } else {
-        messages.push({ text: failureMessage || `There is no enemy in sight to use the ${item.name} on.`, type: 'warning' });
+        messages.push({ text: failureMessage || `There's no ${finalTarget || 'target'} to use this on here.`, type: 'warning' });
       }
       break;
 

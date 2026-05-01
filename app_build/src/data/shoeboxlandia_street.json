@@ -21,10 +21,10 @@
     ],
     [
       "wall",
+      "trash_can",
       "floor",
       "floor",
-      "floor",
-      "trash_can"
+      "wall"
     ],
     [
       "wall",
@@ -140,7 +140,8 @@
         "dialogue": [
           {
             "stage": 0,
-            "text": "\"Welcome to Sal's! Business has been slow — nobody in Shoeboxlandia wants anything new. Say, you're that screaming shoe, aren't you? Give me a good SCREAM and I'll toss in a snack for free!\""
+            "text": "\"Welcome to Sal's! Business has been slow — nobody in Shoeboxlandia wants anything new. Say, you're that screaming shoe, aren't you? Give me a good SCREAM and I'll toss in a snack for free!\"",
+            "requiresScream": true
           },
           {
             "stage": 1,

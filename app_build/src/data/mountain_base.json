@@ -128,18 +128,19 @@
           },
           {
             "stage": 4,
-            "text": "Barry starts to hum menacingly. \"NOW I CAN DRAIN YOU PROPERLY!\" Freddista quickly grabs the Magnifying Glass and focuses the sun's rays!",
+            "text": "Barry starts to hum menacingly. \"NOW I CAN DRAIN YOU PROPERLY!\" Willy whispers, \"Fred! Use that Magnifying Glass we found! Focus the light on his shiny metal casing!\"",
             "conditions": {
-              "requiredItem": "tool_magnifying_glass"
+              "requiredFlag": "sat_in_chair"
             },
-            "hint": "You need the Magnifying Glass from the Secret Cave to stop him!"
+            "hint": "Use the Magnifying Glass from your inventory while standing near Barry!"
           },
           {
             "stage": 5,
+            "requiresFlag": "barry_burned",
             "text": "Barry starts to smoke. \"MY CASING! IT'S MELTING! I'M OVERHEATING! I NEED TO SIT DOWN IN SOMETHING COLD!\" He rolls away frantically toward a distant puddle.",
             "onComplete": {
               "action": "set_flag",
-              "flagSet": "barry_burned"
+              "flagSet": "barry_defeated"
             }
           },
           {

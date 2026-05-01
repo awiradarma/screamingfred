@@ -93,7 +93,14 @@
   "tool_magnifying_glass": {
     "name": "Magnifying Glass",
     "description": "A thick glass lens with a brass handle. It makes small things look large, or can focus light into a burning point.",
-    "type": "tool"
+    "type": "tool",
+    "onUse": {
+      "action": "damage_enemy",
+      "target": "npc_barry",
+      "flagSet": "barry_burned",
+      "successMessage": "You hold the magnifying glass up to the sun. A beam of intense light hits Barry's metal casing! It starts to smoke and glow!",
+      "failureMessage": "You try to focus the light, but Barry isn't in a good position for it."
+    }
   },
   "tool_electric_lantern": {
     "name": "Electric Lantern",
