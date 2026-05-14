@@ -145,5 +145,16 @@
       "consume": true,
       "successMessage": "You eat the Spicy Pepper! Your attacks will deal double damage for 3 turns!"
     }
+  },
+  "consumable_energy_drink": {
+    "name": "Sparking Energy Drink",
+    "description": "A fizzing can of liquid lightning. Drink it to cleanse debuffs and restore 3 HP.",
+    "type": "food",
+    "onUse": {
+      "action": "heal_and_cleanse",
+      "value": 3,
+      "consume": true,
+      "successMessage": "You chug the energy drink! The tingling washes away your fatigue. +3 HP, all debuffs cleared!"
+    }
   }
 }

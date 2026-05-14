@@ -553,6 +553,30 @@
 .lake-tile    { background: rgba(30, 144, 255, 0.2); color: #1e90ff; }
 .tile-lake    { background: rgba(30, 144, 255, 0.15); color: #1e90ff; border: 1px solid rgba(30, 144, 255, 0.2); }
 .tile-bouncy  { background: rgba(57, 255, 133, 0.1); color: var(--accent-green); border: 2px dashed var(--accent-green); }
+.tile-electric { background: rgba(255, 191, 0, 0.15); color: #ffbf00; border: 1px solid rgba(255, 191, 0, 0.3); box-shadow: 0 0 12px rgba(255, 191, 0, 0.15); animation: electricPulse 1.2s ease-in-out infinite; }
+
+@keyframes electricPulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(255, 191, 0, 0.15); }
+  50% { box-shadow: 0 0 18px rgba(255, 191, 0, 0.35); background: rgba(255, 191, 0, 0.25); }
+}
+
+/* Enemy/NPC HP Bar on Grid */
+.enemy-hp-bar {
+  position: absolute;
+  bottom: 2px;
+  left: 4px;
+  right: 4px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.enemy-hp-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.4s ease, background 0.3s ease;
+}
 
 .tile-player {
   background: rgba(0, 229, 255, 0.2) !important;

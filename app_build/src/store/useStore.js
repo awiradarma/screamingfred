@@ -241,6 +241,14 @@ export const useStore = create((set, get) => ({
       if (turnTakingActions.includes(action) && finalActiveEffects.length > 0) {
         const remainingEffects = [];
         for (const effect of finalActiveEffects) {
+          // Apply effect per tick
+          if (effect.type === 'reduce_max_hp') {
+            const reduction = effect.value || 1;
+            newState.maxHP = Math.max(1, (newState.maxHP || 10) - reduction);
+            newState.playerHP = Math.min(newState.playerHP, newState.maxHP);
+            tickMessages.push({ text: `⚡ Energy Drain saps your vitality! Max HP reduced to ${newState.maxHP}!`, type: 'danger', timestamp: Date.now() });
+          }
+
           effect.duration -= 1;
           if (effect.duration <= 0) {
             tickMessages.push({ text: `Your ${effect.name} effect has worn off.`, type: 'system', timestamp: Date.now() });

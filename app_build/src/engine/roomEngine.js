@@ -738,7 +738,7 @@ function handleTalk(state, messages, globalItems = {}) {
 
   // Handle onComplete actions (Standard format)
   if (bestStage.onComplete) {
-    const { action, itemId, flagSet, msg } = bestStage.onComplete;
+    const { action, itemId, flagSet, msg, value, effect } = bestStage.onComplete;
     
     if (action === 'give_item' && itemId && globalItems[itemId]) {
       const rewardKey = `reward_${npcKey}_stage${bestStageIdx}_${itemId}`;
@@ -755,6 +755,22 @@ function handleTalk(state, messages, globalItems = {}) {
 
     if (action === 'damage_player' && value) {
       modifyPlayerHP(state, -value, messages);
+    }
+
+    if (action === 'apply_effect_to_player' && effect) {
+      if (!state.activeEffects) state.activeEffects = [];
+      // Prevent stacking the same effect type
+      const alreadyActive = state.activeEffects.some(e => e.type === effect.type);
+      if (!alreadyActive) {
+        state.activeEffects = [...(state.activeEffects || []), { ...effect }];
+        messages.push({ text: `⚠️ You are afflicted by ${effect.name}! (${effect.duration} turns)`, type: 'danger' });
+      }
+    }
+
+    if (action === 'remove_item' && itemId) {
+      finalInventory = finalInventory.filter(i => i.itemId !== itemId && i.name !== itemId);
+      const itemName = globalItems[itemId]?.name || itemId;
+      messages.push({ text: `The ${itemName} has been destroyed!`, type: 'warning' });
     }
   }
 
@@ -960,6 +976,15 @@ function handleUse(state, itemTarget, messages, globalItems = {}) {
       }
       modifyPlayerHP(newState, healAmount, messages);
       messages.push({ text: successMessage || `You use ${formatEntityName(item.name)} and feel revitalized!`, type: 'hint' });
+      usedSuccessfully = true;
+      break;
+
+    case 'heal_and_cleanse':
+      const cleanseHeal = value || 0;
+      modifyPlayerHP(newState, cleanseHeal, messages);
+      // Clear all active debuffs
+      newState.activeEffects = [];
+      messages.push({ text: successMessage || `You feel revitalized and all debuffs are cleared!`, type: 'loot' });
       usedSuccessfully = true;
       break;
 

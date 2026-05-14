@@ -19,6 +19,8 @@ const TILE_CONFIG = {
   ice:        { icon: '❄', label: 'Ice',    className: 'tile-ice' },
   lake:       { icon: '≋', label: 'Lake',   className: 'tile-lake' },
   bouncy:     { icon: '⊗', label: 'Bouncy', className: 'tile-bouncy' },
+  electric_floor: { icon: '⚡', label: 'Electric', className: 'tile-electric' },
+  cursed_chair: { icon: '🪑', label: 'Chair', className: 'tile-item' },
   exit:       { icon: '△', label: 'Exit',   className: 'tile-exit' },
   enemy:      { icon: '☠', label: 'Enemy',  className: 'tile-enemy' },
   npc:        { icon: '☺', label: 'NPC',    className: 'tile-npc' },
@@ -72,7 +74,7 @@ function getTileConfig(tileType, stateFlags, roomTiles = {}) {
   return baseConfig;
 }
 
-export default function GridViewer({ grid, playerPosition, stateFlags, roomName, entities, tiles: roomTiles }) {
+export default function GridViewer({ grid, playerPosition, stateFlags, roomName, entities, tiles: roomTiles, enemyHP }) {
   const [isExpanded, setIsExpanded] = React.useState(window.innerWidth > 768);
 
   if (!grid) return null;
@@ -107,6 +109,24 @@ export default function GridViewer({ grid, playerPosition, stateFlags, roomName,
                       ) : (
                         <span className="tile-icon">{config.icon}</span>
                       )}
+                      {/* Enemy/NPC HP bar */}
+                      {(() => {
+                        const tileMeta = roomTiles?.[tileType];
+                        const npcHp = tileMeta?.npc?.hp;
+                        if (npcHp && !stateFlags[`${tileType.replace(/^npc_/, '')}_defeated`] && !stateFlags['barry_defeated']) {
+                          const currentHp = enemyHP?.[tileType] ?? npcHp;
+                          if (currentHp > 0) {
+                            const pct = Math.max(0, (currentHp / npcHp) * 100);
+                            const barColor = pct > 60 ? '#4ade80' : pct > 30 ? '#facc15' : '#ef4444';
+                            return (
+                              <div className="enemy-hp-bar" title={`${currentHp}/${npcHp} HP`}>
+                                <div className="enemy-hp-fill" style={{ width: `${pct}%`, background: barColor }} />
+                              </div>
+                            );
+                          }
+                        }
+                        return null;
+                      })()}
                     </div>
                   );
                 })}

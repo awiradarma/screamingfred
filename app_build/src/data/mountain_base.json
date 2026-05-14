@@ -15,21 +15,21 @@
     [
       "wall",
       "floor",
-      "floor",
-      "floor",
+      "electric_floor",
+      "electric_floor",
       "wall"
     ],
     [
       "exit_west",
       "floor",
       "npc_barry",
-      "floor",
-      "wall"
+      "electric_floor",
+      "exit_east"
     ],
     [
       "wall",
       "cursed_chair",
-      "floor",
+      "electric_floor",
       "floor",
       "wall"
     ],
@@ -53,6 +53,15 @@
     "floor": {
       "passable": true,
       "description": "Cold, grey stone covered in a thin layer of crystalline frost."
+    },
+    "electric_floor": {
+      "passable": true,
+      "description": "The ground crackles with violent arcs of electricity! Barry's rage has electrified the floor!",
+      "effect": "damage",
+      "damageAmount": 2,
+      "effectMessage": "⚡ ZAP! The electric floor shocks you!",
+      "hiddenIf": "barry_burned",
+      "hiddenTileType": "floor"
     },
     "cursed_chair": {
       "passable": true,
@@ -84,7 +93,7 @@
       "passable": true,
       "description": "The path continues upward into the higher cliffs of the Mountains of Misery.",
       "conditions": {
-        "requiredFlag": "barry_burned",
+        "requiredFlag": "barry_defeated",
         "failMessage": "Barry blocks the way! You need to deal with him before you can proceed."
       },
       "targetRoomId": "mountain_pass",
@@ -96,8 +105,12 @@
     "npc_barry": {
       "passable": true,
       "description": "A massive, sparking battery with a face full of rage. He looks ready to lunge!",
+      "hiddenIf": "barry_defeated",
+      "hiddenTileType": "floor",
       "npc": {
         "name": "Barry the Battery",
+        "hp": 6,
+        "damage": 2,
         "dialogue": [
           {
             "stage": 0,
@@ -121,9 +134,18 @@
           },
           {
             "stage": 3,
-            "text": "\"Ah, finally sitting down. Excellent...\" Barry's glow stabilizes. Willy whispers, \"I think he's serious about the chair, Fred. He's a total control freak!\"",
+            "text": "\"Ah, finally sitting down. Excellent...\" Barry's glow stabilizes, and a dark hum fills the air. You feel your energy being drained! Willy whispers, \"I think he's draining us, Fred! He's a total control freak!\"",
             "conditions": {
               "requiredFlag": "sat_in_chair"
+            },
+            "onComplete": {
+              "action": "apply_effect_to_player",
+              "effect": {
+                "name": "Energy Drain",
+                "type": "reduce_max_hp",
+                "duration": 3,
+                "value": 1
+              }
             }
           },
           {
@@ -137,7 +159,7 @@
           {
             "stage": 5,
             "requiresFlag": "barry_burned",
-            "text": "Barry starts to smoke. \"MY CASING! IT'S MELTING! I'M OVERHEATING! I NEED TO SIT DOWN IN SOMETHING COLD!\" He rolls away frantically toward a distant puddle.",
+            "text": "Barry starts to smoke. \"MY CASING! IT'S MELTING! I'M OVERHEATING! I NEED TO SIT DOWN IN SOMETHING COLD!\" He rolls away frantically toward a distant puddle, sparks flying everywhere!",
             "onComplete": {
               "action": "set_flag",
               "flagSet": "barry_defeated"
@@ -145,7 +167,7 @@
           },
           {
             "stage": 6,
-            "text": "Willy looks at the ruined Magnifying Glass. \"Well, he's gone. But the glass is toast. At least we don't have to sit in that creepy chair.\"",
+            "text": "Willy looks at the ruined Magnifying Glass. \"Well, he's gone — I can see him cooling off in a puddle way down the mountain. But the glass is toast. At least we don't have to sit in that creepy chair anymore. The path east is clear!\"",
             "onComplete": {
               "action": "remove_item",
               "itemId": "tool_magnifying_glass"
@@ -157,6 +179,8 @@
   },
   "entities": [],
   "state_flags": {
-    "barry_burned": false
+    "barry_burned": false,
+    "sat_in_chair": false,
+    "barry_defeated": false
   }
 }

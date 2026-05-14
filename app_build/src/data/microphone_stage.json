@@ -105,6 +105,14 @@
           },
           {
             "stage": 4,
+            "text": "\"Oh, and one more thing — that battery creature ahead is DANGEROUS. Take this energy drink. You'll need it if he starts draining you.\"",
+            "onComplete": {
+              "action": "give_item",
+              "itemId": "consumable_energy_drink"
+            }
+          },
+          {
+            "stage": 5,
             "text": "\"The Mountains of Misery lie to the East. Go forth and sing your way to destiny!\"",
             "onComplete": {
               "action": "set_flag",
@@ -112,7 +120,7 @@
             }
           },
           {
-            "stage": 5,
+            "stage": 6,
             "text": "\"Your performance was... unforgettable, Fred. Truly. Now move along before I change my mind about your encore.\""
           }
         ]
