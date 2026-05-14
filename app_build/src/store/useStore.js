@@ -233,11 +233,12 @@ export const useStore = create((set, get) => ({
       const { state: newState, messages } = processCommand(gameState, rawInput, itemRegistry);
       
       // Decrement active effects
-      const turnTakingActions = ['move', 'use', 'attack', 'scream', 'interact', 'talk'];
+      const turnTakingActions = ['move', 'use', 'attack', 'scream', 'interact', 'talk', 'north', 'south', 'east', 'west', 'n', 's', 'e', 'w'];
       let finalActiveEffects = newState.activeEffects || [];
       const tickMessages = [];
+      const action = rawInput.toLowerCase().trim().split(' ')[0];
       
-      if (turnTakingActions.includes(command.action) && finalActiveEffects.length > 0) {
+      if (turnTakingActions.includes(action) && finalActiveEffects.length > 0) {
         const remainingEffects = [];
         for (const effect of finalActiveEffects) {
           effect.duration -= 1;
