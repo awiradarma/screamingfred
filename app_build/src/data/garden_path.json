@@ -68,7 +68,7 @@
       "description": "The path leads west back to the neighbor's house.",
       "targetRoomId": "neighbors_house",
       "targetPosition": {
-        "x": 3,
+        "x": 4,
         "y": 2
       }
     }
