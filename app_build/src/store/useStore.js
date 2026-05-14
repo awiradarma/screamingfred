@@ -62,6 +62,8 @@ export const useStore = create((set, get) => ({
         entities: (startRoom.entities || []).map(e => ({ ...e })),
         turnCount: 0,
         discoveredRooms: session.discoveredRooms || [startRoom.world_coord || "15,15,0"],
+        abilities: session.abilities || [],
+        activeEffects: session.activeEffects || [],
       };
       
       get().addMessage('Welcome back, Fred! Your progress has been restored.', 'system');
@@ -70,6 +72,8 @@ export const useStore = create((set, get) => ({
       startRoom = getRoomAt(15, 15, 0) || worldData.freds_house;
       initialState = initGameState(startRoom);
       initialState.discoveredRooms = [startRoom.world_coord || "15,15,0"];
+      initialState.abilities = [];
+      initialState.activeEffects = [];
       const welcomeMessages = getWelcomeMessages(startRoom);
       set({ gameLog: welcomeMessages.map(m => ({ ...m, timestamp: Date.now() })) });
     }
@@ -141,6 +145,8 @@ export const useStore = create((set, get) => ({
       inventory: get().gameState?.inventory || initialState.inventory,
       stateFlags: get().gameState?.stateFlags || initialState.stateFlags,
       discoveredRooms: get().gameState?.discoveredRooms || [],
+      abilities: get().gameState?.abilities || [],
+      activeEffects: get().gameState?.activeEffects || [],
     };
 
     // Add current room to discovered rooms if not already present
@@ -225,11 +231,31 @@ export const useStore = create((set, get) => ({
 
       // Process through the engine
       const { state: newState, messages } = processCommand(gameState, rawInput, itemRegistry);
+      
+      // Decrement active effects
+      const turnTakingActions = ['move', 'use', 'attack', 'scream', 'interact', 'talk'];
+      let finalActiveEffects = newState.activeEffects || [];
+      const tickMessages = [];
+      
+      if (turnTakingActions.includes(command.action) && finalActiveEffects.length > 0) {
+        const remainingEffects = [];
+        for (const effect of finalActiveEffects) {
+          effect.duration -= 1;
+          if (effect.duration <= 0) {
+            tickMessages.push({ text: `Your ${effect.name} effect has worn off.`, type: 'system', timestamp: Date.now() });
+          } else {
+            remainingEffects.push(effect);
+          }
+        }
+        finalActiveEffects = remainingEffects;
+      }
+      newState.activeEffects = finalActiveEffects;
+
       const timestampedMessages = messages.map(m => ({ ...m, timestamp: Date.now() }));
 
       return {
         gameState: newState,
-        gameLog: [...gameLog, echoMsg, ...timestampedMessages],
+        gameLog: [...gameLog, echoMsg, ...timestampedMessages, ...tickMessages],
       };
     });
 

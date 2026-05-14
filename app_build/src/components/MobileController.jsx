@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react';
 import { useStore } from '../store/useStore';
 import './MobileController.css';
 
+import { getAvailableActions } from '../engine/roomEngine';
+
 /**
  * MobileController — Floating touch controls for movement and actions.
  * Only visible on small screens.
@@ -70,13 +72,16 @@ export default function MobileController({ onSubmit, disabled }) {
     setShowItemSelection(false);
   };
 
-  const actions = [
+  const availableActionIds = gameState ? getAvailableActions(gameState) : [];
+  const allActions = [
     { id: 'interact', label: 'Interact', icon: '✋' },
     { id: 'talk', label: 'Talk', icon: '💬' },
     { id: 'use', label: 'Use', icon: '🎒' },
     { id: 'attack', label: 'Attack', icon: '⚔️' },
     { id: 'scream', label: 'Scream', icon: '😱' },
   ];
+  
+  const actions = allActions.filter(a => availableActionIds.includes(a.id));
 
   return (
     <div className={`mobile-controller ${disabled ? 'is-disabled' : ''}`}>

@@ -118,5 +118,32 @@
     "name": "Strong Shoelace",
     "description": "A thick, durable shoelace found in the Secret Cave. It's strong enough to tie anything together — maybe even a broken bridge.",
     "type": "tool"
+  },
+  "ability_zap_immunity": {
+    "name": "Rubber Boots",
+    "description": "Thick rubber boots that grant Zap Immunity.",
+    "type": "tool",
+    "onUse": {
+      "action": "grant_ability",
+      "abilityId": "zap_immunity",
+      "abilityName": "Zap Immunity",
+      "consume": true,
+      "successMessage": "You equip the Rubber Boots. You are now immune to electric damage!"
+    }
+  },
+  "consumable_double_damage": {
+    "name": "Spicy Pepper",
+    "description": "A very spicy pepper. Eat it for Double Damage for 3 turns.",
+    "type": "food",
+    "onUse": {
+      "action": "apply_effect",
+      "effect": {
+        "name": "Spicy Power",
+        "type": "double_damage",
+        "duration": 3
+      },
+      "consume": true,
+      "successMessage": "You eat the Spicy Pepper! Your attacks will deal double damage for 3 turns!"
+    }
   }
 }

@@ -491,11 +491,25 @@ function applyTileEffects(state, x, y, messages, direction) {
     if (!tileData) break;
 
     // 1. Damage Effects (Lava, Lake, Toxic)
-    if (tileData.effect === 'damage' || ['lava', 'lake', 'toxic_pit'].includes(tileType) || tileType.includes('lava') || tileType.includes('lake')) {
-      const damage = tileData.damageAmount || 1;
-      modifyPlayerHP(newState, -damage, messages);
-      const msg = tileData.effectMessage || (tileType.includes('lava') ? "Sizzle! The lava burns!" : "Gurgle! The water is deep and cold.");
-      messages.push({ text: `⚠️ ${msg} (-${damage} HP)`, type: 'danger' });
+    if (tileData.effect === 'damage' || ['lava', 'lake', 'toxic_pit'].includes(tileType) || tileType.includes('lava') || tileType.includes('lake') || tileType.includes('syrup')) {
+      let isImmune = false;
+      let immuneMsg = '';
+      if (newState.abilities?.includes('zap_immunity') && (tileType.includes('electric') || tileData.effectMessage?.includes('zap') || tileData.effectMessage?.includes('electric') || tileData.effectMessage?.includes('shock'))) {
+        isImmune = true;
+        immuneMsg = "Your Zap Immunity absorbs the electric shock!";
+      } else if (newState.abilities?.includes('float') && (tileType.includes('water') || tileType.includes('lake') || tileType.includes('syrup'))) {
+        isImmune = true;
+        immuneMsg = "You effortlessly float over the hazard!";
+      }
+
+      if (isImmune) {
+        messages.push({ text: `✨ ${immuneMsg}`, type: 'narrative' });
+      } else {
+        const damage = tileData.damageAmount || 1;
+        modifyPlayerHP(newState, -damage, messages);
+        const msg = tileData.effectMessage || (tileType.includes('lava') ? "Sizzle! The lava burns!" : "Gurgle! The water is deep and cold.");
+        messages.push({ text: `⚠️ ${msg} (-${damage} HP)`, type: 'danger' });
+      }
     }
 
     // 2. Bouncy Effects (Random non-wall teleport)
@@ -862,7 +876,12 @@ function handleAttack(state, messages, globalItems = {}) {
 
   const enemyKey = entityEnemy ? entityEnemy.id : tileType;
   const currentHP = state.enemyHP[enemyKey] ?? target.hp;
-  const playerDamage = 1;
+  
+  let playerDamage = 1;
+  if (state.activeEffects?.some(e => e.type === 'double_damage')) {
+    playerDamage = 2;
+  }
+  
   const newEnemyHP = currentHP - playerDamage;
 
   messages.push({ text: describeAttack(target, playerDamage), type: 'narrative' });
@@ -961,6 +980,24 @@ function handleUse(state, itemTarget, messages, globalItems = {}) {
     case 'set_flag':
       newState.stateFlags = { ...state.stateFlags, [flagSet]: true };
       messages.push({ text: successMessage || `Spirit of investigation! Flag '${flagSet}' set.`, type: 'hint' });
+      usedSuccessfully = true;
+      break;
+
+    case 'grant_ability':
+      if (!newState.abilities) newState.abilities = [];
+      if (!newState.abilities.includes(item.onUse.abilityId)) {
+        newState.abilities.push(item.onUse.abilityId);
+        messages.push({ text: successMessage || `✨ You have learned a new ability: ${item.onUse.abilityName || item.onUse.abilityId}!`, type: 'loot' });
+        usedSuccessfully = true;
+      } else {
+        messages.push({ text: `You already know the ${item.onUse.abilityName || item.onUse.abilityId} ability.`, type: 'system' });
+      }
+      break;
+
+    case 'apply_effect':
+      if (!newState.activeEffects) newState.activeEffects = [];
+      newState.activeEffects.push({ ...item.onUse.effect });
+      messages.push({ text: successMessage || `✨ You are now under the effect of ${item.onUse.effect.name}!`, type: 'loot' });
       usedSuccessfully = true;
       break;
 
@@ -1141,6 +1178,9 @@ export function getAvailableActions(state) {
   if (tileData?.item && !state.stateFlags[`room_${state.room.room_id}_tile_${tileType}_opened`]) actions.push('interact');
   if ((tileData?.enemy && !state.stateFlags[`${tileType.replace(/^enemy_/, '')}_defeated`]) || entityEnemy) {
     actions.push('attack');
+  }
+  if (state.inventory && state.inventory.length > 0) {
+    actions.push('use');
   }
 
   return actions;

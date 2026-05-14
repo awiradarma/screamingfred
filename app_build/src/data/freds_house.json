@@ -29,7 +29,7 @@
     [
       "wall",
       "floor",
-      "floor",
+      "item_chest",
       "floor",
       "wall"
     ],
@@ -82,13 +82,20 @@
         "y": 1
       }
     },
-    "item_bed": {
+      "item_bed": {
       "passable": true,
       "description": "A soft cotton ball bed. It's not much, but it's home.",
       "interactionVerb": "SEARCH",
       "item": {
-        "name": "Note",
-        "description": "A handwritten note: 'Fred, don't forget to scream today! - Mom'"
+        "itemId": "consumable_double_damage"
+      }
+    },
+    "item_chest": {
+      "passable": true,
+      "description": "A small cardboard chest.",
+      "interactionVerb": "OPEN",
+      "item": {
+        "itemId": "ability_zap_immunity"
       }
     },
     "stairs_up": {
