@@ -8,8 +8,15 @@
     [
       "wall",
       "wall",
+      "edge_n",
       "wall",
-      "wall",
+      "wall"
+    ],
+    [
+      "exit_west",
+      "floor",
+      "floor",
+      "floor",
       "wall"
     ],
     [
@@ -17,21 +24,14 @@
       "floor",
       "floor",
       "floor",
-      "wall"
-    ],
-    [
-      "wall",
-      "floor",
-      "floor",
-      "floor",
-      "wall"
+      "exit_east"
     ],
     [
       "wall",
       "floor",
       "npc_neighbor",
       "floor",
-      "exit_east"
+      "wall"
     ],
     [
       "wall",
@@ -66,7 +66,7 @@
       "description": "The crack leads back to your own shoebox.",
       "targetRoomId": "freds_house",
       "targetPosition": {
-        "x": 4,
+        "x": 3,
         "y": 1
       }
     },
@@ -76,7 +76,7 @@
       "targetRoomId": "shoe_rack",
       "targetPosition": {
         "x": 2,
-        "y": 4
+        "y": 3
       }
     },
     "exit_east": {
@@ -84,7 +84,7 @@
       "description": "A door leads east out to the garden path.",
       "targetRoomId": "garden_path",
       "targetPosition": {
-        "x": 0,
+        "x": 1,
         "y": 2
       }
     },

@@ -17,7 +17,7 @@
       "floor",
       "item_fridge",
       "floor",
-      "wall"
+      "exit_east"
     ],
     [
       "wall",
@@ -78,7 +78,7 @@
       "description": "A small crack in the wall leads to your neighbor's shoebox.",
       "targetRoomId": "neighbors_house",
       "targetPosition": {
-        "x": 0,
+        "x": 1,
         "y": 1
       }
     },

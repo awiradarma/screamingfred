@@ -36,7 +36,7 @@
     [
       "wall",
       "wall",
-      "wall",
+      "exit_south",
       "wall",
       "wall"
     ]
@@ -60,7 +60,7 @@
       "targetRoomId": "neighbors_house",
       "targetPosition": {
         "x": 2,
-        "y": 0
+        "y": 4
       }
     },
     "exit_west": {
