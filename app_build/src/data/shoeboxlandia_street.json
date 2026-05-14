@@ -17,7 +17,7 @@
       "npc_shopkeeper",
       "floor",
       "item_signpost",
-      "exit_east"
+      "wall"
     ],
     [
       "wall",
@@ -31,7 +31,7 @@
       "floor",
       "npc_elder",
       "dark_corner",
-      "wall"
+      "exit_east"
     ],
     [
       "wall",
@@ -129,7 +129,7 @@
       "targetRoomId": "path_to_breakfastopia",
       "targetPosition": {
         "x": 0,
-        "y": 1
+        "y": 3
       }
     },
     "npc_shopkeeper": {
