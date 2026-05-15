@@ -30,6 +30,14 @@ export const CONQUEST_REWARDS = [
     requiredItemNames: ["Rubber Berries", "Yellow Pollen", "Soft Pillow"],
     rewardMessage: "Berries, pollen, and a cotton ball pillow. Ah, the great outdoors. You learned Allergy Resistance! (Passive)",
     ability: { id: "allergy_resistance", name: "Allergy Resistance", description: "You've inhaled so much pollen and dust you're now completely immune to sneezing.", type: "passive", icon: "🤧" }
+  },
+  {
+    id: "bio_synthesizer",
+    name: "Bio-Synthesizer",
+    requiredItems: ["item_rubber", "item_mushrooms", "item_vine"],
+    requiredItemNames: ["Rubber Piece", "Glowing Mushrooms", "Pulsing Vine"],
+    rewardMessage: "A rubber piece, glowing mushrooms, and a pulsing vine... You fuse them together into a strange, living patch! You learned Bio-Synthesizer! (Passive)",
+    ability: { id: "bio_synthesizer", name: "Bio-Synthesizer", description: "Your deep connection to weird ecology makes you slightly more resilient.", type: "passive", icon: "🌱" }
   }
 ];
 
