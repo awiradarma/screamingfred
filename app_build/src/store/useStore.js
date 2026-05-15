@@ -28,8 +28,8 @@ export const CONQUEST_REWARDS = [
     name: "Nature's Bounty",
     requiredItems: ["item_berries", "item_pollen", "item_pillow"],
     requiredItemNames: ["Rubber Berries", "Yellow Pollen", "Soft Pillow"],
-    rewardMessage: "Berries, pollen, and a cotton ball pillow. Ah, the great outdoors. You learned Allergy Resistance! (Passive)",
-    ability: { id: "allergy_resistance", name: "Allergy Resistance", description: "You've inhaled so much pollen and dust you're now completely immune to sneezing.", type: "passive", icon: "🤧" }
+    rewardMessage: "Berries, pollen, and a cotton ball pillow. You've spent so much time in the wild you've developed a sixth sense for terrain! You learned Nature's Bounty! (Reveals room layout on map)",
+    ability: { id: "natures_bounty_vision", name: "Nature's Bounty", description: "Your naturalist instincts allow you to perceive the full layout of any room at a glance.", type: "passive", icon: "🗺️" }
   },
   {
     id: "bio_synthesizer",

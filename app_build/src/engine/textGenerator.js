@@ -71,7 +71,7 @@ export function describeTile(tileType, tileData, state, roomTiles = {}, roomId =
   const stateFlags = state?.stateFlags || {};
 
   // Check visibility condition
-  if (!isTileVisible(tileData, state)) {
+  if (!isTileVisible(tileData, state, 'render')) {
     // If hidden, describe the fallback tile instead (e.g. floor)
     const fallbackType = tileData.hiddenTileType || 'floor';
     const fallbackData = roomTiles[fallbackType];

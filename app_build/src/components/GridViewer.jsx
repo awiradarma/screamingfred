@@ -25,16 +25,40 @@ const TILE_CONFIG = {
   enemy:      { icon: '☠', label: 'Enemy',  className: 'tile-enemy' },
   npc:        { icon: '☺', label: 'NPC',    className: 'tile-npc' },
   item:       { icon: '◈', label: 'Item',   className: 'tile-item' },
+  // Expanded Types
+  grass:      { icon: '☘', label: 'Grass',  className: 'tile-floor' },
+  dirt_path:  { icon: '░', label: 'Path',   className: 'tile-floor' },
+  sand_path:  { icon: '▒', label: 'Sand',   className: 'tile-floor' },
+  pancake_path: { icon: '🥞', label: 'Syrup Path', className: 'tile-floor' },
+  stairs_up:   { icon: '⤊', label: 'Up',     className: 'tile-exit' },
+  stairs_down: { icon: '⤋', label: 'Down',   className: 'tile-exit' },
+  dark_corner: { icon: '🌑', label: 'Dark',   className: 'tile-unknown' },
+  warning_sign: { icon: '⚠', label: 'Sign',   className: 'tile-item' },
+  creek:       { icon: '⌇', label: 'Creek',  className: 'tile-lake' },
+  syrup_river: { icon: '♒', label: 'Syrup',  className: 'tile-lake' },
+  trash_can:   { icon: '♻', label: 'Trash',  className: 'tile-item' },
+  ledge_floor: { icon: '┘', label: 'Ledge',  className: 'tile-floor' },
+  lint_ground: { icon: '◌', label: 'Lint',   className: 'tile-floor' },
+  velcro_mountain: { icon: '⛰', label: 'Mt', className: 'tile-wall' },
+  cereal_box_wall: { icon: '🗃', label: 'Wall', className: 'tile-wall' },
+  whispering_wall: { icon: '⬯', label: 'Wall', className: 'tile-wall' },
+  item_bed:    { icon: '🛏', label: 'Bed',    className: 'tile-item' },
+  item_chest:  { icon: '📦', label: 'Chest',  className: 'tile-item' },
+  glowcap_mushrooms: { icon: '🍄', label: 'Mush', className: 'tile-item' },
 };
 
-function getTileConfig(tileType, stateFlags, roomTiles = {}) {
+function getTileConfig(tileType, stateFlags, roomTiles = {}, abilities = []) {
+  const hasNaturesBounty = abilities.some(a => a.id === "natures_bounty_vision");
   // Check room-specific metadata first
   const roomMeta = roomTiles[tileType];
   
   // Visibility Check
   if (roomMeta && roomMeta.visibleIf && !stateFlags[roomMeta.visibleIf]) {
-    const fallbackType = roomMeta.hiddenTileType || 'floor';
-    return getTileConfig(fallbackType, stateFlags, roomTiles);
+    // Nature's Bounty allows seeing the tile itself, but we should show it as revealed
+    if (!hasNaturesBounty) {
+        const fallbackType = roomMeta.hiddenTileType || 'floor';
+        return getTileConfig(fallbackType, stateFlags, roomTiles, abilities);
+    }
   }
 
   // Check if enemy is defeated
@@ -61,7 +85,9 @@ function getTileConfig(tileType, stateFlags, roomTiles = {}) {
     baseType = 'item';
   }
   
-  const baseConfig = TILE_CONFIG[baseType] || { icon: '?', label: tileType, className: 'tile-unknown' };
+  const baseConfig = TILE_CONFIG[baseType] || (hasNaturesBounty 
+    ? { icon: '✧', label: tileType, className: 'tile-revealed' } 
+    : { icon: '?', label: tileType, className: 'tile-unknown' });
   
   if (roomMeta) {
     return {
@@ -74,7 +100,7 @@ function getTileConfig(tileType, stateFlags, roomTiles = {}) {
   return baseConfig;
 }
 
-export default function GridViewer({ grid, playerPosition, stateFlags, roomName, entities, tiles: roomTiles, enemyHP }) {
+export default function GridViewer({ grid, playerPosition, stateFlags, roomName, entities, tiles: roomTiles, enemyHP, abilities = [] }) {
   const [isExpanded, setIsExpanded] = React.useState(window.innerWidth > 768);
 
   if (!grid) return null;
@@ -93,7 +119,7 @@ export default function GridViewer({ grid, playerPosition, stateFlags, roomName,
               <div key={y} className="grid-row">
                 {row.map((tileType, x) => {
                   const isPlayer = playerPosition.x === x && playerPosition.y === y;
-                  const config = getTileConfig(tileType, stateFlags, roomTiles);
+                  const config = getTileConfig(tileType, stateFlags, roomTiles, abilities);
                   const cellEntities = (entities || []).filter(e => e.x === x && e.y === y && !stateFlags[`${e.id}_defeated`]);
 
                   return (

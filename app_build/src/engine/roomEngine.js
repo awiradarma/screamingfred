@@ -62,10 +62,14 @@ function getTileData(room, tileType) {
  * Supports visibleIf (requires flag) and hiddenIf (flag hides it).
  * Both support "!" prefix for negation.
  */
-export function isTileVisible(tileData, state) {
+export function isTileVisible(tileData, state, purpose = 'interaction') {
   if (!tileData) return true;
   const stateFlags = state.stateFlags || {};
   const hasDetectiveIntuition = state.abilities?.some(a => a.id === "detectives_intuition");
+  const hasNaturesBounty = state.abilities?.some(a => a.id === "natures_bounty_vision");
+
+  // Nature's Bounty allows seeing the layout (map/description) but not interacting with hidden details
+  if (purpose !== 'interaction' && hasNaturesBounty) return true;
 
   if (tileData.visibleIf) {
     const flag = tileData.visibleIf;
@@ -335,7 +339,7 @@ export function handleMove(state, direction, messages) {
   let tileData = targetTile ? getTileData(state.room, targetTile) : null;
 
   // Resolve visibility fallback for movement
-  const isTargetVisible = isTileVisible(tileData, state);
+  const isTargetVisible = isTileVisible(tileData, state, 'render');
   if (tileData && !isTargetVisible) {
     const fallbackType = tileData.hiddenTileType || 'floor';
     tileData = getTileData(state.room, fallbackType);
@@ -603,7 +607,7 @@ function handleInteract(state, target, messages, globalItems = {}) {
   }
 
   // Visibility Check
-  if (!isTileVisible(tileData, state)) {
+  if (!isTileVisible(tileData, state, 'interaction')) {
     messages.push({ text: 'There\'s nothing to interact with here.', type: 'system' });
     return { state, messages };
   }
@@ -696,7 +700,7 @@ function handleTalk(state, messages, globalItems = {}) {
   }
 
   // Visibility Check
-  if (!isTileVisible(tileData, state)) {
+  if (!isTileVisible(tileData, state, 'interaction')) {
     messages.push({ text: 'There\'s nobody here to talk to.', type: 'system' });
     return { state, messages };
   }
