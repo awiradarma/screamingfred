@@ -79,6 +79,7 @@
       "item": {
         "contains": {
           "name": "Silver Eyelet",
+          "itemId": "item_silver_eyelet",
           "type": "treasure"
         },
         "onCollect": "Your piercing scream vibrates the lock until it pops open! Inside is a shiny silver eyelet."

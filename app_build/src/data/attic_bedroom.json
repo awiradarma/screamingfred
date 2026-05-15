@@ -14,7 +14,7 @@
     ],
     [
       "wall",
-      "floor",
+      "item_photo",
       "floor",
       "floor",
       "wall"
@@ -78,6 +78,17 @@
       "item": {
         "name": "Soft Pillow",
         "itemId": "item_pillow",
+        "actions": [
+          "interact",
+          "search"
+        ]
+      }
+    },
+    "item_photo": {
+      "passable": true,
+      "description": "An old, dusty photo lying face down on the floor.",
+      "item": {
+        "itemId": "flavor_photo",
         "actions": [
           "interact",
           "search"

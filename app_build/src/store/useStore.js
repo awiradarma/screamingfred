@@ -14,6 +14,22 @@ export const CONQUEST_REWARDS = [
     requiredItemNames: ["Empty Fridge Note", "Old Photo", "Freddista's Note"],
     rewardMessage: "You piece together the clues! The Empty Fridge, the Old Photo, and Freddista's Note all point to one thing... wait, actually it just points to the fact you are a great detective! You learned Detective's Intuition! (Reveals hidden items)",
     ability: { id: "detectives_intuition", name: "Detective's Intuition", description: "Automatically reveals hidden things in dark corners without needing a light.", type: "passive", icon: "🕵️‍♂️" }
+  },
+  {
+    id: "master_tinkerer",
+    name: "Master Tinkerer",
+    requiredItems: ["flavor_signpost", "tool_lace", "item_silver_eyelet"],
+    requiredItemNames: ["Signpost Info", "Long Shoelace", "Silver Eyelet"],
+    rewardMessage: "You've gathered a signpost, a shoelace, and an eyelet. You realize you can build almost anything with this junk! You learned Master Tinkerer! (Passive)",
+    ability: { id: "master_tinkerer", name: "Master Tinkerer", description: "You have an incredible knack for repurposing ordinary junk into useful tools.", type: "passive", icon: "🔧" }
+  },
+  {
+    id: "natures_bounty",
+    name: "Nature's Bounty",
+    requiredItems: ["item_berries", "item_pollen", "item_pillow"],
+    requiredItemNames: ["Rubber Berries", "Yellow Pollen", "Soft Pillow"],
+    rewardMessage: "Berries, pollen, and a cotton ball pillow. Ah, the great outdoors. You learned Allergy Resistance! (Passive)",
+    ability: { id: "allergy_resistance", name: "Allergy Resistance", description: "You've inhaled so much pollen and dust you're now completely immune to sneezing.", type: "passive", icon: "🤧" }
   }
 ];
 
