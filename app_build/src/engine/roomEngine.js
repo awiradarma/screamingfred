@@ -507,10 +507,12 @@ function applyTileEffects(state, x, y, messages, direction) {
     if (tileData.effect === 'damage' || ['lava', 'lake', 'toxic_pit'].includes(tileType) || tileType.includes('lava') || tileType.includes('lake') || tileType.includes('syrup')) {
       let isImmune = false;
       let immuneMsg = '';
-      if (newState.abilities?.includes('zap_immunity') && (tileType.includes('electric') || tileData.effectMessage?.includes('zap') || tileData.effectMessage?.includes('electric') || tileData.effectMessage?.includes('shock'))) {
+      if (newState.abilities?.some(a => a.id === 'zap_immunity' || a.id === 'bio_synthesizer') && (tileType.includes('electric') || tileData.effectMessage?.includes('zap') || tileData.effectMessage?.includes('electric') || tileData.effectMessage?.includes('shock'))) {
         isImmune = true;
-        immuneMsg = "Your Zap Immunity absorbs the electric shock!";
-      } else if (newState.abilities?.includes('float') && (tileType.includes('water') || tileType.includes('lake') || tileType.includes('syrup'))) {
+        immuneMsg = newState.abilities?.some(a => a.id === 'bio_synthesizer') 
+          ? "Your Bio-Synthesizer patch grounds the electricity, protecting you!" 
+          : "Your Zap Immunity absorbs the electric shock!";
+      } else if (newState.abilities?.some(a => a.id === 'float') && (tileType.includes('water') || tileType.includes('lake') || tileType.includes('syrup'))) {
         isImmune = true;
         immuneMsg = "You effortlessly float over the hazard!";
       }
@@ -789,7 +791,12 @@ function handleTalk(state, messages, globalItems = {}) {
     }
 
     if (action === 'damage_player' && value) {
-      modifyPlayerHP(state, -value, messages);
+      let finalDamage = value;
+      if (state.abilities?.some(a => a.id === 'bio_synthesizer')) {
+         finalDamage = Math.max(1, finalDamage - 1);
+         messages.push({ text: `✨ Your Bio-Synthesizer absorbed some of the impact!`, type: 'narrative' });
+      }
+      modifyPlayerHP(state, -finalDamage, messages);
     }
 
     if (action === 'apply_effect_to_player' && effect) {
@@ -1205,7 +1212,13 @@ export function getEnemyIdleAttacks(state) {
 
   if (enemy) {
     // Player is at risk! Deal damage.
-    const damage = enemy.damage || 1;
+    let damage = enemy.damage || 1;
+    
+    if (newState.abilities?.some(a => a.id === 'bio_synthesizer')) {
+      damage = Math.max(1, damage - 1);
+      messages.push({ text: `✨ Your Bio-Synthesizer absorbed some of the impact!`, type: 'narrative' });
+    }
+    
     modifyPlayerHP(newState, -damage, messages);
     
     messages.push({ 
