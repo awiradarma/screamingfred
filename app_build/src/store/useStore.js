@@ -284,15 +284,19 @@ export const useStore = create((set, get) => ({
       for (const conquest of CONQUEST_REWARDS) {
         // Only grant if they don't already have the ability
         if (!finalAbilities.some(a => a.id === conquest.ability.id)) {
-          const hasAllItems = conquest.requiredItems.every(reqId => finalInventory.some(item => item.itemId === reqId));
+          const hasAllItems = conquest.requiredItems.every((reqId, index) => {
+            const reqName = conquest.requiredItemNames ? conquest.requiredItemNames[index] : null;
+            return finalInventory.some(item => item.itemId === reqId || item.name === reqId || (reqName && item.name === reqName) || (reqName && item.name.includes(reqName)));
+          });
           if (hasAllItems) {
             messages.push({ text: `🎉 CONQUEST COMPLETE: ${conquest.name} 🎉`, type: 'system' });
             messages.push({ text: conquest.rewardMessage, type: 'loot' });
             finalAbilities.push(conquest.ability);
             
             // Remove the consumed conquest items
-            conquest.requiredItems.forEach(reqId => {
-              const idx = finalInventory.findIndex(item => item.itemId === reqId);
+            conquest.requiredItems.forEach((reqId, index) => {
+              const reqName = conquest.requiredItemNames ? conquest.requiredItemNames[index] : null;
+              const idx = finalInventory.findIndex(item => item.itemId === reqId || item.name === reqId || (reqName && item.name === reqName) || (reqName && item.name.includes(reqName)));
               if (idx > -1) finalInventory.splice(idx, 1);
             });
           }

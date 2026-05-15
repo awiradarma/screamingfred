@@ -62,14 +62,20 @@ function getTileData(room, tileType) {
  * Supports visibleIf (requires flag) and hiddenIf (flag hides it).
  * Both support "!" prefix for negation.
  */
-export function isTileVisible(tileData, stateFlags) {
+export function isTileVisible(tileData, state) {
   if (!tileData) return true;
+  const stateFlags = state.stateFlags || {};
+  const hasDetectiveIntuition = state.abilities?.some(a => a.id === "detectives_intuition");
 
   if (tileData.visibleIf) {
     const flag = tileData.visibleIf;
     const isNegated = flag.startsWith('!');
     const actualFlag = isNegated ? flag.substring(1) : flag;
-    const flagValue = !!stateFlags[actualFlag];
+    
+    let flagValue = !!stateFlags[actualFlag];
+    // Detective's intuition auto-illuminates dark corners
+    if (actualFlag === "corner_illuminated" && hasDetectiveIntuition) flagValue = true;
+    
     if (isNegated ? flagValue : !flagValue) return false;
   }
 
@@ -77,7 +83,10 @@ export function isTileVisible(tileData, stateFlags) {
     const flag = tileData.hiddenIf;
     const isNegated = flag.startsWith('!');
     const actualFlag = isNegated ? flag.substring(1) : flag;
-    const flagValue = !!stateFlags[actualFlag];
+    
+    let flagValue = !!stateFlags[actualFlag];
+    if (actualFlag === "corner_illuminated" && hasDetectiveIntuition) flagValue = true;
+
     if (isNegated ? !flagValue : flagValue) return false;
   }
 
@@ -326,7 +335,7 @@ export function handleMove(state, direction, messages) {
   let tileData = targetTile ? getTileData(state.room, targetTile) : null;
 
   // Resolve visibility fallback for movement
-  const isTargetVisible = isTileVisible(tileData, state.stateFlags);
+  const isTargetVisible = isTileVisible(tileData, state);
   if (tileData && !isTargetVisible) {
     const fallbackType = tileData.hiddenTileType || 'floor';
     tileData = getTileData(state.room, fallbackType);
@@ -380,7 +389,11 @@ export function handleMove(state, direction, messages) {
     // Check if player has the item (check itemId or name)
     const hasItem = requiredItem ? state.inventory.some(i => i.itemId === requiredItem || i.name === requiredItem) : true;
     // Check if player has met the flag
-    const hasFlag = requiredFlag ? state.stateFlags[requiredFlag] || finalFlags[requiredFlag] : true;
+    let hasFlag = requiredFlag ? state.stateFlags[requiredFlag] || finalFlags[requiredFlag] : true;
+    // Detective's intuition auto-illuminates dark corners
+    if (requiredFlag === "corner_illuminated" && state.abilities?.some(a => a.id === "detectives_intuition")) {
+      hasFlag = true;
+    }
 
     if (!hasItem || !hasFlag) {
       messages.push({ 
@@ -588,7 +601,7 @@ function handleInteract(state, target, messages, globalItems = {}) {
   }
 
   // Visibility Check
-  if (!isTileVisible(tileData, state.stateFlags)) {
+  if (!isTileVisible(tileData, state)) {
     messages.push({ text: 'There\'s nothing to interact with here.', type: 'system' });
     return { state, messages };
   }
@@ -681,7 +694,7 @@ function handleTalk(state, messages, globalItems = {}) {
   }
 
   // Visibility Check
-  if (!isTileVisible(tileData, state.stateFlags)) {
+  if (!isTileVisible(tileData, state)) {
     messages.push({ text: 'There\'s nobody here to talk to.', type: 'system' });
     return { state, messages };
   }
