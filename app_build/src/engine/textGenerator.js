@@ -65,16 +65,18 @@ export function describeRoom(roomData) {
 /**
  * Generate tile-specific description.
  */
-export function describeTile(tileType, tileData, stateFlags, roomTiles = {}, roomId = '') {
+export function describeTile(tileType, tileData, state, roomTiles = {}, roomId = '') {
   if (!tileData) return 'Nothing unremarkable here.';
 
+  const stateFlags = state?.stateFlags || {};
+
   // Check visibility condition
-  if (!isTileVisible(tileData, stateFlags)) {
+  if (!isTileVisible(tileData, state)) {
     // If hidden, describe the fallback tile instead (e.g. floor)
     const fallbackType = tileData.hiddenTileType || 'floor';
     const fallbackData = roomTiles[fallbackType];
     if (fallbackData && fallbackData !== tileData) {
-      return describeTile(fallbackType, fallbackData, stateFlags, roomTiles, roomId);
+      return describeTile(fallbackType, fallbackData, state, roomTiles, roomId);
     }
     return tileData.hiddenDescription || 'Nothing remarkable here.';
   }

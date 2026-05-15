@@ -309,7 +309,7 @@ function handleLook(state, messages) {
   // Current tile description
   const tileType = getCurrentTile(state);
   const tileData = getTileData(state.room, tileType);
-  const tileDesc = describeTile(tileType, tileData, state.stateFlags, state.room.tiles);
+  const tileDesc = describeTile(tileType, tileData, state, state.room.tiles, state.room.room_id);
   messages.push({ text: tileDesc, type: 'narrative' });
 
   // Show available actions hint
@@ -431,7 +431,7 @@ export function handleMove(state, direction, messages) {
   const finalTileData = getTileData(finalState.room, finalTileType);
   
   if (finalTileData) {
-    const tileDesc = describeTile(finalTileType, finalTileData, finalState.stateFlags, finalState.room.tiles, finalState.room.room_id);
+    const tileDesc = describeTile(finalTileType, finalTileData, finalState, finalState.room.tiles, finalState.room.room_id);
     messages.push({ text: tileDesc, type: 'narrative' });
   }
 
@@ -1256,7 +1256,7 @@ export function getWelcomeMessages(roomData) {
     { text: describeTile(
         roomData.grid[roomData.player_start.y][roomData.player_start.x],
         roomData.tiles[roomData.grid[roomData.player_start.y][roomData.player_start.x]],
-        roomData.state_flags,
+        { stateFlags: roomData.state_flags },
         roomData.tiles,
         roomData.room_id
       ), type: 'narrative' },
