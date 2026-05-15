@@ -55,6 +55,8 @@ const AbilitiesModal = ({ onClose }) => {
                 </div>
               ))
             )}
+          </div>
+
           <div className="abilities-section">
             <h3>Available Conquests</h3>
             {CONQUEST_REWARDS.length === 0 ? (
