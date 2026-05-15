@@ -77,3 +77,21 @@ export async function clearPlayerSession() {
     return false;
   }
 }
+
+/**
+ * Verify an admin secret phrase by attempting to create a document in admin_users.
+ */
+export async function verifyAdminSecret(secretPhrase) {
+  try {
+    const uid = await ensureAuth();
+    const adminDoc = doc(db, 'admin_users', uid);
+    await setDoc(adminDoc, {
+      secret: secretPhrase,
+      grantedAt: serverTimestamp()
+    });
+    return true;
+  } catch (error) {
+    console.error("Failed to verify admin secret:", error);
+    return false;
+  }
+}

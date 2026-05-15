@@ -582,7 +582,7 @@ function handleInteract(state, target, messages, globalItems = {}) {
   const tileType = getCurrentTile(state);
   const tileData = getTileData(state.room, tileType);
 
-  if (!tileData?.item) {
+  if (!tileData?.item && !tileData?.onInteract) {
     messages.push({ text: 'There\'s nothing to interact with here.', type: 'system' });
     return { state, messages };
   }
@@ -595,8 +595,13 @@ function handleInteract(state, target, messages, globalItems = {}) {
 
   const verb = tileData.interactionVerb || 'SEARCH';
   const flagKey = `room_${state.room.room_id}_tile_${tileType}_opened`;
-  if (state.stateFlags[flagKey]) {
-    messages.push({ text: tileData.item.opened_description || 'Already searched.', type: 'system' });
+  
+  // If it's an item that provides onInteract, we might want to let them interact again,
+  // or at least not show "Already searched." if it's not a searchable thing.
+  const isCollectable = tileData.item && (tileData.item.itemId || tileData.item.contains || tileData.item.name);
+  
+  if (state.stateFlags[flagKey] && isCollectable) {
+    messages.push({ text: tileData.item?.opened_description || 'Already searched.', type: 'system' });
     return { state, messages };
   }
 
@@ -604,10 +609,25 @@ function handleInteract(state, target, messages, globalItems = {}) {
     messages.push({ text: tileData.revealMessage, type: 'narrative' });
   }
 
-  // Process picking up items
-  let newState = { ...state, stateFlags: { ...state.stateFlags, [flagKey]: true } };
+  if (tileData.onInteract) {
+    if (typeof tileData.onInteract === 'string') {
+      messages.push({ text: tileData.onInteract, type: 'narrative' });
+    }
+  }
+
+  let newState = { ...state };
   
+  if (isCollectable) {
+    newState.stateFlags = { ...newState.stateFlags, [flagKey]: true };
+  }
+
   if (tileData.item) {
+    if (tileData.item.onInteract) {
+      if (tileData.item.onInteract.action === 'set_flag') {
+        newState.stateFlags = { ...newState.stateFlags, [tileData.item.onInteract.flagSet]: true };
+      }
+    }
+
     let itemToCollect = null;
     
     // Resolve item from Global Registry if itemId provided
@@ -639,11 +659,13 @@ function handleInteract(state, target, messages, globalItems = {}) {
     }
 
     if (tileData.item.setFlag) {
-      newState.stateFlags[tileData.item.setFlag] = true;
+      newState.stateFlags = { ...newState.stateFlags, [tileData.item.setFlag]: true };
     }
     
-    if (tileData.item.onCollect) {
+    if (tileData.item.onCollect && isCollectable) {
       messages.push({ text: tileData.item.onCollect, type: 'narrative' });
+    } else if (tileData.item.onCollect) {
+       messages.push({ text: tileData.item.onCollect, type: 'narrative' });
     }
   }
   return { state: newState, messages };

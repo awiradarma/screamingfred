@@ -229,6 +229,20 @@
   font-weight: 500;
 }
 
+.hud-abilities {
+  cursor: pointer;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.hud-abilities:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
+}
+
 /* ── Inventory Selector ──────────────────────── */
 .hud-inventory {
   position: relative;

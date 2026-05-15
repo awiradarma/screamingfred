@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import AbilitiesModal from './AbilitiesModal';
 
 /**
  * PlayerHUD — Compact status bar showing player info.
  */
 export default function PlayerHUD({ playerHP, maxHP, inventory, position, roomName, theme, onCommand }) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
+  const [isAbilitiesOpen, setIsAbilitiesOpen] = useState(false);
 
   const hpPercent = Math.max(0, (playerHP / maxHP) * 100);
   const hpColor = hpPercent > 60 ? 'var(--color-hp-high)' : hpPercent > 30 ? 'var(--color-hp-mid)' : 'var(--color-hp-low)';
@@ -71,26 +73,56 @@ export default function PlayerHUD({ playerHP, maxHP, inventory, position, roomNa
               {inventory.length === 0 ? (
                 <div className="selector-empty">Empty pockets...</div>
               ) : (
-                inventory.map((item, idx) => (
-                  <div key={idx} className="selector-item" onClick={() => handleItemClick(item)}>
-                    <span className="selector-item-icon">{getItemIcon(item.type, item.name)}</span>
-                    <div className="selector-item-info">
-                      <span className="selector-item-name">{item.name}</span>
-                      <span className="selector-item-type">{item.type}</span>
+                <>
+                  <div className="inventory-category-header">Usables</div>
+                  {inventory.filter(i => i.onUse || ['food', 'potion', 'tool', 'pasta', 'potato', 'weapon', 'drink'].includes(i.type)).length === 0 && (
+                    <div className="selector-empty">No usable items.</div>
+                  )}
+                  {inventory
+                    .filter(i => i.onUse || ['food', 'potion', 'tool', 'pasta', 'potato', 'weapon', 'drink'].includes(i.type))
+                    .map((item, idx) => (
+                    <div key={`usable-${idx}`} className="selector-item" onClick={() => handleItemClick(item)}>
+                      <span className="selector-item-icon">{getItemIcon(item.type, item.name)}</span>
+                      <div className="selector-item-info">
+                        <span className="selector-item-name">{item.name}</span>
+                        <span className="selector-item-type">{item.type}</span>
+                      </div>
+                      {item.onUse && <span className="use-hint" title="Can be used">⚡</span>}
                     </div>
-                    {item.onUse && <span className="use-hint" title="Can be used">⚡</span>}
-                  </div>
-                ))
+                  ))}
+                  
+                  <div className="inventory-category-header" style={{ marginTop: '10px' }}>Conquest & Lore</div>
+                  {inventory.filter(i => !i.onUse && !['food', 'potion', 'tool', 'pasta', 'potato', 'weapon', 'drink'].includes(i.type)).length === 0 && (
+                    <div className="selector-empty">No conquest items.</div>
+                  )}
+                  {inventory
+                    .filter(i => !i.onUse && !['food', 'potion', 'tool', 'pasta', 'potato', 'weapon', 'drink'].includes(i.type))
+                    .map((item, idx) => (
+                    <div key={`conquest-${idx}`} className="selector-item" style={{ opacity: 0.8 }} onClick={() => handleItemClick(item)}>
+                      <span className="selector-item-icon">{getItemIcon(item.type, item.name)}</span>
+                      <div className="selector-item-info">
+                        <span className="selector-item-name">{item.name}</span>
+                        <span className="selector-item-type">{item.type}</span>
+                      </div>
+                    </div>
+                  ))}
+                </>
               )}
             </div>
           </div>
         )}
       </div>
 
+      <div className="hud-section hud-abilities" onClick={() => setIsAbilitiesOpen(true)} title="View Abilities & Status">
+        <span className="hud-label">🌟</span>
+      </div>
+
       <div className="hud-section hud-coords">
         <span className="coord-label">Pos</span>
         <span className="coord-value">({position.x}, {position.y})</span>
       </div>
+
+      {isAbilitiesOpen && <AbilitiesModal onClose={() => setIsAbilitiesOpen(false)} />}
     </div>
   );
 }

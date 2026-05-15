@@ -3,7 +3,7 @@ import { initGameState, processCommand, getWelcomeMessages, getEnemyIdleAttacks 
 import { worldData, getRoomAt } from '../data/worldData.js';
 import { fetchWorldRooms } from '../firebase/worldPersistence.js';
 import { fetchItemRegistry, loadRegistryFromLocal, migrateStaticItems } from '../firebase/registryPersistence.js';
-import { savePlayerSession, loadPlayerSession, clearPlayerSession } from '../firebase/sessionPersistence.js';
+import { savePlayerSession, loadPlayerSession, clearPlayerSession, verifyAdminSecret } from '../firebase/sessionPersistence.js';
 import staticItems from '../data/items.json';
 
 /**
@@ -190,7 +190,7 @@ export const useStore = create((set, get) => ({
   /**
    * Process a player command string.
    */
-  submitCommand: (rawInput) => {
+  submitCommand: async (rawInput) => {
     const { resetGame, addMessage } = get();
     if (!rawInput) return;
 
@@ -203,11 +203,28 @@ export const useStore = create((set, get) => ({
     }
 
     if (normalized === '/admin') {
-      set(state => {
-        const newAdminState = !state.isAdmin;
-        const msg = { text: `Admin mode is now ${newAdminState ? 'ON' : 'OFF'}.`, type: 'system', timestamp: Date.now() };
-        return { isAdmin: newAdminState, gameLog: [...state.gameLog, msg] };
-      });
+      const { isAdmin } = get();
+      if (!isAdmin) {
+        const secret = window.prompt("Enter admin secret phrase:");
+        if (secret) {
+          const success = await verifyAdminSecret(secret);
+          if (success) {
+            set(state => ({
+              isAdmin: true,
+              gameLog: [...state.gameLog, { text: "Admin mode is now ON.", type: "system", timestamp: Date.now() }]
+            }));
+          } else {
+            set(state => ({
+              gameLog: [...state.gameLog, { text: "Incorrect secret phrase. Admin mode denied.", type: "danger", timestamp: Date.now() }]
+            }));
+          }
+        }
+      } else {
+        set(state => ({
+          isAdmin: false,
+          gameLog: [...state.gameLog, { text: "Admin mode is now OFF.", type: "system", timestamp: Date.now() }]
+        }));
+      }
       return;
     }
 
@@ -232,6 +249,42 @@ export const useStore = create((set, get) => ({
       // Process through the engine
       const { state: newState, messages } = processCommand(gameState, rawInput, itemRegistry);
       
+      // Check for Conquest Rewards
+      const conquestRewards = [
+        {
+          id: "detective_intuition",
+          name: "Detective's Intuition",
+          requiredItems: ["clue_empty_fridge", "flavor_photo", "quest_note"],
+          rewardMessage: "You piece together the clues! The Empty Fridge, the Old Photo, and Freddista's Note all point to one thing... wait, actually it just points to the fact you are a great detective! You learned Detective's Intuition! (Reveals hidden items)",
+          ability: { id: "detectives_intuition", name: "Detective's Intuition", description: "Automatically reveals hidden things in dark corners without needing a light.", type: "passive" }
+        }
+      ];
+
+      // Automatically check after every action if any conquests are complete
+      const finalInventory = [...newState.inventory];
+      const finalAbilities = [...(newState.abilities || [])];
+      
+      for (const conquest of conquestRewards) {
+        // Only grant if they don't already have the ability
+        if (!finalAbilities.some(a => a.id === conquest.ability.id)) {
+          const hasAllItems = conquest.requiredItems.every(reqId => finalInventory.some(item => item.itemId === reqId));
+          if (hasAllItems) {
+            messages.push({ text: `🎉 CONQUEST COMPLETE: ${conquest.name} 🎉`, type: 'system' });
+            messages.push({ text: conquest.rewardMessage, type: 'loot' });
+            finalAbilities.push(conquest.ability);
+            
+            // Remove the consumed conquest items
+            conquest.requiredItems.forEach(reqId => {
+              const idx = finalInventory.findIndex(item => item.itemId === reqId);
+              if (idx > -1) finalInventory.splice(idx, 1);
+            });
+          }
+        }
+      }
+      
+      newState.inventory = finalInventory;
+      newState.abilities = finalAbilities;
+
       // Decrement active effects
       const turnTakingActions = ['move', 'use', 'attack', 'scream', 'interact', 'talk', 'north', 'south', 'east', 'west', 'n', 's', 'e', 'w'];
       let finalActiveEffects = newState.activeEffects || [];
@@ -249,11 +302,12 @@ export const useStore = create((set, get) => ({
             tickMessages.push({ text: `⚡ Energy Drain saps your vitality! Max HP reduced to ${newState.maxHP}!`, type: 'danger', timestamp: Date.now() });
           }
 
+          // Decrement duration
           effect.duration -= 1;
-          if (effect.duration <= 0) {
-            tickMessages.push({ text: `Your ${effect.name} effect has worn off.`, type: 'system', timestamp: Date.now() });
-          } else {
+          if (effect.duration > 0) {
             remainingEffects.push(effect);
+          } else {
+            tickMessages.push({ text: `The effect of ${effect.name} has worn off.`, type: 'system', timestamp: Date.now() });
           }
         }
         finalActiveEffects = remainingEffects;

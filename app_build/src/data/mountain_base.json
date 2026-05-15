@@ -130,7 +130,7 @@
               "action": "damage_player",
               "value": 2
             },
-            "hint": "You need to interact with the Cursed Chair to satisfy his demand!"
+            "hint": "You need to move to the Cursed Chair and use the 'interact' command (or tap it on mobile) to sit down."
           },
           {
             "stage": 3,
@@ -150,11 +150,11 @@
           },
           {
             "stage": 4,
-            "text": "Barry starts to hum menacingly. \"NOW I CAN DRAIN YOU PROPERLY!\" Willy whispers, \"Fred! Use that Magnifying Glass we found! Focus the light on his shiny metal casing!\"",
+            "text": "Barry starts to hum menacingly. \"NOW I CAN DRAIN YOU PROPERLY!\" Willy whispers, \"Fred! Stand next to him and USE the Magnifying Glass from your inventory! Focus the light on his shiny metal casing!\"",
             "conditions": {
               "requiredFlag": "sat_in_chair"
             },
-            "hint": "Use the Magnifying Glass from your inventory while standing near Barry!"
+            "hint": "Move next to Barry and type 'use tool_magnifying_glass' or open your inventory and use the Magnifying Glass."
           },
           {
             "stage": 5,
