@@ -6,6 +6,17 @@ import { fetchItemRegistry, loadRegistryFromLocal, migrateStaticItems } from '..
 import { savePlayerSession, loadPlayerSession, clearPlayerSession, verifyAdminSecret } from '../firebase/sessionPersistence.js';
 import staticItems from '../data/items.json';
 
+export const CONQUEST_REWARDS = [
+  {
+    id: "detective_intuition",
+    name: "Detective's Intuition",
+    requiredItems: ["clue_empty_fridge", "flavor_photo", "quest_note"],
+    requiredItemNames: ["Empty Fridge Note", "Old Photo", "Freddista's Note"],
+    rewardMessage: "You piece together the clues! The Empty Fridge, the Old Photo, and Freddista's Note all point to one thing... wait, actually it just points to the fact you are a great detective! You learned Detective's Intuition! (Reveals hidden items)",
+    ability: { id: "detectives_intuition", name: "Detective's Intuition", description: "Automatically reveals hidden things in dark corners without needing a light.", type: "passive", icon: "🕵️‍♂️" }
+  }
+];
+
 /**
  * Zustand store for the MUD text adventure.
  * Manages game state, message log, and command processing.
@@ -250,21 +261,11 @@ export const useStore = create((set, get) => ({
       const { state: newState, messages } = processCommand(gameState, rawInput, itemRegistry);
       
       // Check for Conquest Rewards
-      const conquestRewards = [
-        {
-          id: "detective_intuition",
-          name: "Detective's Intuition",
-          requiredItems: ["clue_empty_fridge", "flavor_photo", "quest_note"],
-          rewardMessage: "You piece together the clues! The Empty Fridge, the Old Photo, and Freddista's Note all point to one thing... wait, actually it just points to the fact you are a great detective! You learned Detective's Intuition! (Reveals hidden items)",
-          ability: { id: "detectives_intuition", name: "Detective's Intuition", description: "Automatically reveals hidden things in dark corners without needing a light.", type: "passive" }
-        }
-      ];
-
       // Automatically check after every action if any conquests are complete
       const finalInventory = [...newState.inventory];
       const finalAbilities = [...(newState.abilities || [])];
       
-      for (const conquest of conquestRewards) {
+      for (const conquest of CONQUEST_REWARDS) {
         // Only grant if they don't already have the ability
         if (!finalAbilities.some(a => a.id === conquest.ability.id)) {
           const hasAllItems = conquest.requiredItems.every(reqId => finalInventory.some(item => item.itemId === reqId));

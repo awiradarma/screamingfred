@@ -1,5 +1,5 @@
 import React from 'react';
-import { useStore } from '../store/useStore';
+import { useStore, CONQUEST_REWARDS } from '../store/useStore';
 import './AbilitiesModal.css';
 
 const AbilitiesModal = ({ onClose }) => {
@@ -54,6 +54,30 @@ const AbilitiesModal = ({ onClose }) => {
                   </div>
                 </div>
               ))
+            )}
+          <div className="abilities-section">
+            <h3>Available Conquests</h3>
+            {CONQUEST_REWARDS.length === 0 ? (
+              <div className="empty-state">No conquests available.</div>
+            ) : (
+              CONQUEST_REWARDS.map((conquest, idx) => {
+                const isCompleted = activeAbilities.some(a => a.id === conquest.ability.id);
+                return (
+                  <div key={idx} className={`ability-card ${isCompleted ? 'completed' : ''}`} style={{ opacity: isCompleted ? 0.6 : 1 }}>
+                    <div className="card-icon">{isCompleted ? '✅' : '🏆'}</div>
+                    <div className="card-info">
+                      <div className="card-title">
+                        {conquest.name}
+                        {isCompleted && <span className="duration-badge" style={{ marginLeft: '8px', background: '#4ade80', color: '#064e3b' }}>Completed</span>}
+                      </div>
+                      <div className="card-desc">
+                        <strong>Reward:</strong> {conquest.ability.name} ({conquest.ability.description})<br/>
+                        <strong>Requires:</strong> {conquest.requiredItemNames ? conquest.requiredItemNames.join(', ') : conquest.requiredItems.join(', ')}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
             )}
           </div>
         </div>
