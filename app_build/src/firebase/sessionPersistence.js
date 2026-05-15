@@ -31,6 +31,8 @@ export async function savePlayerSession(gameState) {
       playerPosition: gameState.playerPosition,
       roomCoordinates: gameState.room.world_coord || "(15, 15, 0)", // backup if missing
       discoveredRooms: gameState.discoveredRooms || [],
+      abilities: gameState.abilities || [],
+      activeEffects: gameState.activeEffects || [],
       lastUpdated: serverTimestamp()
     };
 
