@@ -404,8 +404,13 @@ export function handleMove(state, direction, messages) {
     const hasItem = requiredItem ? state.inventory.some(i => i.itemId === requiredItem || i.name === requiredItem) : true;
     // Check if player has met the flag
     let hasFlag = requiredFlag ? state.stateFlags[requiredFlag] || finalFlags[requiredFlag] : true;
-    // Detective's intuition auto-illuminates dark corners
-    if (requiredFlag === "corner_illuminated" && state.abilities?.some(a => a.id === "detectives_intuition")) {
+    // Ability-based flag overrides
+    if (requiredFlag === "corner_illuminated" && 
+        state.abilities?.some(a => ["detectives_intuition", "thermal_sight"].includes(a.id))) {
+      hasFlag = true;
+    }
+    if (requiredFlag === "master_tinkerer_check" && 
+        state.abilities?.some(a => a.id === "master_tinkerer")) {
       hasFlag = true;
     }
 

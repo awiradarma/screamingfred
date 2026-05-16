@@ -42,9 +42,9 @@ export const CONQUEST_REWARDS = [
   {
     id: "culinary_alchemist",
     name: "Culinary Alchemist",
-    requiredItems: ["spicy_noodles", "suitable_potato"],
-    requiredItemNames: ["Spicy Noodles", "Suitable Potato"],
-    rewardMessage: "A balanced meal of exotic carbs and starchy perfection! You feel incredibly grounded. You learned Stable Footing! (Prevents unintended launches)",
+    requiredItems: ["spicy_noodles", "suitable_potato", "food_potato"],
+    requiredItemNames: ["Spicy Noodles", "Suitable Potato", "Wild Potato"],
+    rewardMessage: "A balanced meal of factory spice, farm starch, and forest goodness! You feel incredibly grounded. You learned Stable Footing! (Prevents unintended launches)",
     ability: { id: "stable_footing", name: "Stable Footing", description: "Your incredible balance allows you to walk safely on jiggly jelly surfaces.", type: "passive", icon: "👞" }
   },
   {

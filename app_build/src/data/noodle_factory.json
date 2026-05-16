@@ -36,11 +36,22 @@
       "icon": "🌀",
       "targetRoomId": "scary_scrapyard",
       "conditions": { "requiredFlag": "barry_factory_encounter" }
+    },
+    "H": {
+      "name": "Maintenance Hatch",
+      "passable": true,
+      "icon": "🚪",
+      "description": "A heavy metal hatch. It looks like it hasn't been opened in years.",
+      "conditions": {
+        "requiredFlag": "master_tinkerer_check",
+        "failMessage": "The hatch is stuck tight. You need specialized knowledge to open this without a key."
+      },
+      "item": { "itemId": "factory_blueprints", "name": "Factory Blueprints", "description": "Detailed blueprints of the Noodle Factory. Very valuable!" }
     }
   },
   "grid": [
     ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
-    ["▓", ".", ".", "N", ".", ".", ".", "▓"],
+    ["▓", ".", ".", "N", ".", ".", "H", "▓"],
     ["▓", ".", "J", "J", "J", ".", ".", "▓"],
     ["▓", ".", "J", ".", "J", ".", ".", "▓"],
     ["▓", ".", "J", "J", "J", "B", ".", "▓"],

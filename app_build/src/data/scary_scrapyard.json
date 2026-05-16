@@ -14,6 +14,16 @@
       "icon": "🔍",
       "item": { "itemId": "tool_magnifying_glass", "name": "Magnifying Glass", "description": "Willy's prized possession, recovered from the scrapyard." }
     },
+    "B": {
+      "name": "Broken Sorter",
+      "passable": false,
+      "icon": "⚙️",
+      "description": "A massive machine for sorting scrap. It's jammed with cutlery.",
+      "conditions": {
+        "requiredFlag": "master_tinkerer_check",
+        "failMessage": "The machine is far too complex for a normal shoe to fix. If only you were a Master Tinkerer..."
+      }
+    },
     "C": {
       "name": "Cutlery Monster",
       "passable": false,
@@ -49,7 +59,7 @@
     ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
     ["▓", ".", ".", "L", ".", ".", "M", "▓"],
     ["▓", ".", "▓", "▓", "▓", ".", ".", "▓"],
-    ["▓", ".", "▓", "C", "▓", ".", ".", "▓"],
+    ["▓", "B", "▓", "C", "▓", ".", ".", "▓"],
     ["▓", ".", "▓", ".", "▓", ".", ".", "▓"],
     ["▓", "L", ".", ".", ".", ".", "E", "▓"],
     ["▓", ".", ".", ".", ".", ".", ".", "▓"],

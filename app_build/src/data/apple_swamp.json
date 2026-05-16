@@ -31,11 +31,19 @@
       }
     },
     "P": { "name": "Banana Bridge", "passable": true, "icon": "█", "description": "The back of a giant banana. It's surprisingly stable.", "condition": { "requiredFlag": "banana_bridge" } },
+    "H": {
+      "name": "Dark Hollow",
+      "passable": true,
+      "icon": "🕳️",
+      "description": "A pitch-black hole in a giant rotten apple core. You can see something shimmering inside!",
+      "visibleIf": "corner_illuminated",
+      "item": { "itemId": "swamp_gem", "name": "Swamp Gem", "description": "A glowing gem found in the dark swamp." }
+    },
     "E": { "name": "Exit", "passable": true, "icon": "▟", "targetRoomId": "great_farm" }
   },
   "grid": [
     ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
-    ["▓", "~", "~", "~", "~", "~", "~", "▓"],
+    ["▓", "~", "~", "~", "~", "~", "H", "▓"],
     ["▓", "~", "~", "~", "~", "~", "~", "▓"],
     ["▓", "~", "P", "P", "P", "P", "E", "▓"],
     [".", "P", "P", "B", "~", "~", "~", "▓"],
