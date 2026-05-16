@@ -107,6 +107,16 @@ export function describeTile(tileType, tileData, state, roomTiles = {}, roomId =
   }
 
   let text = tileData.description || 'Nothing remarkable here.';
+
+  // Check for specialized "unlit" or "hidden" descriptions if conditions aren't met
+  // This allows tiles like 'dark_corner' to be visible on the map but still described as dark
+  if (tileData.unlitDescription && tileData.conditions?.requiredFlag === 'corner_illuminated') {
+    const isLit = stateFlags['corner_illuminated'] || state.abilities?.some(a => a.id === 'detectives_intuition');
+    if (!isLit) {
+      text = tileData.unlitDescription;
+    }
+  }
+
   if (tileData.name && !text.includes(tileData.name)) {
     text = `${tileData.name}: ${text}`;
   }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { isTileVisible } from '../engine/roomEngine';
 
 /**
  * GridViewer — 5×5 tactical grid visualization.
@@ -6,76 +7,64 @@ import React from 'react';
  */
 
 const TILE_CONFIG = {
-  wall:       { icon: '▓', label: 'Wall',   className: 'tile-wall' },
-  floor:      { icon: '·', label: 'Floor',  className: 'tile-floor' },
+  wall: { icon: '▓', label: 'Wall', className: 'tile-wall' },
+  floor: { icon: '·', label: 'Floor', className: 'tile-floor' },
   exit_north: { icon: '△', label: 'Exit N', className: 'tile-exit' },
   exit_south: { icon: '▽', label: 'Exit S', className: 'tile-exit' },
-  exit_east:  { icon: '▷', label: 'Exit E', className: 'tile-exit' },
-  exit_west:  { icon: '◁', label: 'Exit W', className: 'tile-exit' },
-  npc_sue:    { icon: '☺', label: 'NPC',    className: 'tile-npc' },
-  item_fridge: { icon: '◈', label: 'Item',  className: 'tile-item' },
+  exit_east: { icon: '▷', label: 'Exit E', className: 'tile-exit' },
+  exit_west: { icon: '◁', label: 'Exit W', className: 'tile-exit' },
+  npc_sue: { icon: '☺', label: 'NPC', className: 'tile-npc' },
+  item_fridge: { icon: '◈', label: 'Item', className: 'tile-item' },
   enemy_snake: { icon: '☠', label: 'Enemy', className: 'tile-enemy' },
-  lava:       { icon: '≈', label: 'Lava',   className: 'tile-lava' },
-  ice:        { icon: '❄', label: 'Ice',    className: 'tile-ice' },
-  lake:       { icon: '≋', label: 'Lake',   className: 'tile-lake' },
-  bouncy:     { icon: '⊗', label: 'Bouncy', className: 'tile-bouncy' },
+  lava: { icon: '≈', label: 'Lava', className: 'tile-lava' },
+  ice: { icon: '❄', label: 'Ice', className: 'tile-ice' },
+  lake: { icon: '≋', label: 'Lake', className: 'tile-lake' },
+  bouncy: { icon: '⊗', label: 'Bouncy', className: 'tile-bouncy' },
   electric_floor: { icon: '⚡', label: 'Electric', className: 'tile-electric' },
-  electric_sand:  { icon: '⚡', label: 'Electric', className: 'tile-electric' },
+  electric_sand: { icon: '⚡', label: 'Electric', className: 'tile-electric' },
   cursed_chair: { icon: '🪑', label: 'Chair', className: 'tile-item' },
-  exit:       { icon: '△', label: 'Exit',   className: 'tile-exit' },
-  enemy:      { icon: '☠', label: 'Enemy',  className: 'tile-enemy' },
-  npc:        { icon: '☺', label: 'NPC',    className: 'tile-npc' },
-  item:       { icon: '◈', label: 'Item',   className: 'tile-item' },
+  exit: { icon: '△', label: 'Exit', className: 'tile-exit' },
+  enemy: { icon: '☠', label: 'Enemy', className: 'tile-enemy' },
+  npc: { icon: '☺', label: 'NPC', className: 'tile-npc' },
+  item: { icon: '◈', label: 'Item', className: 'tile-item' },
   // Expanded Types
-  grass:      { icon: '☘', label: 'Grass',  className: 'tile-floor' },
-  dirt_path:  { icon: '░', label: 'Path',   className: 'tile-floor' },
-  sand_path:  { icon: '▒', label: 'Sand',   className: 'tile-floor' },
+  grass: { icon: '☘', label: 'Grass', className: 'tile-floor' },
+  dirt_path: { icon: '░', label: 'Path', className: 'tile-floor' },
+  sand_path: { icon: '▒', label: 'Sand', className: 'tile-floor' },
   pancake_path: { icon: '🥞', label: 'Syrup Path', className: 'tile-floor' },
-  stairs_up:   { icon: '⤊', label: 'Up',     className: 'tile-exit' },
-  stairs_down: { icon: '⤋', label: 'Down',   className: 'tile-exit' },
-  dark_corner: { icon: '🌑', label: 'Dark',   className: 'tile-unknown' },
-  warning_sign: { icon: '⚠', label: 'Sign',   className: 'tile-item' },
-  creek:       { icon: '⌇', label: 'Creek',  className: 'tile-lake' },
-  syrup_river: { icon: '♒', label: 'Syrup',  className: 'tile-lake' },
-  trash_can:   { icon: '♻', label: 'Trash',  className: 'tile-item' },
-  ledge_floor: { icon: '┘', label: 'Ledge',  className: 'tile-floor' },
-  lint_ground: { icon: '◌', label: 'Lint',   className: 'tile-floor' },
+  stairs_up: { icon: '⤊', label: 'Up', className: 'tile-exit' },
+  stairs_down: { icon: '⤋', label: 'Down', className: 'tile-exit' },
+  dark_corner: { icon: '🌑', label: 'Dark', className: 'tile-unknown' },
+  warning_sign: { icon: '⚠', label: 'Sign', className: 'tile-item' },
+  creek: { icon: '⌇', label: 'Creek', className: 'tile-lake' },
+  syrup_river: { icon: '♒', label: 'Syrup', className: 'tile-lake' },
+  trash_can: { icon: '♻', label: 'Trash', className: 'tile-item' },
+  ledge_floor: { icon: '┘', label: 'Ledge', className: 'tile-floor' },
+  lint_ground: { icon: '◌', label: 'Lint', className: 'tile-floor' },
   velcro_mountain: { icon: '▓', label: 'Mt', className: 'tile-wall' },
   cereal_box_wall: { icon: '▓', label: 'Wall', className: 'tile-wall' },
   whispering_wall: { icon: '▓', label: 'Wall', className: 'tile-wall' },
-  item_bed:    { icon: '🛏', label: 'Bed',    className: 'tile-item' },
-  item_chest:  { icon: '📦', label: 'Chest',  className: 'tile-item' },
+  item_bed: { icon: '🛏', label: 'Bed', className: 'tile-item' },
+  item_chest: { icon: '📦', label: 'Chest', className: 'tile-item' },
   glowcap_mushrooms: { icon: '🍄', label: 'Mush', className: 'tile-item' },
 };
 
 
 function getTileConfig(tileType, stateFlags, roomTiles = {}, abilities = []) {
-  const hasNaturesBounty = abilities.some(a => a.id === "natures_bounty_vision");
-  // Check room-specific metadata first
   const roomMeta = roomTiles[tileType];
+  const mockState = { stateFlags, abilities };
   
-  // Visibility Check
-  if (roomMeta) {
-    // If it's an NPC or has specific visibility narrative flags, respect them even with Nature's Bounty
-    const isNPC = !!roomMeta.npc;
-    const hasVisibilityFlags = roomMeta.visibleIf || roomMeta.hiddenIf;
-    
-    if (hasVisibilityFlags) {
-      const visibleIf = roomMeta.visibleIf;
-      const hiddenIf = roomMeta.hiddenIf;
-      
-      const isVisible = (!visibleIf || stateFlags[visibleIf]) && (!hiddenIf || !stateFlags[hiddenIf]);
-      
-      if (!isVisible) {
-        // Nature's Bounty reveals the *terrain* (hiddenTileType) but not the NPC/hidden detail itself
-        if (!hasNaturesBounty || isNPC) {
-          const fallbackType = roomMeta.hiddenTileType || 'floor';
-          return getTileConfig(fallbackType, stateFlags, roomTiles, abilities);
-        }
-      }
-    }
-  }
+  // Use core engine visibility logic
+  const isVisible = isTileVisible(roomMeta, mockState, 'map');
 
+  if (!isVisible) {
+    if (roomMeta?.hiddenTileType) {
+      // Recursively resolve the hidden representation
+      return getTileConfig(roomMeta.hiddenTileType, stateFlags, roomTiles, abilities);
+    }
+    // Default hidden style if no hiddenTileType is provided
+    return { icon: '?', label: 'Unknown', className: 'tile-hidden' };
+  }
 
   // Check if enemy is defeated
   if (tileType.startsWith('enemy_') && stateFlags[`${tileType.replace(/^enemy_/, '')}_defeated`]) {
@@ -100,16 +89,17 @@ function getTileConfig(tileType, stateFlags, roomTiles = {}, abilities = []) {
   if (tileType.startsWith('item_') && !TILE_CONFIG[tileType]) {
     baseType = 'item';
   }
-  
-  const baseConfig = TILE_CONFIG[baseType] || (hasNaturesBounty 
-    ? { icon: '✧', label: tileType, className: 'tile-revealed' } 
+
+  const hasNaturesBounty = abilities.some(a => a.id === "natures_bounty_vision");
+  const baseConfig = TILE_CONFIG[baseType] || (hasNaturesBounty
+    ? { icon: '✧', label: tileType, className: 'tile-revealed' }
     : { icon: '?', label: tileType, className: 'tile-unknown' });
-  
+
   if (roomMeta) {
     return {
-        ...baseConfig,
-        label: roomMeta.name || baseConfig.label,
-        description: roomMeta.description || baseConfig.description
+      ...baseConfig,
+      label: roomMeta.name || baseConfig.label,
+      description: roomMeta.description || baseConfig.description
     };
   }
 
