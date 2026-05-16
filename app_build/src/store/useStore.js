@@ -18,10 +18,10 @@ export const CONQUEST_REWARDS = [
   {
     id: "master_tinkerer",
     name: "Master Tinkerer",
-    requiredItems: ["flavor_signpost", "tool_lace", "item_silver_eyelet"],
-    requiredItemNames: ["Signpost Info", "Long Shoelace", "Silver Eyelet"],
+    requiredItems: ["flavor_signpost", "tool_strong_shoelace", "item_silver_eyelet"],
+    requiredItemNames: ["Signpost Info", "Strong Shoelace", "Silver Eyelet"],
     rewardMessage: "You've gathered a signpost, a shoelace, and an eyelet. You realize you can build almost anything with this junk! You learned Master Tinkerer! (Passive)",
-    ability: { id: "master_tinkerer", name: "Master Tinkerer", description: "You have an incredible knack for repurposing ordinary junk into useful tools.", type: "passive", icon: "🔧" }
+    ability: { id: "master_tinkerer", name: "Master Tinkerer", description: "Expertise in repurposing junk. Allows interacting with complex machinery and stuck hatches.", type: "passive", icon: "🔧" }
   },
   {
     id: "natures_bounty",
@@ -53,7 +53,7 @@ export const CONQUEST_REWARDS = [
     requiredItems: ["tool_magnifying_glass", "tool_flashlight"],
     requiredItemNames: ["Magnifying Glass", "Flashlight"],
     rewardMessage: "Between the magnifying glass and the flashlight, your vision is enhanced beyond normal shoe capabilities! You learned Thermal Sight! (Passive)",
-    ability: { id: "thermal_sight", name: "Thermal Sight", description: "You can see perfectly in the dark without the need for additional light sources.", type: "passive", icon: "👁️" }
+    ability: { id: "thermal_sight", name: "Thermal Sight", description: "Advanced infrared vision. Reveals life forms (NPCs/Enemies) and machinery through darkness and fog.", type: "passive", icon: "👁️" }
   }
 ];
 
@@ -100,6 +100,11 @@ export const useStore = create((set, get) => ({
       // Reconstitute room from session coordinates
       const [sx, sy, sz] = session.roomCoordinates.replace(/[()]/g, '').split(',').map(s => parseInt(s.trim()));
       startRoom = get().worldRooms[`${sx},${sy}`] || getRoomAt(sx, sy, sz || 0);
+
+      if (!startRoom) {
+        console.warn(`Room at ${sx},${sy},${sz} not found! Resetting to Fred's house.`);
+        startRoom = getRoomAt(15, 15, 0) || worldData.freds_house;
+      }
 
       initialState = {
         room: startRoom,

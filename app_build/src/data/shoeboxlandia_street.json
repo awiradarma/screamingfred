@@ -105,6 +105,8 @@
     },
     "dark_corner": {
       "passable": true,
+      "visibleIf": "corner_illuminated",
+      "hiddenTileType": "floor",
       "description": "A corner. It used to be pitch black, but now you can see the dust and debris. Oh! and there's a small crack on the wall.",
       "conditions": {
         "requiredFlag": "corner_illuminated",

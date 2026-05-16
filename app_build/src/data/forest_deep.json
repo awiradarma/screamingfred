@@ -16,7 +16,7 @@
       "wall",
       "lint_ground",
       "lint_ground",
-      "lint_ground",
+      "?",
       "wall"
     ],
     [
@@ -53,6 +53,20 @@
     "lint_ground": {
       "passable": true,
       "description": "Dirty, grey lint ground."
+    },
+    "?": {
+      "name": "Dark Corner",
+      "passable": true,
+      "icon": " ",
+      "description": "A very dark corner. You can't see anything here.",
+      "visibleIf": "corner_illuminated",
+      "hiddenTileType": "wall",
+      "item": {
+        "name": "Hidden Message",
+        "itemId": "quest_note_forest",
+        "description": "A wet note stuck to the wall. It says: 'The path to the desert is guarded by a battery. Bring something shiny.'",
+        "actions": ["interact", "search"]
+      }
     },
 
     "exit_south": {

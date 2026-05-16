@@ -86,8 +86,12 @@ export function isTileVisible(tileData, state, purpose = 'interaction') {
     const actualFlag = isNegated ? flag.substring(1) : flag;
     
     let flagValue = !!stateFlags[actualFlag];
-    // Detective's intuition/Thermal Sight auto-illuminates dark corners
-    if (actualFlag === "corner_illuminated" && (hasDetectiveIntuition || hasThermalSight)) flagValue = true;
+    // Detective's intuition auto-illuminates dark corners
+    if (actualFlag === "corner_illuminated" && hasDetectiveIntuition) flagValue = true;
+    
+    // Thermal sight reveals machinery and life forms
+    if (actualFlag === "machinery_detected" && hasThermalSight) flagValue = true;
+    if (actualFlag === "life_form_detected" && hasThermalSight) flagValue = true;
     
     if (isNegated ? flagValue : !flagValue) return false;
   }
@@ -98,7 +102,7 @@ export function isTileVisible(tileData, state, purpose = 'interaction') {
     const actualFlag = isNegated ? flag.substring(1) : flag;
     
     let flagValue = !!stateFlags[actualFlag];
-    if (actualFlag === "corner_illuminated" && (hasDetectiveIntuition || hasThermalSight)) flagValue = true;
+    if (actualFlag === "corner_illuminated" && hasDetectiveIntuition) flagValue = true;
 
     if (isNegated ? !flagValue : flagValue) return false;
   }
@@ -406,7 +410,7 @@ export function handleMove(state, direction, messages) {
     let hasFlag = requiredFlag ? state.stateFlags[requiredFlag] || finalFlags[requiredFlag] : true;
     // Ability-based flag overrides
     if (requiredFlag === "corner_illuminated" && 
-        state.abilities?.some(a => ["detectives_intuition", "thermal_sight"].includes(a.id))) {
+        state.abilities?.some(a => a.id === "detectives_intuition")) {
       hasFlag = true;
     }
     if (requiredFlag === "master_tinkerer_check" && 

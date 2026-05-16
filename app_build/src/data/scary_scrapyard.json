@@ -16,9 +16,10 @@
     },
     "B": {
       "name": "Broken Sorter",
-      "passable": false,
+      "passable": true,
       "icon": "⚙️",
       "description": "A massive machine for sorting scrap. It's jammed with cutlery.",
+      "visibleIf": "machinery_detected",
       "conditions": {
         "requiredFlag": "master_tinkerer_check",
         "failMessage": "The machine is far too complex for a normal shoe to fix. If only you were a Master Tinkerer..."
@@ -29,6 +30,7 @@
       "passable": false,
       "icon": "🍴",
       "description": "A terrifying mass of forks, knives, and spoons!",
+      "visibleIf": "life_form_detected",
       "npc": {
         "name": "Cutlery Monster",
         "dialogue": [

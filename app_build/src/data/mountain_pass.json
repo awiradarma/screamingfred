@@ -1,0 +1,78 @@
+{
+  "room_id": "mountain_pass",
+  "world_coord": "21,16,0",
+  "room_name": "Winding Mountain Pass",
+  "theme": "Mountains_of_Misery",
+  "description": "The path narrows here, hugging the side of the cliff. To the west, the descent back to Barry's domain. To the east, the trail continues toward the summit. The wind howls through the narrow gaps.",
+  "grid": [
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ],
+    [
+      "wall",
+      "floor",
+      "floor",
+      "floor",
+      "wall"
+    ],
+    [
+      "exit_west",
+      "floor",
+      "floor",
+      "floor",
+      "exit_east"
+    ],
+    [
+      "wall",
+      "floor",
+      "floor",
+      "floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ]
+  ],
+  "player_start": {
+    "x": 1,
+    "y": 2
+  },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "Solid mountain rock."
+    },
+    "floor": {
+      "passable": true,
+      "description": "A narrow, icy ledge."
+    },
+    "exit_west": {
+      "passable": true,
+      "description": "Back to the foot of the mountains.",
+      "targetRoomId": "mountain_base",
+      "targetPosition": {
+        "x": 4,
+        "y": 2
+      }
+    },
+    "exit_east": {
+      "passable": true,
+      "description": "Upward to the peak.",
+      "targetRoomId": "mountain_peak",
+      "targetPosition": {
+        "x": 0,
+        "y": 2
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {}
+}

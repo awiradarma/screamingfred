@@ -27,6 +27,8 @@ import scary_scrapyard from './scary_scrapyard.json';
 import apple_swamp from './apple_swamp.json';
 import great_farm from './great_farm.json';
 import bridge_of_blah from './bridge_of_blah.json';
+import mountain_pass from './mountain_pass.json';
+import mountain_peak from './mountain_peak.json';
 
 export const WORLD_SIZE = 30;
 export const COORD_MIN = 0;
@@ -39,7 +41,7 @@ export const worldCoordinateRegistry = {
   // Village area
   "15,15,0": "freds_house",
   "15,15,1": "attic_bedroom",
-  "15,14,0": "attic_corner",
+  "15,14,1": "attic_corner",
   "16,14,0": "shoe_rack",
   "17,14,0": "window_sill",
   "16,15,0": "neighbors_house",
@@ -52,6 +54,8 @@ export const worldCoordinateRegistry = {
   "18,16,0": "electric_desert_entrance",
   "19,16,0": "microphone_stage",
   "20,16,0": "mountain_base",
+  "21,16,0": "mountain_pass",
+  "22,16,0": "mountain_peak",
 
   // Forest
   "15,17,0": "forest_entrance",
@@ -102,6 +106,8 @@ export const worldData = {
   apple_swamp,
   great_farm,
   bridge_of_blah,
+  mountain_pass,
+  mountain_peak,
 };
 
 /**

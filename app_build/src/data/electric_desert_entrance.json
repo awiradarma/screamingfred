@@ -23,7 +23,7 @@
       "electric_sand",
       "sand_path",
       "sand_path",
-      "sand_path",
+      "H",
       "electric_sand"
     ],
     [
@@ -46,6 +46,21 @@
     "y": 2
   },
   "tiles": {
+    "H": {
+      "name": "Humming Capacitor",
+      "passable": true,
+      "icon": "🔋",
+      "description": "A device that stores massive amounts of static energy. It's vibrating dangerously.",
+      "visibleIf": "machinery_detected",
+      "conditions": {
+        "requiredFlag": "master_tinkerer_check",
+        "failMessage": "This capacitor is way too dangerous to touch without advanced knowledge of junk-tech. You need to be a Master Tinkerer.",
+        "onSuccess": {
+          "action": "give_item",
+          "itemId": "item_energy_crystal"
+        }
+      }
+    },
     "electric_sand": {
       "passable": true,
       "effect": "damage",

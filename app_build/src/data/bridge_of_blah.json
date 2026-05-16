@@ -5,7 +5,7 @@
   "description": "A 52-mile long bridge of brittle wood. You feel an overwhelming urge to say 'blah' every five minutes.",
   "onEnter": {
     "action": "remove_item",
-    "itemId": "magnifying_glass",
+    "itemId": "tool_magnifying_glass",
     "message": "Barry suddenly appears and snatches the Magnifying Glass! 'WHOOPS!' he screeches, dropping it into the Chasm of Chaos!"
   },
   "player_start": { "x": 0, "y": 4 },

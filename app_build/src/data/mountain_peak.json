@@ -1,0 +1,85 @@
+{
+  "room_id": "mountain_peak",
+  "world_coord": "22,16,0",
+  "room_name": "Peak of Misery",
+  "theme": "Mountains_of_Misery",
+  "description": "You've reached the highest point. Below, the world of Screaming Fred looks like a messy bedroom. To the east, you see a strange distortion in the air — the entrance to Textlandia.",
+  "grid": [
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ],
+    [
+      "wall",
+      "floor",
+      "floor",
+      "floor",
+      "wall"
+    ],
+    [
+      "exit_west",
+      "floor",
+      "peak_telescope",
+      "floor",
+      "exit_east"
+    ],
+    [
+      "wall",
+      "floor",
+      "floor",
+      "floor",
+      "wall"
+    ],
+    [
+      "wall",
+      "wall",
+      "wall",
+      "wall",
+      "wall"
+    ]
+  ],
+  "player_start": {
+    "x": 1,
+    "y": 2
+  },
+  "tiles": {
+    "wall": {
+      "passable": false,
+      "description": "The edge of the peak. It's a long way down."
+    },
+    "floor": {
+      "passable": true,
+      "description": "Flattened summit ground."
+    },
+    "peak_telescope": {
+      "name": "Battered Telescope",
+      "passable": true,
+      "icon": "🔭",
+      "description": "A telescope pointing toward the horizon.",
+      "onInteract": "You look through the telescope. You see the far-off lands of Textlandia, where words have weight and commas are sharp."
+    },
+    "exit_west": {
+      "passable": true,
+      "description": "Back down the pass.",
+      "targetRoomId": "mountain_pass",
+      "targetPosition": {
+        "x": 4,
+        "y": 2
+      }
+    },
+    "exit_east": {
+      "passable": true,
+      "description": "Step into the distortion...",
+      "targetRoomId": "textlandia_entrance",
+      "targetPosition": {
+        "x": 0,
+        "y": 2
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {}
+}

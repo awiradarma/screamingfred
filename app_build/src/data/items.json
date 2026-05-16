@@ -169,5 +169,15 @@
     "icon": "🥔",
     "description": "A rare, non-rotten potato from the Great Farm. It looks almost too perfect.",
     "type": "food"
+  },
+  "quest_note_forest": {
+    "name": "Hidden Message",
+    "description": "A wet note stuck to the wall. It says: 'The path to the desert is guarded by a battery. Bring something shiny.'",
+    "type": "quest"
+  },
+  "item_energy_crystal": {
+    "name": "Energy Crystal",
+    "description": "A pulsing blue crystal harvested from a capacitor. It hums with raw static power.",
+    "type": "quest"
   }
 }

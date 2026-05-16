@@ -42,6 +42,7 @@
       "passable": true,
       "icon": "🚪",
       "description": "A heavy metal hatch. It looks like it hasn't been opened in years.",
+      "visibleIf": "machinery_detected",
       "conditions": {
         "requiredFlag": "master_tinkerer_check",
         "failMessage": "The hatch is stuck tight. You need specialized knowledge to open this without a key."
