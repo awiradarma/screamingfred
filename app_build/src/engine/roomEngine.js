@@ -67,6 +67,7 @@ export function isTileVisible(tileData, state, purpose = 'interaction') {
   const stateFlags = state.stateFlags || {};
   const hasDetectiveIntuition = state.abilities?.some(a => a.id === "detectives_intuition");
   const hasNaturesBounty = state.abilities?.some(a => a.id === "natures_bounty_vision");
+  const hasThermalSight = state.abilities?.some(a => a.id === "thermal_sight");
 
   // Nature's Bounty allows seeing the layout (map/description) but not interacting with hidden details
   // However, we should NOT reveal NPCs or plot-critical hidden objects that aren't ready yet
@@ -85,8 +86,8 @@ export function isTileVisible(tileData, state, purpose = 'interaction') {
     const actualFlag = isNegated ? flag.substring(1) : flag;
     
     let flagValue = !!stateFlags[actualFlag];
-    // Detective's intuition auto-illuminates dark corners
-    if (actualFlag === "corner_illuminated" && hasDetectiveIntuition) flagValue = true;
+    // Detective's intuition/Thermal Sight auto-illuminates dark corners
+    if (actualFlag === "corner_illuminated" && (hasDetectiveIntuition || hasThermalSight)) flagValue = true;
     
     if (isNegated ? flagValue : !flagValue) return false;
   }
@@ -97,7 +98,7 @@ export function isTileVisible(tileData, state, purpose = 'interaction') {
     const actualFlag = isNegated ? flag.substring(1) : flag;
     
     let flagValue = !!stateFlags[actualFlag];
-    if (actualFlag === "corner_illuminated" && hasDetectiveIntuition) flagValue = true;
+    if (actualFlag === "corner_illuminated" && (hasDetectiveIntuition || hasThermalSight)) flagValue = true;
 
     if (isNegated ? !flagValue : flagValue) return false;
   }
@@ -463,17 +464,36 @@ export function handleMove(state, direction, messages) {
     }
 
     messages.push({ text: `⚡ Transitioning to ${transitionRoom.room_name}...`, type: 'system' });
+    
+    let updatedInventory = [...finalState.inventory];
+    let updatedFlags = { ...finalState.stateFlags };
+    
+    if (transitionRoom.onEnter) {
+      const { action, itemId, message, flagSet } = transitionRoom.onEnter;
+      if (action === 'remove_item' && itemId) {
+        const itemToRemove = updatedInventory.find(i => i.itemId === itemId || i.name === itemId);
+        if (itemToRemove) {
+          updatedInventory = updatedInventory.filter(i => i.itemId !== itemId && i.name !== itemId);
+          if (message) messages.push({ text: `🚫 ${message}`, type: 'warning' });
+        }
+      }
+      if (action === 'set_flag' && flagSet) {
+        updatedFlags[flagSet] = true;
+      }
+    }
+
     return {
       state: {
         ...finalState,
         room: transitionRoom,
         playerPosition: transitionPos || { ...transitionRoom.player_start },
-        discoveredRooms: newDiscovered
+        discoveredRooms: newDiscovered,
+        inventory: updatedInventory,
+        stateFlags: updatedFlags
       },
       messages: [
         ...messages,
-        { text: describeRoom(transitionRoom, finalState.stateFlags), type: 'narrative' }
-
+        { text: describeRoom(transitionRoom, updatedFlags), type: 'narrative' }
       ]
     };
   }
@@ -600,6 +620,44 @@ function applyTileEffects(state, x, y, messages, direction) {
         newState.playerPosition = { x: currentX, y: currentY };
         messages.push({ text: "You slide across the ice!", type: 'narrative' });
         moved = true; // Check the landing tile for effects (like a bouncy pad at the end of ice)
+      }
+    }
+
+    // 4. Jelly Effects (Launch)
+    if (tileData.effect === 'launch' || tileType === 'jelly' || tileType.includes('jelly')) {
+      const hasStableFooting = newState.stateFlags?.stable_footing || newState.abilities?.some(a => a.id === 'stable_footing');
+      if (!hasStableFooting) {
+        messages.push({ text: "🍮 AAAAAAH! The jelly surface launches you into the air!", type: 'warning' });
+        const { dx, dy } = DIR_VECTORS[direction] || { dx: 0, dy: 0 };
+        
+        if (dx !== 0 || dy !== 0) {
+          let finalX = currentX;
+          let finalY = currentY;
+          
+          for (let i = 1; i <= 3; i++) {
+            const tx = currentX + (dx * i);
+            const ty = currentY + (dy * i);
+            const tType = getTileAt(newState.room, tx, ty);
+            const tData = tType ? getTileData(newState.room, tType) : null;
+            
+            if (!tType || !tData || !tData.passable) break;
+            finalX = tx;
+            finalY = ty;
+          }
+          
+          if (finalX !== currentX || finalY !== currentY) {
+            currentX = finalX;
+            currentY = finalY;
+            newState.playerPosition = { x: currentX, y: currentY };
+            moved = true;
+            continue;
+          }
+        }
+      } else {
+         // Subtle feedback that ability is working
+         if (loopCount === 1) {
+           messages.push({ text: "✨ Your footing is stable despite the jiggly ground.", type: 'system' });
+         }
       }
     }
   }
@@ -908,13 +966,26 @@ function handleScream(state, messages, globalItems = {}) {
       // Handle special flags or items from the next stage immediately
       const nextStage = dialogueStages[nextStageIdx];
       if (nextStage.onComplete) {
-        const { action, itemId, flagSet } = nextStage.onComplete;
+        const { action, itemId, flagSet, value, effect } = nextStage.onComplete;
         if (action === 'give_item' && itemId && globalItems[itemId]) {
           newState.inventory = [...newState.inventory, { ...globalItems[itemId], itemId }];
           messages.push({ text: `🎁 ${tileData.npc.name} gave you: ${globalItems[itemId].name}!`, type: 'loot' });
         }
+        if (action === 'remove_item' && itemId) {
+          newState.inventory = newState.inventory.filter(i => i.itemId !== itemId && i.name !== itemId);
+          const itemName = globalItems[itemId]?.name || itemId;
+          messages.push({ text: `The ${itemName} has been taken!`, type: 'warning' });
+        }
         if (action === 'set_flag' && flagSet) {
           newState.stateFlags = { ...newState.stateFlags, [flagSet]: true };
+        }
+        if (action === 'damage_player' && value) {
+          modifyPlayerHP(newState, -value, messages);
+        }
+        if (action === 'apply_effect_to_player' && effect) {
+          if (!newState.activeEffects) newState.activeEffects = [];
+          newState.activeEffects = [...newState.activeEffects, { ...effect }];
+          messages.push({ text: `⚠️ You are afflicted by ${effect.name}!`, type: 'danger' });
         }
       }
 

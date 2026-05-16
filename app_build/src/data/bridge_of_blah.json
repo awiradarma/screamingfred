@@ -1,0 +1,56 @@
+{
+  "room_id": "bridge_of_blah",
+  "room_name": "Bridge of BLAAAAAAaaaah",
+  "world_coord": "26,16,0",
+  "description": "A 52-mile long bridge of brittle wood. You feel an overwhelming urge to say 'blah' every five minutes.",
+  "onEnter": {
+    "action": "remove_item",
+    "itemId": "magnifying_glass",
+    "message": "Barry suddenly appears and snatches the Magnifying Glass! 'WHOOPS!' he screeches, dropping it into the Chasm of Chaos!"
+  },
+  "player_start": { "x": 0, "y": 4 },
+  "tiles": {
+    "▓": { "name": "Chasm of Chaos", "passable": false, "icon": " " },
+    "=": { "name": "Brittle Wood", "passable": true, "icon": "=", "description": "The wood creaks ominously." },
+    "B": {
+      "name": "Barry",
+      "passable": false,
+      "icon": "🔋",
+      "description": "Barry is blocking the way, looking smug.",
+      "npc": {
+        "name": "Barry",
+        "dialogue": [
+          {
+            "id": "start",
+            "text": "Your perseverance annoys me! Now you have no choice but to TAKE A SEAT!",
+            "options": [
+              { "text": "Freddista, do something!", "next": "freddista_action" }
+            ]
+          },
+          {
+            "id": "freddista_action",
+            "text": "Freddista rushes over and hurls Barry into the chasm! 'That's it!' she snaps.",
+            "onComplete": { "action": "set_flag", "flagSet": "barry_chasm" }
+          }
+        ]
+      }
+    },
+    "E": { 
+      "name": "Exit", 
+      "passable": true, 
+      "icon": "▟", 
+      "targetRoomId": "endless_jumping", 
+      "conditions": { "requiredFlag": "barry_chasm" } 
+    }
+  },
+  "grid": [
+    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
+    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
+    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
+    ["=", "=", "=", "=", "=", "B", "=", "E"],
+    ["=", "=", "=", "=", "=", "=", "=", "="],
+    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
+    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
+    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"]
+  ]
+}

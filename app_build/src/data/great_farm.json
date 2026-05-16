@@ -1,0 +1,29 @@
+{
+  "room_id": "great_farm",
+  "room_name": "The Great Farm",
+  "world_coord": "25,16,0",
+  "description": "The only farm in the world. It's surprisingly tiny and mostly filled with rotten produce.",
+  "player_start": { "x": 1, "y": 7 },
+  "tiles": {
+    "▓": { "name": "Wooden Wall", "passable": false, "icon": "▓" },
+    ".": { "name": "Dirt Floor", "passable": true, "icon": " " },
+    "R": { "name": "Rotten Produce", "passable": true, "icon": "🍅", "description": "It's completely rotten." },
+    "P": { 
+      "name": "Suitable Potato", 
+      "passable": true, 
+      "icon": "🥔", 
+      "item": { "itemId": "suitable_potato", "name": "Suitable Potato", "description": "A rare, non-rotten potato from the Great Farm." }
+    },
+    "E": { "name": "Exit", "passable": true, "icon": "▟", "targetRoomId": "bridge_of_blah" }
+  },
+  "grid": [
+    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
+    ["▓", "R", ".", "R", ".", "P", ".", "▓"],
+    ["▓", ".", ".", ".", ".", ".", ".", "▓"],
+    ["▓", "R", ".", "R", ".", "R", ".", "▓"],
+    ["▓", ".", ".", ".", ".", ".", ".", "▓"],
+    ["▓", "R", ".", "R", ".", "R", "E", "▓"],
+    ["▓", ".", ".", ".", ".", ".", ".", "▓"],
+    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"]
+  ]
+}

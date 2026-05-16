@@ -1,0 +1,58 @@
+{
+  "room_id": "scary_scrapyard",
+  "room_name": "Scary Scrapyard",
+  "world_coord": "23,16,0",
+  "description": "A desolate field of old cars and mechanical lamps. You feel like something is watching you from the shadows.",
+  "player_start": { "x": 1, "y": 1 },
+  "tiles": {
+    "▓": { "name": "Scrap Heap", "passable": false, "icon": "🚜" },
+    ".": { "name": "Oil-Stained Ground", "passable": true, "icon": " " },
+    "L": { "name": "Mechanical Lamp", "passable": false, "icon": "💡", "description": "A flickering mechanical lamp. It looks ancient." },
+    "M": {
+      "name": "Magnifying Glass",
+      "passable": true,
+      "icon": "🔍",
+      "item": { "itemId": "tool_magnifying_glass", "name": "Magnifying Glass", "description": "Willy's prized possession, recovered from the scrapyard." }
+    },
+    "C": {
+      "name": "Cutlery Monster",
+      "passable": false,
+      "icon": "🍴",
+      "description": "A terrifying mass of forks, knives, and spoons!",
+      "npc": {
+        "name": "Cutlery Monster",
+        "dialogue": [
+          {
+            "id": "start",
+            "text": "CLANK! CLATTER! (It's about to slice you to shoelaces!)",
+            "options": [
+              { "text": "RUN!", "next": "run" }
+            ]
+          },
+          {
+            "id": "run",
+            "text": "You barely escape the creature's reach!",
+            "onComplete": { "action": "set_flag", "flagSet": "monster_escaped" }
+          }
+        ]
+      }
+    },
+    "E": { 
+      "name": "Exit", 
+      "passable": true, 
+      "icon": "▟", 
+      "targetRoomId": "apple_swamp",
+      "conditions": { "requiredItem": "tool_magnifying_glass" }
+    }
+  },
+  "grid": [
+    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
+    ["▓", ".", ".", "L", ".", ".", "M", "▓"],
+    ["▓", ".", "▓", "▓", "▓", ".", ".", "▓"],
+    ["▓", ".", "▓", "C", "▓", ".", ".", "▓"],
+    ["▓", ".", "▓", ".", "▓", ".", ".", "▓"],
+    ["▓", "L", ".", ".", ".", ".", "E", "▓"],
+    ["▓", ".", ".", ".", ".", ".", ".", "▓"],
+    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"]
+  ]
+}

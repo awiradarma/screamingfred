@@ -156,5 +156,18 @@
       "consume": true,
       "successMessage": "You chug the energy drink! The tingling washes away your fatigue. +3 HP, all debuffs cleared!"
     }
+  },
+  "spicy_noodles": {
+    "name": "Spicy Noodles",
+    "icon": "🍜",
+    "description": "Exotic and very spicy noodles from the factory. Hot enough to melt ice!",
+    "type": "food",
+    "onUse": { "action": "narrative", "text": "The spice is overwhelming! Your vocal cords are literally on fire!" }
+  },
+  "suitable_potato": {
+    "name": "Suitable Potato",
+    "icon": "🥔",
+    "description": "A rare, non-rotten potato from the Great Farm. It looks almost too perfect.",
+    "type": "food"
   }
 }

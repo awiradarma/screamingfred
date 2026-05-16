@@ -21,6 +21,12 @@ import garden_path from './garden_path.json';
 import neighbors_house from './neighbors_house.json';
 import shoe_rack from './shoe_rack.json';
 import window_sill from './window_sill.json';
+import hidden_hideout from './hidden_hideout.json';
+import noodle_factory from './noodle_factory.json';
+import scary_scrapyard from './scary_scrapyard.json';
+import apple_swamp from './apple_swamp.json';
+import great_farm from './great_farm.json';
+import bridge_of_blah from './bridge_of_blah.json';
 
 export const WORLD_SIZE = 30;
 export const COORD_MIN = 0;
@@ -58,6 +64,12 @@ export const worldCoordinateRegistry = {
   "17,19,0": "forest_marsh",
   "15,19,0": "snake_path",
   "15,20,0": "freddista_shack",
+  "21,16,0": "hidden_hideout",
+  "22,16,0": "noodle_factory",
+  "23,16,0": "scary_scrapyard",
+  "24,16,0": "apple_swamp",
+  "25,16,0": "great_farm",
+  "26,16,0": "bridge_of_blah",
 };
 
 export const worldData = {
@@ -84,6 +96,12 @@ export const worldData = {
   neighbors_house,
   shoe_rack,
   window_sill,
+  hidden_hideout,
+  noodle_factory,
+  scary_scrapyard,
+  apple_swamp,
+  great_farm,
+  bridge_of_blah,
 };
 
 /**

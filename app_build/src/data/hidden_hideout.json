@@ -1,0 +1,91 @@
+{
+  "room_id": "hidden_hideout",
+  "room_name": "Hidden Hideout",
+  "world_coord": "21,16,0",
+  "description": "A cramped underground bunker filled with strange machinery and cobwebs. The air smells of dust and old wood.",
+  "player_start": { "x": 1, "y": 7 },
+  "tiles": {
+    "▓": { "name": "Stone Wall", "passable": false, "icon": "▓" },
+    ".": { "name": "Dusty Floor", "passable": true, "icon": " " },
+    "H": { "name": "Hole", "passable": true, "icon": "O", "description": "The hole you fell through. It's too high to climb back up." },
+    "S": { 
+      "name": "Sue & Saul", 
+      "passable": false, 
+      "icon": "✂", 
+      "description": "A sewing machine named Sue and a grunting saw named Saul.",
+      "npc": {
+        "name": "Sue",
+        "dialogue": [
+          {
+            "id": "start",
+            "text": "Oh! A visitor! I'm Sue, and this is Saul. He only grunts since he got stuck in wood.",
+            "options": [
+              { "text": "Have you seen a screaming shoe?", "next": "ask_fred" },
+              { "text": "What is this place?", "next": "about_place" }
+            ]
+          },
+          {
+            "id": "ask_fred",
+            "text": "A screaming shoe? Yes, we heard a loud scream in the west corridor. Poor thing sounded terrified.",
+            "options": [
+              { "text": "I need to find him!", "next": "find_fred" }
+            ]
+          },
+          {
+            "id": "about_place",
+            "text": "This is our hideout. We have a movie room, a shoe assassination chamber... don't question those.",
+            "options": [
+              { "text": "Understood.", "next": "start" }
+            ]
+          },
+          {
+            "id": "find_fred",
+            "text": "Go through the corridor to the west. Just be careful not to head to Creativity or the Unknown Lands!",
+            "onComplete": { "action": "set_flag", "flagSet": "sue_met" }
+          }
+        ]
+      }
+    },
+    "F": {
+      "name": "Fred",
+      "passable": false,
+      "icon": "👞",
+      "description": "It's Fred! He looks a bit dusty but otherwise fine.",
+      "condition": { "requiredFlag": "sue_met" },
+      "npc": {
+        "name": "Fred",
+        "dialogue": [
+          {
+            "id": "start",
+            "text": "See? I told you it wasn't that large! I just slipped, that's all.",
+            "options": [
+              { "text": "Let's get out of here.", "next": "leave" }
+            ]
+          },
+          {
+            "id": "leave",
+            "text": "Right! Saul showed me the way out. Let's head back to the plains.",
+            "onComplete": { "action": "set_flag", "flagSet": "fred_recovered" }
+          }
+        ]
+      }
+    },
+    "E": { 
+      "name": "Exit", 
+      "passable": true, 
+      "icon": "▟", 
+      "targetRoomId": "noodle_factory",
+      "conditions": { "requiredFlag": "fred_recovered", "failMessage": "We can't leave without Fred!" }
+    }
+  },
+  "grid": [
+    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
+    ["▓", ".", ".", ".", ".", ".", ".", "▓"],
+    ["▓", "F", ".", "▓", "▓", "▓", ".", "▓"],
+    ["▓", ".", ".", "▓", "E", "▓", ".", "▓"],
+    ["▓", ".", ".", "▓", ".", "▓", ".", "▓"],
+    ["▓", ".", "S", "▓", ".", ".", ".", "▓"],
+    ["▓", ".", ".", ".", ".", ".", ".", "▓"],
+    ["▓", "H", ".", "▓", "▓", "▓", "▓", "▓"]
+  ]
+}

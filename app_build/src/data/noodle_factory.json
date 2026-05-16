@@ -1,0 +1,51 @@
+{
+  "room_id": "noodle_factory",
+  "room_name": "Great Noodle Factory",
+  "world_coord": "22,16,0",
+  "description": "A pasta paradise! Shelves are lined with ramen, Mac and Cheese, and Indomie. The air is thick with the scent of boiling wheat.",
+  "player_start": { "x": 1, "y": 7 },
+  "tiles": {
+    "▓": { "name": "Pasta Wall", "passable": false, "icon": "▓" },
+    ".": { "name": "Polished Floor", "passable": true, "icon": " " },
+    "J": { "name": "Jelly Floor", "passable": true, "icon": "🍮", "effect": "launch", "description": "A jiggly, jelly-like surface. Stepping here might launch you!" },
+    "N": { 
+      "name": "Spicy Noodles", 
+      "passable": true, 
+      "icon": "🍜", 
+      "item": { "itemId": "spicy_noodles", "name": "Spicy Noodles", "description": "Exotic and very spicy noodles from the factory." }
+    },
+    "B": {
+      "name": "Deformed Barry",
+      "passable": false,
+      "icon": "🔋",
+      "description": "It's Barry, but he looks half-melted and sparking with rage!",
+      "npc": {
+        "name": "Barry",
+        "dialogue": [
+          {
+            "id": "start",
+            "text": "YOU WON'T GET AWAY WITH THIS! TAKE A SEAT IN THE SCRAPYARD!",
+            "onComplete": { "action": "set_flag", "flagSet": "barry_factory_encounter" }
+          }
+        ]
+      }
+    },
+    "T": {
+      "name": "Scrapyard Portal",
+      "passable": true,
+      "icon": "🌀",
+      "targetRoomId": "scary_scrapyard",
+      "conditions": { "requiredFlag": "barry_factory_encounter" }
+    }
+  },
+  "grid": [
+    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
+    ["▓", ".", ".", "N", ".", ".", ".", "▓"],
+    ["▓", ".", "J", "J", "J", ".", ".", "▓"],
+    ["▓", ".", "J", ".", "J", ".", ".", "▓"],
+    ["▓", ".", "J", "J", "J", "B", ".", "▓"],
+    ["▓", ".", ".", ".", ".", ".", "T", "▓"],
+    ["▓", ".", ".", ".", ".", ".", ".", "▓"],
+    ["▓", ".", ".", ".", ".", ".", ".", "▓"]
+  ]
+}

@@ -38,6 +38,22 @@ export const CONQUEST_REWARDS = [
     requiredItemNames: ["Rubber Piece", "Glowing Mushrooms", "Pulsing Vine"],
     rewardMessage: "A rubber piece, glowing mushrooms, and a pulsing vine... You fuse them together into a strange, living patch! You learned Bio-Synthesizer! (Passive)",
     ability: { id: "bio_synthesizer", name: "Bio-Synthesizer", description: "Your deep connection to weird ecology makes you slightly more resilient.", type: "passive", icon: "🌱" }
+  },
+  {
+    id: "culinary_alchemist",
+    name: "Culinary Alchemist",
+    requiredItems: ["spicy_noodles", "suitable_potato"],
+    requiredItemNames: ["Spicy Noodles", "Suitable Potato"],
+    rewardMessage: "A balanced meal of exotic carbs and starchy perfection! You feel incredibly grounded. You learned Stable Footing! (Prevents unintended launches)",
+    ability: { id: "stable_footing", name: "Stable Footing", description: "Your incredible balance allows you to walk safely on jiggly jelly surfaces.", type: "passive", icon: "👞" }
+  },
+  {
+    id: "optical_overload",
+    name: "Optical Overload",
+    requiredItems: ["tool_magnifying_glass", "tool_flashlight"],
+    requiredItemNames: ["Magnifying Glass", "Flashlight"],
+    rewardMessage: "Between the magnifying glass and the flashlight, your vision is enhanced beyond normal shoe capabilities! You learned Thermal Sight! (Passive)",
+    ability: { id: "thermal_sight", name: "Thermal Sight", description: "You can see perfectly in the dark without the need for additional light sources.", type: "passive", icon: "👁️" }
   }
 ];
 
