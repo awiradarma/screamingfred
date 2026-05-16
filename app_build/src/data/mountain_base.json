@@ -4,6 +4,13 @@
   "room_name": "Foot of the Mountains of Misery",
   "theme": "Mountains_of_Misery",
   "description": "The flat desert gives way to jagged, dark peaks that pierce the sky like broken glass. The air is cold and thin. In the distance, you can see Barry the Battery lunging toward you, sparks flying from his angry casing!",
+  "alt_descriptions": [
+    {
+      "requiredFlag": "barry_defeated",
+      "description": "The jagged peaks still loom overhead, but the air is noticeably quieter. Barry the Battery is nowhere to be seen, having fled to a distant puddle to cool off. The electric arcs that once crackled across the ground have dissipated, and the cursed chair sits silent and still."
+    }
+  ],
+
   "grid": [
     [
       "wall",

@@ -69,7 +69,15 @@ export function isTileVisible(tileData, state, purpose = 'interaction') {
   const hasNaturesBounty = state.abilities?.some(a => a.id === "natures_bounty_vision");
 
   // Nature's Bounty allows seeing the layout (map/description) but not interacting with hidden details
-  if (purpose !== 'interaction' && hasNaturesBounty) return true;
+  // However, we should NOT reveal NPCs or plot-critical hidden objects that aren't ready yet
+  if (purpose !== 'interaction' && hasNaturesBounty) {
+    if (tileData.npc && (tileData.visibleIf || tileData.hiddenIf)) {
+      // Fall through to normal check for narrative-critical NPCs
+    } else {
+      return true;
+    }
+  }
+
 
   if (tileData.visibleIf) {
     const flag = tileData.visibleIf;
@@ -308,7 +316,8 @@ function processLivingEntities(state, messages) {
 
 function handleLook(state, messages) {
   // Room description
-  messages.push({ text: describeRoom(state.room), type: 'narrative' });
+  messages.push({ text: describeRoom(state.room, state.stateFlags), type: 'narrative' });
+
 
   // Current tile description
   const tileType = getCurrentTile(state);
@@ -463,7 +472,8 @@ export function handleMove(state, direction, messages) {
       },
       messages: [
         ...messages,
-        { text: describeRoom(transitionRoom), type: 'narrative' }
+        { text: describeRoom(transitionRoom, finalState.stateFlags), type: 'narrative' }
+
       ]
     };
   }
@@ -1269,7 +1279,8 @@ export function getAvailableActions(state) {
 export function getWelcomeMessages(roomData) {
   return [
     { text: getWelcomeMessage(), type: 'system' },
-    { text: describeRoom(roomData), type: 'narrative' },
+    { text: describeRoom(roomData, roomData.state_flags), type: 'narrative' },
+
     { text: describeTile(
         roomData.grid[roomData.player_start.y][roomData.player_start.x],
         roomData.tiles[roomData.grid[roomData.player_start.y][roomData.player_start.x]],

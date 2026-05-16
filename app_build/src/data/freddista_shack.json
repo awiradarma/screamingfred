@@ -4,6 +4,13 @@
   "room_name": "Freddista's Shack",
   "theme": "Shoelace_Forest",
   "description": "At the end of the winding forest path stands a small, crooked shack made of mismatched wood and old shoebox scraps. The door hangs slightly open. Whoever lives here has been alone for a very long time. This is where the rumors say the 'monster' Freddista dwells.",
+  "alt_descriptions": [
+    {
+      "requiredFlag": "freddista_joined",
+      "description": "The crooked shack is quiet now. The dirt floor is still tidy, but the sense of loneliness has faded since Freddista left to join your adventure. Only the mismatching wooden walls remain as a reminder of her long exile."
+    }
+  ],
+
   "grid": [
     [
       "wall",

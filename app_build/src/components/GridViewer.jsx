@@ -20,6 +20,7 @@ const TILE_CONFIG = {
   lake:       { icon: '≋', label: 'Lake',   className: 'tile-lake' },
   bouncy:     { icon: '⊗', label: 'Bouncy', className: 'tile-bouncy' },
   electric_floor: { icon: '⚡', label: 'Electric', className: 'tile-electric' },
+  electric_sand:  { icon: '⚡', label: 'Electric', className: 'tile-electric' },
   cursed_chair: { icon: '🪑', label: 'Chair', className: 'tile-item' },
   exit:       { icon: '△', label: 'Exit',   className: 'tile-exit' },
   enemy:      { icon: '☠', label: 'Enemy',  className: 'tile-enemy' },
@@ -39,13 +40,14 @@ const TILE_CONFIG = {
   trash_can:   { icon: '♻', label: 'Trash',  className: 'tile-item' },
   ledge_floor: { icon: '┘', label: 'Ledge',  className: 'tile-floor' },
   lint_ground: { icon: '◌', label: 'Lint',   className: 'tile-floor' },
-  velcro_mountain: { icon: '⛰', label: 'Mt', className: 'tile-wall' },
-  cereal_box_wall: { icon: '🗃', label: 'Wall', className: 'tile-wall' },
-  whispering_wall: { icon: '⬯', label: 'Wall', className: 'tile-wall' },
+  velcro_mountain: { icon: '▓', label: 'Mt', className: 'tile-wall' },
+  cereal_box_wall: { icon: '▓', label: 'Wall', className: 'tile-wall' },
+  whispering_wall: { icon: '▓', label: 'Wall', className: 'tile-wall' },
   item_bed:    { icon: '🛏', label: 'Bed',    className: 'tile-item' },
   item_chest:  { icon: '📦', label: 'Chest',  className: 'tile-item' },
   glowcap_mushrooms: { icon: '🍄', label: 'Mush', className: 'tile-item' },
 };
+
 
 function getTileConfig(tileType, stateFlags, roomTiles = {}, abilities = []) {
   const hasNaturesBounty = abilities.some(a => a.id === "natures_bounty_vision");
@@ -53,13 +55,27 @@ function getTileConfig(tileType, stateFlags, roomTiles = {}, abilities = []) {
   const roomMeta = roomTiles[tileType];
   
   // Visibility Check
-  if (roomMeta && roomMeta.visibleIf && !stateFlags[roomMeta.visibleIf]) {
-    // Nature's Bounty allows seeing the tile itself, but we should show it as revealed
-    if (!hasNaturesBounty) {
-        const fallbackType = roomMeta.hiddenTileType || 'floor';
-        return getTileConfig(fallbackType, stateFlags, roomTiles, abilities);
+  if (roomMeta) {
+    // If it's an NPC or has specific visibility narrative flags, respect them even with Nature's Bounty
+    const isNPC = !!roomMeta.npc;
+    const hasVisibilityFlags = roomMeta.visibleIf || roomMeta.hiddenIf;
+    
+    if (hasVisibilityFlags) {
+      const visibleIf = roomMeta.visibleIf;
+      const hiddenIf = roomMeta.hiddenIf;
+      
+      const isVisible = (!visibleIf || stateFlags[visibleIf]) && (!hiddenIf || !stateFlags[hiddenIf]);
+      
+      if (!isVisible) {
+        // Nature's Bounty reveals the *terrain* (hiddenTileType) but not the NPC/hidden detail itself
+        if (!hasNaturesBounty || isNPC) {
+          const fallbackType = roomMeta.hiddenTileType || 'floor';
+          return getTileConfig(fallbackType, stateFlags, roomTiles, abilities);
+        }
+      }
     }
   }
+
 
   // Check if enemy is defeated
   if (tileType.startsWith('enemy_') && stateFlags[`${tileType.replace(/^enemy_/, '')}_defeated`]) {

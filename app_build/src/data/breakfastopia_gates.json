@@ -4,6 +4,13 @@
   "room_name": "Breakfastopia Gates",
   "theme": "Breakfastopia",
   "description": "A massive gate constructed from three colossal cereal boxes towers before you. Beyond it, you can see the sprawling city of Breakfastopia: bakeries, town halls, restaurants, shops, and even shoe stores. The air is thick with the smell of butter and maple syrup.",
+  "alt_descriptions": [
+    {
+      "requiredFlag": "willy_joined",
+      "description": "The pancake path is still soft underfoot, but the area feels different now that Willy the Waffle has joined your party. The tuxedo pancake is still here, greeting visitors, but the air of mystery surrounding the detective has moved on with you."
+    }
+  ],
+
   "grid": [
     [
       "cereal_box_wall",

@@ -58,9 +58,23 @@ function withArticle(name) {
 /**
  * Generate the full room description when entering or looking.
  */
-export function describeRoom(roomData) {
+export function describeRoom(roomData, stateFlags = {}) {
+  if (roomData.alt_descriptions) {
+    // Check alt descriptions in order. First one that matches its flag wins.
+    for (const alt of roomData.alt_descriptions) {
+      const flag = alt.requiredFlag;
+      const isNegated = flag.startsWith('!');
+      const actualFlag = isNegated ? flag.substring(1) : flag;
+      const flagValue = !!stateFlags[actualFlag];
+      
+      if (isNegated ? !flagValue : flagValue) {
+        return alt.description;
+      }
+    }
+  }
   return roomData.description || 'You are in an unremarkable place.';
 }
+
 
 /**
  * Generate tile-specific description.
