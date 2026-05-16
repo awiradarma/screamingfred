@@ -77,6 +77,10 @@
       "targetPosition": {
         "x": 0,
         "y": 2
+      },
+      "conditions": {
+        "requiredItem": "item_energy_crystal",
+        "failMessage": "The distortion is unstable! You need a powerful energy source to stabilize the portal. Maybe that humming capacitor back in the desert had something..."
       }
     }
   },

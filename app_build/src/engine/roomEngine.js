@@ -689,6 +689,29 @@ function handleInteract(state, target, messages, globalItems = {}) {
     return { state, messages };
   }
 
+  // Condition Check (Gate interactions behind items/flags/abilities)
+  if (tileData.conditions) {
+    const { requiredItem, requiredFlag, failMessage } = tileData.conditions;
+    const hasItem = requiredItem ? state.inventory.some(i => i.itemId === requiredItem || i.name === requiredItem) : true;
+    let hasFlag = requiredFlag ? state.stateFlags[requiredFlag] : true;
+    
+    // Ability-based flag overrides
+    if (requiredFlag === "corner_illuminated" && state.abilities?.some(a => a.id === "detectives_intuition")) {
+      hasFlag = true;
+    }
+    if (requiredFlag === "master_tinkerer_check" && state.abilities?.some(a => a.id === "master_tinkerer")) {
+      hasFlag = true;
+    }
+
+    if (!hasItem || !hasFlag) {
+      messages.push({ 
+        text: failMessage || 'You can\'t do that right now.', 
+        type: 'warning' 
+      });
+      return { state, messages };
+    }
+  }
+
   const verb = tileData.interactionVerb || 'SEARCH';
   const flagKey = `room_${state.room.room_id}_tile_${tileType}_opened`;
   
