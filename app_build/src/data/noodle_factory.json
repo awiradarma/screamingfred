@@ -5,21 +5,19 @@
   "theme": "Industrial",
   "description": "A complex network of steam pipes and assembly lines producing... pasta? The air is warm and smells faintly of garlic.",
   "grid": [
-    ["▓", "▓", "▓", "▓", "▓"],
-    ["▓", "N", ".", "H", "▓"],
-    ["▓", "W", "B", "T", "▓"],
-    ["▓", "J", ".", "J", "▓"],
-    ["▓", "▓", "▓", "▓", "▓"]
+    ["steel_wall", "steel_wall", "steel_wall", "steel_wall", "steel_wall"],
+    ["steel_wall", "noodle_vats", "metal_floor", "chef_tortellini", "steel_wall"],
+    ["steel_wall", "exit_west", "assembly_belt", "tube_portal", "steel_wall"],
+    ["steel_wall", "jammed_valve", "metal_floor", "jammed_valve", "steel_wall"],
+    ["steel_wall", "steel_wall", "steel_wall", "steel_wall", "steel_wall"]
   ],
   "player_start": {
     "x": 1,
     "y": 2
   },
   "tiles": {
-    "W": {
-      "name": "West Pathway",
+    "exit_west": {
       "passable": true,
-      "icon": "▙",
       "description": "A dark crawlspace leading back to the Hidden Hideout.",
       "targetRoomId": "hidden_hideout",
       "targetPosition": {
@@ -27,22 +25,20 @@
         "y": 2
       }
     },
-    "▓": {
+    "steel_wall": {
       "passable": false,
       "description": "Thick steel-plated walls that vibrate with heavy machinery."
     },
-    ".": {
+    "metal_floor": {
       "passable": true,
       "description": "Polished metal floor plates, slightly slippery from condensation."
     },
-    "N": {
-      "name": "Noodle Vats",
+    "noodle_vats": {
       "passable": true,
-      "icon": "🍜",
       "description": "Giant boiling vats of starchy broth and noodles.",
       "item": {
         "name": "Spicy Noodles",
-        "type": "quest",
+        "type": "pasta",
         "description": "Exotic and very spicy noodles from the factory. Hot enough to melt ice!",
         "opened_description": "The vats are boiling, but no more spicy noodles can be safely scooped.",
         "onUse": {
@@ -52,10 +48,8 @@
         }
       }
     },
-    "H": {
-      "name": "Noodle Maker NPC",
+    "chef_tortellini": {
       "passable": false,
-      "icon": "👨‍🍳",
       "description": "A chef wearing a white hat, frantically stirring a pot.",
       "npc": {
         "name": "Chef Tortellini",
@@ -67,22 +61,16 @@
         ]
       }
     },
-    "B": {
-      "name": "Assembly Line Belt",
+    "assembly_belt": {
       "passable": true,
-      "icon": "⚙️",
       "description": "A mechanical conveyor belt transporting uncooked pasta shapes."
     },
-    "J": {
-      "name": "Jammed Valve",
+    "jammed_valve": {
       "passable": false,
-      "icon": "🔧",
       "description": "A large steam valve that has rusted shut. It refuses to turn."
     },
-    "T": {
-      "name": "Pneumatic Tube Portal",
+    "tube_portal": {
       "passable": true,
-      "icon": "▟",
       "description": "A giant pneumatic transport tube. It seems to lead to a different part of the facility.",
       "targetRoomId": "scary_scrapyard",
       "targetPosition": {

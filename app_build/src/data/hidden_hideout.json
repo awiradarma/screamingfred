@@ -5,61 +5,73 @@
   "theme": "Underground",
   "description": "A dust-choked chamber hidden beneath the base of the mountains. Laces hang from the stone ceiling like cobwebs. A dim light filters down from a hole in the ceiling above. Willy warned you not to enter, but here you are — Fred accidentally fell down the hole!",
   "grid": [
-    ["▓", "▓", "▓", "▓", "▓"],
-    ["▓", "S", "exit_up", ".", "▓"],
-    ["▓", ".", "H", "E", "▓"],
-    ["▓", ".", ".", ".", "▓"],
-    ["▓", "▓", "▓", "▓", "▓"]
+    ["stone_wall", "stone_wall", "stone_wall", "stone_wall", "stone_wall"],
+    ["stone_wall", "sewing_machine_sue", "saw_saul", "stone_floor", "stone_wall"],
+    ["stone_wall", "spiderweb_cellar", "exit_up", "exit_east", "stone_wall"],
+    ["stone_wall", "stone_floor", "stone_floor", "stone_floor", "stone_wall"],
+    ["stone_wall", "stone_wall", "stone_wall", "stone_wall", "stone_wall"]
   ],
   "player_start": {
     "x": 2,
     "y": 2
   },
   "tiles": {
-    "▓": {
+    "stone_wall": {
       "passable": false,
       "description": "Raw, jagged stone walls that sweat cold mountain moisture."
     },
-    ".": {
+    "stone_floor": {
       "passable": true,
       "description": "Cold, damp stone floors covered in a layer of fine dust."
     },
-    "S": {
-      "name": "Stash of Freddista",
+    "sewing_machine_sue": {
       "passable": true,
-      "icon": "📦",
-      "description": "A heavy wooden chest. Freddista's stash of stolen items.",
-      "item": {
-        "name": "Stolen Pasta",
-        "type": "pasta",
-        "description": "A box of dried spaghetti. It has Fred's name written on it in marker.",
-        "opened_description": "The chest is open, and all the stolen pasta is gone.",
-        "onUse": {
-          "action": "quest_progress",
-          "flagSet": "pasta_recovered",
-          "successMessage": "You recovered your stolen pasta! Freddista's crimes are laid bare!"
-        }
-      }
-    },
-    "F": {
-      "name": "Freddista's Stare",
-      "passable": false,
-      "icon": "👁️",
-      "description": "A chilling pair of eyes looking out from a dark portrait.",
+      "description": "Sue the Sewing Machine hums softly with electric life.",
       "npc": {
-        "name": "Freddista",
+        "name": "Sue the Sewing Machine",
         "dialogue": [
           {
             "stage": 0,
-            "text": "\"Your screams... they echo... even here...\" whispers a voice from the shadows."
+            "text": "\"I'm Sue,\" squeaked the sewing machine, \"and that's Saul, but he doesn't talk because he was stuck in wood and forgot how to communicate so he only grunts.\""
+          },
+          {
+            "stage": 1,
+            "text": "Willy asks: \"Have you seen a screaming shoe that was lost?\""
+          },
+          {
+            "stage": 2,
+            "text": "\"No,\" replies Sue, \"however, we heard a loud scream in the west corridor! That's definitely where you fell.\""
+          },
+          {
+            "stage": 3,
+            "text": "\"Whatever you do, do not head to creativity or even worse, the unknown lands!\" warns Sue."
           }
         ]
       }
     },
-    "exit_up": {
-      "name": "Hole to the Surface",
+    "saw_saul": {
       "passable": true,
-      "icon": "🕳️",
+      "description": "Saul the Saw is sitting next to Sue, looking heavy and rustic.",
+      "npc": {
+        "name": "Saul the Saw",
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "Saul lets out a disappointed grunt: \"*Hmph... grrrr!*\""
+          },
+          {
+            "stage": 1,
+            "text": "Saul points his metallic blade toward the eastern passage, directing you to the exit."
+          }
+        ]
+      }
+    },
+    "spiderweb_cellar": {
+      "passable": true,
+      "description": "A small cramped cellar covered in thick spiderwebs and dust bunnies. This is where you fell down and lay yelping before Willy and Freddista found you."
+    },
+    "exit_up": {
+      "passable": true,
       "description": "A shaft of dim light from the Peak of Misery above. You could climb back up.",
       "targetRoomId": "mountain_peak",
       "targetPosition": {
@@ -67,16 +79,8 @@
         "y": 3
       }
     },
-    "H": {
-      "name": "Hideout Hearth",
+    "exit_east": {
       "passable": true,
-      "icon": "🔥",
-      "description": "A cold stone fireplace. It hasn't been used in years."
-    },
-    "E": {
-      "name": "Escape Route",
-      "passable": true,
-      "icon": "▟",
       "description": "A low-hanging crawlspace leading further East into the mountain roots.",
       "targetRoomId": "noodle_factory",
       "targetPosition": {

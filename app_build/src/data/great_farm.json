@@ -5,21 +5,19 @@
   "theme": "Agricultural",
   "description": "A subterranean farm under artificial sunlamps. Orderly rows of glowing root vegetables stretch out into the shadows.",
   "grid": [
-    ["▓", "▓", "▓", "▓", "▓"],
-    ["▓", "R", ".", "P", "▓"],
-    ["▓", "W", "R", "E", "▓"],
-    ["▓", ".", ".", ".", "▓"],
-    ["▓", "▓", "▓", "▓", "▓"]
+    ["farm_fence", "farm_fence", "farm_fence", "farm_fence", "farm_fence"],
+    ["farm_fence", "rotten_produce", "tilled_soil", "suitable_potato", "farm_fence"],
+    ["farm_fence", "exit_west", "rotten_produce", "exit_east", "farm_fence"],
+    ["farm_fence", "tilled_soil", "tilled_soil", "tilled_soil", "farm_fence"],
+    ["farm_fence", "farm_fence", "farm_fence", "farm_fence", "farm_fence"]
   ],
   "player_start": {
     "x": 1,
     "y": 2
   },
   "tiles": {
-    "W": {
-      "name": "West Pathway",
+    "exit_west": {
       "passable": true,
-      "icon": "▙",
       "description": "A small mud trail leading back to the Apple Swamp.",
       "targetRoomId": "apple_swamp",
       "targetPosition": {
@@ -27,24 +25,20 @@
         "y": 2
       }
     },
-    "▓": {
+    "farm_fence": {
       "passable": false,
       "description": "Tall wooden fences and support beams keeping the mountain from collapsing."
     },
-    ".": {
+    "tilled_soil": {
       "passable": true,
       "description": "Tilled soil that is warm and soft to step on."
     },
-    "R": {
-      "name": "Rotten Produce",
+    "rotten_produce": {
       "passable": true,
-      "icon": "🍄",
       "description": "A heap of decaying agricultural waste. It smells strongly of mold."
     },
-    "P": {
-      "name": "Suitable Potato",
+    "suitable_potato": {
       "passable": true,
-      "icon": "🥔",
       "description": "A highly prized, perfectly healthy subterranean potato growing in a special plot.",
       "item": {
         "name": "Suitable Potato",
@@ -58,10 +52,8 @@
         }
       }
     },
-    "E": {
-      "name": "Exit East",
+    "exit_east": {
       "passable": true,
-      "icon": "▟",
       "description": "A tunnel exit that leads back up towards the surface bridge.",
       "targetRoomId": "bridge_of_blah",
       "targetPosition": {

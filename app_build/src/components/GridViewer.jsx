@@ -7,6 +7,7 @@ import { isTileVisible } from '../engine/roomEngine';
  */
 
 const TILE_CONFIG = {
+  // Core tiles
   wall: { icon: '▓', label: 'Wall', className: 'tile-wall' },
   floor: { icon: '·', label: 'Floor', className: 'tile-floor' },
   exit_north: { icon: '△', label: 'Exit N', className: 'tile-exit' },
@@ -27,6 +28,50 @@ const TILE_CONFIG = {
   enemy: { icon: '☠', label: 'Enemy', className: 'tile-enemy' },
   npc: { icon: '☺', label: 'NPC', className: 'tile-npc' },
   item: { icon: '◈', label: 'Item', className: 'tile-item' },
+  
+  // Custom renamed tiles (sole source of truth for name/icon)
+  swamp_wall: { icon: '▓', label: 'Swamp Wall', className: 'tile-wall' },
+  swamp_pool: { icon: '~', label: 'Swamp Pool', className: 'tile-lake' },
+  banzo_builder: { icon: '🐒', label: 'Banzo the Builder', className: 'tile-npc' },
+  banana_bridge: { icon: '█', label: 'Banana Bridge', className: 'tile-item' },
+  swamp_hollow: { icon: '🕳️', label: 'Swamp Hollow', className: 'tile-floor' },
+  
+  chasm_of_chaos: { icon: ' ', label: 'Chasm of Chaos', className: 'tile-wall' },
+  brittle_wood: { icon: '=', label: 'Brittle Wood', className: 'tile-floor' },
+  barry: { icon: '🔋', label: 'Barry', className: 'tile-npc' },
+  locked_gate: { icon: '🚪', label: 'Locked Gate', className: 'tile-exit' },
+  
+  farm_fence: { icon: '▓', label: 'Farm Fence', className: 'tile-wall' },
+  tilled_soil: { icon: '·', label: 'Tilled Soil', className: 'tile-floor' },
+  rotten_produce: { icon: '🍄', label: 'Rotten Produce', className: 'tile-item' },
+  suitable_potato: { icon: '🥔', label: 'Suitable Potato', className: 'tile-item' },
+  
+  stone_wall: { icon: '▓', label: 'Stone Wall', className: 'tile-wall' },
+  stone_floor: { icon: '·', label: 'Stone Floor', className: 'tile-floor' },
+  sewing_machine_sue: { icon: '🧵', label: 'Sue the Sewing Machine', className: 'tile-npc' },
+  saw_saul: { icon: '🪚', label: 'Saul the Saw', className: 'tile-npc' },
+  spiderweb_cellar: { icon: '🕸️', label: 'Spiderweb Cellar', className: 'tile-floor' },
+  exit_up: { icon: '🕳️', label: 'Hole to the Surface', className: 'tile-exit' },
+  
+  steel_wall: { icon: '▓', label: 'Steel Wall', className: 'tile-wall' },
+  metal_floor: { icon: '·', label: 'Metal Floor', className: 'tile-floor' },
+  noodle_vats: { icon: '🍜', label: 'Noodle Vats', className: 'tile-item' },
+  chef_tortellini: { icon: '👨‍🍳', label: 'Chef Tortellini', className: 'tile-npc' },
+  assembly_belt: { icon: '⚙️', label: 'Assembly Line Belt', className: 'tile-item' },
+  jammed_valve: { icon: '🔧', label: 'Jammed Valve', className: 'tile-wall' },
+  tube_portal: { icon: '▟', label: 'Pneumatic Tube Portal', className: 'tile-exit' },
+  
+  scrap_wall: { icon: '▓', label: 'Scrap Wall', className: 'tile-wall' },
+  scrapyard_floor: { icon: '·', label: 'Scrapyard Floor', className: 'tile-floor' },
+  lost_lens: { icon: '🔍', label: 'Lost Lens', className: 'tile-item' },
+  metal_heap: { icon: '📦', label: 'Metal Heap', className: 'tile-item' },
+  compact_crusher: { icon: '⚙️', label: 'Compact Crusher', className: 'tile-wall' },
+  broken_boiler: { icon: '🌋', label: 'Broken Boiler', className: 'tile-item' },
+  
+  humming_capacitor: { icon: '🔋', label: 'Humming Capacitor', className: 'tile-item' },
+  portal_of_misery: { icon: '🌀', label: 'Portal of Misery', className: 'tile-exit' },
+  portal_core: { icon: '🔮', label: 'Lexicon Sphere', className: 'tile-item' },
+
   // Expanded Types
   grass: { icon: '☘', label: 'Grass', className: 'tile-floor' },
   dirt_path: { icon: '░', label: 'Path', className: 'tile-floor' },
@@ -106,7 +151,7 @@ function getTileConfig(tileType, stateFlags, roomTiles = {}, abilities = []) {
   return baseConfig;
 }
 
-export default function GridViewer({ grid, playerPosition, stateFlags, roomName, entities, tiles: roomTiles, enemyHP, abilities = [] }) {
+export default function GridViewer({ grid, playerPosition, stateFlags, entities, tiles: roomTiles, enemyHP, abilities = [] }) {
   const [isExpanded, setIsExpanded] = React.useState(window.innerWidth > 768);
 
   if (!grid) return null;

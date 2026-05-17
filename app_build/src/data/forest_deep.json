@@ -16,7 +16,7 @@
       "wall",
       "lint_ground",
       "lint_ground",
-      "?",
+      "dark_corner",
       "wall"
     ],
     [
@@ -54,10 +54,8 @@
       "passable": true,
       "description": "Dirty, grey lint ground."
     },
-    "?": {
-      "name": "Dark Corner",
+    "dark_corner": {
       "passable": true,
-      "icon": " ",
       "description": "A very dark corner. You can't see anything here.",
       "visibleIf": "corner_illuminated",
       "hiddenTileType": "wall",
@@ -68,7 +66,6 @@
         "actions": ["interact", "search"]
       }
     },
-
     "exit_south": {
       "passable": true,
       "description": "The path continues deeper into the forest.",

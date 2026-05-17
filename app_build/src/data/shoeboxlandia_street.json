@@ -52,7 +52,7 @@
       "description": "A heavy iron gate blocks the way back to the bridge. It is locked tight.",
       "conditions": {
         "requiredFlag": "chapter_2_unlocked",
-        "failMessage": "This gate is locked. The path to the bridge is closed until Chapter 2."
+        "failMessage": "The gate is locked. Better come back later."
       },
       "targetRoomId": "bridge_of_blah",
       "targetPosition": {

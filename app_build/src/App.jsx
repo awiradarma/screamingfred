@@ -19,6 +19,7 @@ export default function App() {
   const [showRestartConfirm, setShowRestartConfirm] = React.useState(false);
 
   useEffect(() => {
+    window.useStore = useStore;
     const sequence = async () => {
       if (!isGameStarted) {
         await useStore.getState().loadWorldData();
@@ -172,7 +173,7 @@ export default function App() {
             <div className="info-title">Room Info</div>
             <div className="info-row">
               <span className="info-label">Theme</span>
-              <span className="info-value">{gameState.room.theme.replace(/_/g, ' ')}</span>
+              <span className="info-value">{(gameState.room.theme || 'Unknown').replace(/_/g, ' ')}</span>
             </div>
             <div className="info-row">
               <span className="info-label">Coord</span>

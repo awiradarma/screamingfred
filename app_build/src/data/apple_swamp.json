@@ -5,21 +5,19 @@
   "theme": "Swamp",
   "description": "A murky, bubbling pool of expired apple juice and marsh weed. The air smells strongly of fermentation and vinegar.",
   "grid": [
-    ["▓", "▓", "▓", "▓", "▓"],
-    ["▓", "~", "B", "~", "▓"],
-    ["▓", "W", "P", "E", "▓"],
-    ["▓", "~", "H", "~", "▓"],
-    ["▓", "▓", "▓", "▓", "▓"]
+    ["swamp_wall", "swamp_wall", "swamp_wall", "swamp_wall", "swamp_wall"],
+    ["swamp_wall", "swamp_pool", "banzo_builder", "swamp_pool", "swamp_wall"],
+    ["swamp_wall", "exit_west", "banana_bridge", "exit_east", "swamp_wall"],
+    ["swamp_wall", "swamp_pool", "swamp_hollow", "swamp_pool", "swamp_wall"],
+    ["swamp_wall", "swamp_wall", "swamp_wall", "swamp_wall", "swamp_wall"]
   ],
   "player_start": {
     "x": 1,
     "y": 2
   },
   "tiles": {
-    "W": {
-      "name": "West Pathway",
+    "exit_west": {
       "passable": true,
-      "icon": "▙",
       "description": "A gate opening back to the Scary Scrapyard.",
       "targetRoomId": "scary_scrapyard",
       "targetPosition": {
@@ -27,22 +25,20 @@
         "y": 2
       }
     },
-    "▓": {
+    "swamp_wall": {
       "passable": false,
       "description": "Dense, tangled walls of swamp bramble and petrified apple branches."
     },
-    ".": {
+    "floor": {
       "passable": true,
       "description": "Slightly muddy, sticky ground near the swamp edge."
     },
-    "~": {
+    "swamp_pool": {
       "passable": false,
       "description": "Deep, bubbling pools of fermented apple juice. Far too sticky to walk through."
     },
-    "B": {
-      "name": "Banana Bridge Builder NPC",
+    "banzo_builder": {
       "passable": false,
-      "icon": "🐒",
       "description": "A clever-looking monkey wearing overalls. He seems willing to help you cross for a fee.",
       "npc": {
         "name": "Banzo the Builder",
@@ -72,26 +68,20 @@
         ]
       }
     },
-    "P": {
-      "name": "Banana Bridge",
+    "banana_bridge": {
       "passable": true,
-      "icon": "█",
       "description": "The back of a giant banana. It's surprisingly stable.",
       "conditions": {
         "requiredFlag": "banana_bridge",
         "failMessage": "There's only expired apple juice here. You need a way to cross!"
       }
     },
-    "H": {
-      "name": "Swamp Hollow",
+    "swamp_hollow": {
       "passable": true,
-      "icon": "🕳️",
       "description": "A hollow in a petrified tree trunk. Safe from the sticky mud."
     },
-    "E": {
-      "name": "Exit East",
+    "exit_east": {
       "passable": true,
-      "icon": "▟",
       "description": "A small mud trail leading out of the swamp towards a cultivated field.",
       "targetRoomId": "great_farm",
       "targetPosition": {

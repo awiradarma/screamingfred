@@ -5,21 +5,19 @@
   "theme": "Industrial",
   "description": "A dark yard piled high with discarded metal, old boots, and rusted cans. Sparks occasionally fly from exposed wires.",
   "grid": [
-    ["▓", "▓", "▓", "▓", "▓"],
-    ["▓", "L", ".", "M", "▓"],
-    ["▓", "W", "C", "E", "▓"],
-    ["▓", ".", "B", ".", "▓"],
-    ["▓", "▓", "▓", "▓", "▓"]
+    ["scrap_wall", "scrap_wall", "scrap_wall", "scrap_wall", "scrap_wall"],
+    ["scrap_wall", "lost_lens", "scrapyard_floor", "metal_heap", "scrap_wall"],
+    ["scrap_wall", "exit_west", "compact_crusher", "exit_east", "scrap_wall"],
+    ["scrap_wall", "scrapyard_floor", "broken_boiler", "scrapyard_floor", "scrap_wall"],
+    ["scrap_wall", "scrap_wall", "scrap_wall", "scrap_wall", "scrap_wall"]
   ],
   "player_start": {
     "x": 1,
     "y": 2
   },
   "tiles": {
-    "W": {
-      "name": "West Pathway",
+    "exit_west": {
       "passable": true,
-      "icon": "▙",
       "description": "A heavy metal door leading back to the Noodle Factory.",
       "targetRoomId": "noodle_factory",
       "targetPosition": {
@@ -27,18 +25,16 @@
         "y": 2
       }
     },
-    "▓": {
+    "scrap_wall": {
       "passable": false,
       "description": "Unstable mountains of compressed scrap metal that loom overhead."
     },
-    ".": {
+    "scrapyard_floor": {
       "passable": true,
       "description": "Oil-stained ground littered with sharp metal shavings."
     },
-    "L": {
-      "name": "Lost Lens",
+    "lost_lens": {
       "passable": true,
-      "icon": "🔍",
       "description": "A small metallic compartment buried under a heap of broken gears.",
       "item": {
         "name": "Magnifying Lens",
@@ -52,10 +48,8 @@
         }
       }
     },
-    "M": {
-      "name": "Metal Heap",
+    "metal_heap": {
       "passable": true,
-      "icon": "📦",
       "description": "A pile of discarded brass and iron scraps.",
       "item": {
         "name": "Sturdy Brass Frame",
@@ -69,22 +63,16 @@
         }
       }
     },
-    "C": {
-      "name": "Compact Crusher",
+    "compact_crusher": {
       "passable": false,
-      "icon": "⚙️",
       "description": "A slow-moving piston that periodically crushes heaps of junk."
     },
-    "B": {
-      "name": "Broken Boiler",
+    "broken_boiler": {
       "passable": true,
-      "icon": "🌋",
       "description": "An old steam boiler that has cold ash spilling out of its furnace."
     },
-    "E": {
-      "name": "Exit East",
+    "exit_east": {
       "passable": true,
-      "icon": "▟",
       "description": "A heavy metal security gate that creaks open just enough to pass.",
       "targetRoomId": "apple_swamp",
       "targetPosition": {

@@ -17,10 +17,8 @@
       "passable": true,
       "description": "A stable floor paved with soft, parchment-like tiles."
     },
-    "exit_west": {
-      "name": "Portal of Misery",
+    "portal_of_misery": {
       "passable": true,
-      "icon": "🌀",
       "description": "A swirling distortion in the air leading back to the Peak of Misery.",
       "targetRoomId": "mountain_peak",
       "targetPosition": {
@@ -29,16 +27,14 @@
       }
     },
     "portal_core": {
-      "name": "Lexicon Sphere",
       "passable": true,
-      "icon": "🔮",
       "description": "A glowing sphere constructed of pure alphabetic characters. It hums with the rules of spelling and grammar."
     }
   },
   "grid": [
     ["wall", "wall", "wall", "wall", "wall"],
     ["wall", "floor", "floor", "floor", "wall"],
-    ["exit_west", "floor", "portal_core", "floor", "wall"],
+    ["portal_of_misery", "floor", "portal_core", "floor", "wall"],
     ["wall", "floor", "floor", "floor", "wall"],
     ["wall", "wall", "wall", "wall", "wall"]
   ],

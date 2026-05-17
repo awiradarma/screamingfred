@@ -2,6 +2,7 @@
   "room_id": "bridge_of_blah",
   "room_name": "Bridge of BLAAAAAAaaaah",
   "world_coord": "26,16,-1",
+  "theme": "Underground",
   "description": "A 52-mile long bridge of brittle wood. You feel an overwhelming urge to say 'blah' every five minutes.",
   "onEnter": {
     "action": "remove_item",
@@ -13,10 +14,8 @@
     "y": 2
   },
   "tiles": {
-    "W": {
-      "name": "West Pathway",
+    "exit_west": {
       "passable": true,
-      "icon": "▙",
       "description": "A stone archway leading back down to the Great Farm.",
       "targetRoomId": "great_farm",
       "targetPosition": {
@@ -24,24 +23,19 @@
         "y": 2
       }
     },
-    "▓": {
-      "name": "Chasm of Chaos",
+    "chasm_of_chaos": {
       "passable": false,
-      "icon": " "
+      "description": "An bottomless void stretching into absolute darkness. Blah echoes from its depths."
     },
-    "=": {
-      "name": "Brittle Wood",
+    "brittle_wood": {
       "passable": true,
-      "icon": "=",
       "description": "The wood creaks ominously."
     },
-    "B": {
-      "name": "Barry",
-      "passable": false,
-      "icon": "🔋",
+    "barry": {
+      "passable": true,
       "description": "Barry is blocking the way, looking smug.",
       "hiddenIf": "barry_chasm",
-      "hiddenTileType": "=",
+      "hiddenTileType": "brittle_wood",
       "npc": {
         "name": "Barry",
         "dialogue": [
@@ -49,21 +43,25 @@
             "id": "start",
             "text": "Your perseverance annoys me! Now you have no choice but to TAKE A SEAT!",
             "options": [
-              { "text": "Freddista, do something!", "next": "freddista_action" }
+              {
+                "text": "Freddista, do something!",
+                "next": "freddista_action"
+              }
             ]
           },
           {
             "id": "freddista_action",
             "text": "Freddista rushes over and hurls Barry into the chasm! 'That's it!' she snaps.",
-            "onComplete": { "action": "set_flag", "flagSet": "barry_chasm" }
+            "onComplete": {
+              "action": "set_flag",
+              "flagSet": "barry_chasm"
+            }
           }
         ]
       }
     },
-    "G": {
-      "name": "Locked Gate",
+    "locked_gate": {
       "passable": true,
-      "icon": "🚪",
       "description": "A heavy iron gate blocks the way back to Shoeboxlandia. It requires Chapter 2 to open.",
       "conditions": {
         "requiredFlag": "chapter_2_unlocked",
@@ -77,10 +75,40 @@
     }
   },
   "grid": [
-    ["▓", "▓", "▓", "▓", "▓"],
-    ["▓", "▓", "▓", "▓", "▓"],
-    ["▓", "W", "B", "G", "▓"],
-    ["▓", "▓", "▓", "▓", "▓"],
-    ["▓", "▓", "▓", "▓", "▓"]
+    [
+      "chasm_of_chaos",
+      "chasm_of_chaos",
+      "chasm_of_chaos",
+      "chasm_of_chaos",
+      "chasm_of_chaos"
+    ],
+    [
+      "chasm_of_chaos",
+      "chasm_of_chaos",
+      "chasm_of_chaos",
+      "chasm_of_chaos",
+      "chasm_of_chaos"
+    ],
+    [
+      "chasm_of_chaos",
+      "exit_west",
+      "barry",
+      "locked_gate",
+      "chasm_of_chaos"
+    ],
+    [
+      "chasm_of_chaos",
+      "chasm_of_chaos",
+      "chasm_of_chaos",
+      "chasm_of_chaos",
+      "chasm_of_chaos"
+    ],
+    [
+      "chasm_of_chaos",
+      "chasm_of_chaos",
+      "chasm_of_chaos",
+      "chasm_of_chaos",
+      "chasm_of_chaos"
+    ]
   ]
 }

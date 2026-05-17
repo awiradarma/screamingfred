@@ -23,7 +23,7 @@
       "electric_sand",
       "sand_path",
       "sand_path",
-      "H",
+      "humming_capacitor",
       "electric_sand"
     ],
     [
@@ -46,10 +46,8 @@
     "y": 2
   },
   "tiles": {
-    "H": {
-      "name": "Humming Capacitor",
+    "humming_capacitor": {
       "passable": true,
-      "icon": "🔋",
       "description": "A device that stores massive amounts of static energy. It's vibrating dangerously.",
       "visibleIf": "machinery_detected",
       "conditions": {
