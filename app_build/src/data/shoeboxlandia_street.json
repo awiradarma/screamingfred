@@ -27,7 +27,7 @@
       "wall"
     ],
     [
-      "wall",
+      "exit_west_gate",
       "floor",
       "npc_elder",
       "dark_corner",
@@ -46,6 +46,20 @@
     "y": 2
   },
   "tiles": {
+    "exit_west_gate": {
+      "passable": true,
+      "icon": "🚪",
+      "description": "A heavy iron gate blocks the way back to the bridge. It is locked tight.",
+      "conditions": {
+        "requiredFlag": "chapter_2_unlocked",
+        "failMessage": "This gate is locked. The path to the bridge is closed until Chapter 2."
+      },
+      "targetRoomId": "bridge_of_blah",
+      "targetPosition": {
+        "x": 3,
+        "y": 2
+      }
+    },
     "wall": {
       "passable": false,
       "description": "A low fence made of stacked shoebox lids. Orderly, like everything in Shoeboxlandia."

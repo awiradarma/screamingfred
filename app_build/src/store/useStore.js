@@ -11,14 +11,14 @@ export const CONQUEST_REWARDS = [
     id: "detective_intuition",
     name: "Detective's Intuition",
     requiredItems: ["clue_empty_fridge", "flavor_photo", "quest_note"],
-    requiredItemNames: ["Empty Fridge Note", "Old Photo", "Freddista's Note"],
+    requiredItemNames: ["Empty Fridge Clue", "Old Photo", "Freddista's Note"],
     rewardMessage: "You piece together the clues! The Empty Fridge, the Old Photo, and Freddista's Note all point to one thing... wait, actually it just points to the fact you are a great detective! You learned Detective's Intuition! (Reveals hidden items)",
     ability: { id: "detectives_intuition", name: "Detective's Intuition", description: "Automatically reveals hidden things in dark corners without needing a light.", type: "passive", icon: "🕵️‍♂️" }
   },
   {
     id: "master_tinkerer",
     name: "Master Tinkerer",
-    requiredItems: ["flavor_signpost", "tool_strong_shoelace", "item_silver_eyelet"],
+    requiredItems: ["flavor_signpost", "quest_strong_shoelace", "item_silver_eyelet"],
     requiredItemNames: ["Signpost Info", "Strong Shoelace", "Silver Eyelet"],
     rewardMessage: "You've gathered a signpost, a shoelace, and an eyelet. You realize you can build almost anything with this junk! You learned Master Tinkerer! (Passive)",
     ability: { id: "master_tinkerer", name: "Master Tinkerer", description: "Expertise in repurposing junk. Allows interacting with complex machinery and stuck hatches.", type: "passive", icon: "🔧" }
@@ -42,17 +42,17 @@ export const CONQUEST_REWARDS = [
   {
     id: "culinary_alchemist",
     name: "Culinary Alchemist",
-    requiredItems: ["spicy_noodles", "suitable_potato", "food_potato"],
-    requiredItemNames: ["Spicy Noodles", "Suitable Potato", "Wild Potato"],
+    requiredItems: ["spicy_noodles", "suitable_potato", "item_forest_spud"],
+    requiredItemNames: ["Spicy Noodles", "Suitable Potato", "Forest Spud"],
     rewardMessage: "A balanced meal of factory spice, farm starch, and forest goodness! You feel incredibly grounded. You learned Stable Footing! (Prevents unintended launches)",
     ability: { id: "stable_footing", name: "Stable Footing", description: "Your incredible balance allows you to walk safely on jiggly jelly surfaces.", type: "passive", icon: "👞" }
   },
   {
     id: "optical_overload",
     name: "Optical Overload",
-    requiredItems: ["tool_magnifying_glass", "tool_flashlight"],
-    requiredItemNames: ["Magnifying Glass", "Flashlight"],
-    rewardMessage: "Between the magnifying glass and the flashlight, your vision is enhanced beyond normal shoe capabilities! You learned Thermal Sight! (Passive)",
+    requiredItems: ["item_magnifying_lens", "item_shiny_reflector"],
+    requiredItemNames: ["Magnifying Lens", "Shiny Reflector"],
+    rewardMessage: "Between the magnifying lens and the shiny reflector, your vision is enhanced beyond normal shoe capabilities! You learned Thermal Sight! (Passive)",
     ability: { id: "thermal_sight", name: "Thermal Sight", description: "Advanced infrared vision. Reveals life forms (NPCs/Enemies) and machinery through darkness and fog.", type: "passive", icon: "👁️" }
   }
 ];

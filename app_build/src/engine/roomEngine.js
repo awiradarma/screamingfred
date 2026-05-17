@@ -730,7 +730,21 @@ function handleInteract(state, target, messages, globalItems = {}) {
 
   if (tileData.onInteract) {
     if (typeof tileData.onInteract === 'string') {
-      messages.push({ text: tileData.onInteract, type: 'narrative' });
+      let interactText = tileData.onInteract;
+      if (tileData.alt_onInteract) {
+        for (const alt of tileData.alt_onInteract) {
+          const requiredFlag = alt.requiredFlag;
+          const isNegated = requiredFlag.startsWith('!');
+          const actualFlag = isNegated ? requiredFlag.substring(1) : requiredFlag;
+          const flagValue = !!state.stateFlags[actualFlag];
+          const matches = isNegated ? !flagValue : flagValue;
+          if (matches) {
+            interactText = alt.text;
+            break;
+          }
+        }
+      }
+      messages.push({ text: interactText, type: 'narrative' });
     }
   }
 
@@ -1093,7 +1107,7 @@ function handleInventory(state, messages) {
   if (state.inventory.length === 0) {
     messages.push({ text: 'Your pockets are empty. Fred\'s pasta and potatoes are still missing.', type: 'system' });
   } else {
-    const items = state.inventory.map(i => `  • ${i.name} (${i.type})`).join('\n');
+    const items = state.inventory.map(i => `  • ${i.name} (${i.type}): ${i.description || 'No description available.'}`).join('\n');
     messages.push({ text: `Inventory:\n${items}`, type: 'system' });
   }
   return { state, messages };

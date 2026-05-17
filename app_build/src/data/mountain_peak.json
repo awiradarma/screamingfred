@@ -3,7 +3,7 @@
   "world_coord": "22,16,0",
   "room_name": "Peak of Misery",
   "theme": "Mountains_of_Misery",
-  "description": "You've reached the highest point. Below, the world of Screaming Fred looks like a messy bedroom. To the east, you see a strange distortion in the air — the entrance to Textlandia.",
+  "description": "You've reached the highest point. Below, the world of Screaming Fred looks like a messy bedroom. To the east, you see a strange distortion in the air. Down below, you notice a dark hole — the entrance to the Hidden Hideout! Willy warns you: 'Do not enter the hideout, or you will be lost!'",
   "grid": [
     [
       "wall",
@@ -29,7 +29,7 @@
     [
       "wall",
       "floor",
-      "floor",
+      "hideout_hole",
       "floor",
       "wall"
     ],
@@ -60,6 +60,17 @@
       "icon": "🔭",
       "description": "A telescope pointing toward the horizon.",
       "onInteract": "You look through the telescope. You see the far-off lands of Textlandia, where words have weight and commas are sharp."
+    },
+    "hideout_hole": {
+      "name": "Dark Hole",
+      "passable": true,
+      "icon": "🕳️",
+      "description": "A gaping hole in the mountain floor. You can hear echoes from below. Willy warned you not to go in... but the path forward lies through the depths.",
+      "targetRoomId": "hidden_hideout",
+      "targetPosition": {
+        "x": 2,
+        "y": 2
+      }
     },
     "exit_west": {
       "passable": true,

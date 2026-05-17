@@ -54,11 +54,13 @@
       "visibleIf": "machinery_detected",
       "conditions": {
         "requiredFlag": "master_tinkerer_check",
-        "failMessage": "This capacitor is way too dangerous to touch without advanced knowledge of junk-tech. You need to be a Master Tinkerer.",
-        "onSuccess": {
-          "action": "give_item",
-          "itemId": "item_energy_crystal"
-        }
+        "failMessage": "This capacitor is way too dangerous to touch without advanced knowledge of junk-tech. You need to be a Master Tinkerer."
+      },
+      "item": {
+        "itemId": "item_energy_crystal",
+        "name": "Energy Crystal",
+        "opened_description": "The capacitor has been drained of its crystal.",
+        "onCollect": "You successfully harness your Master Tinkerer knowledge, safely bypassing the dangerous voltage. With a sharp twist, you disconnect the glowing Energy Crystal from the Humming Capacitor! The capacitor powers down, vibrating no more."
       }
     },
     "electric_sand": {

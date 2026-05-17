@@ -114,10 +114,10 @@
       "failureMessage": "The blue light reveals nothing hidden here."
     }
   },
-  "tool_strong_shoelace": {
+  "quest_strong_shoelace": {
     "name": "Strong Shoelace",
     "description": "A thick, durable shoelace found in the Secret Cave. It's strong enough to tie anything together — maybe even a broken bridge.",
-    "type": "tool"
+    "type": "quest"
   },
   "ability_zap_immunity": {
     "name": "Rubber Boots",
@@ -161,14 +161,13 @@
     "name": "Spicy Noodles",
     "icon": "🍜",
     "description": "Exotic and very spicy noodles from the factory. Hot enough to melt ice!",
-    "type": "food",
-    "onUse": { "action": "narrative", "text": "The spice is overwhelming! Your vocal cords are literally on fire!" }
+    "type": "quest"
   },
   "suitable_potato": {
     "name": "Suitable Potato",
     "icon": "🥔",
     "description": "A rare, non-rotten potato from the Great Farm. It looks almost too perfect.",
-    "type": "food"
+    "type": "quest"
   },
   "quest_note_forest": {
     "name": "Hidden Message",
@@ -178,6 +177,56 @@
   "item_energy_crystal": {
     "name": "Energy Crystal",
     "description": "A pulsing blue crystal harvested from a capacitor. It hums with raw static power.",
+    "type": "quest"
+  },
+  "item_silver_eyelet": {
+    "name": "Silver Eyelet",
+    "description": "A polished silver eyelet, gleaming in the light. It's remarkably durable and fits shoelaces perfectly.",
+    "type": "quest"
+  },
+  "item_berries": {
+    "name": "Rubber Berries",
+    "description": "Soft, bouncy berries that grow on Shoelace Forest trees. They are completely inedible but useful for synthesis.",
+    "type": "quest"
+  },
+  "item_pollen": {
+    "name": "Yellow Pollen",
+    "description": "Fine golden spores gathered from the forest floor. It has a sweet, aromatic scent.",
+    "type": "quest"
+  },
+  "item_pillow": {
+    "name": "Soft Pillow",
+    "description": "A tiny pillow made of a single cotton ball. Soft and cloud-like to the touch.",
+    "type": "quest"
+  },
+  "item_rubber": {
+    "name": "Rubber Piece",
+    "description": "A piece of vulcanized rubber scrap. It's highly elastic and resistant to electricity.",
+    "type": "quest"
+  },
+  "item_mushrooms": {
+    "name": "Glowing Mushrooms",
+    "description": "Bioluminescent forest mushrooms that cast a faint green light. They pulse with organic energy.",
+    "type": "quest"
+  },
+  "item_vine": {
+    "name": "Pulsing Vine",
+    "description": "A thick, green forest vine that seems to twitch slightly when touched. It has strong structural properties.",
+    "type": "quest"
+  },
+  "item_forest_spud": {
+    "name": "Forest Spud",
+    "description": "A tiny forest potato, covered in rich soil. Unlike wild potatoes, it has uniquely dense starch.",
+    "type": "quest"
+  },
+  "item_magnifying_lens": {
+    "name": "Magnifying Lens",
+    "description": "A highly polished glass lens that focuses ambient light. Perfect for studying tiny details.",
+    "type": "quest"
+  },
+  "item_shiny_reflector": {
+    "name": "Shiny Reflector",
+    "description": "A curved metallic dish that maximizes light emission. It looks like it was scavenged from an old torch.",
     "type": "quest"
   }
 }

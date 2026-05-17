@@ -66,15 +66,19 @@
       "description": "The ground crackles with violent arcs of electricity! Barry's rage has electrified the floor!",
       "effect": "damage",
       "damageAmount": 2,
-      "effectMessage": "⚡ ZAP! The electric floor shocks you!",
-      "hiddenIf": "barry_burned",
-      "hiddenTileType": "floor"
+      "effectMessage": "⚡ ZAP! The electric floor shocks you!"
     },
     "cursed_chair": {
       "passable": true,
       "description": "A rickety wooden chair that seems to be vibrating with dark energy. It looks incredibly uncomfortable, yet strangely inviting.",
       "interactionVerb": "SIT",
       "onInteract": "You sit down. A cold shock runs through your sole, locking you in place for a moment. You feel a strange connection to the ground. Barry laughs hysterically.",
+      "alt_onInteract": [
+        {
+          "requiredFlag": "barry_defeated",
+          "text": "You sit down. A cold shock runs through your sole, locking you in place for a moment. You feel a strange connection to the ground, but Barry is no longer here to laugh at you."
+        }
+      ],
       "item": {
         "onCollect": "You can't carry a chair!",
         "contains": null,

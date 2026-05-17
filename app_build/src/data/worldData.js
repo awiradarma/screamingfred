@@ -29,6 +29,7 @@ import great_farm from './great_farm.json';
 import bridge_of_blah from './bridge_of_blah.json';
 import mountain_pass from './mountain_pass.json';
 import mountain_peak from './mountain_peak.json';
+import textlandia_entrance from './textlandia_entrance.json';
 
 export const WORLD_SIZE = 30;
 export const COORD_MIN = 0;
@@ -56,6 +57,7 @@ export const worldCoordinateRegistry = {
   "20,16,0": "mountain_base",
   "21,16,0": "mountain_pass",
   "22,16,0": "mountain_peak",
+  "23,16,0": "textlandia_entrance",
 
   // Forest
   "15,17,0": "forest_entrance",
@@ -68,12 +70,12 @@ export const worldCoordinateRegistry = {
   "17,19,0": "forest_marsh",
   "15,19,0": "snake_path",
   "15,20,0": "freddista_shack",
-  "21,16,0": "hidden_hideout",
-  "22,16,0": "noodle_factory",
-  "23,16,0": "scary_scrapyard",
-  "24,16,0": "apple_swamp",
-  "25,16,0": "great_farm",
-  "26,16,0": "bridge_of_blah",
+  "21,16,-1": "hidden_hideout",
+  "22,16,-1": "noodle_factory",
+  "23,16,-1": "scary_scrapyard",
+  "24,16,-1": "apple_swamp",
+  "25,16,-1": "great_farm",
+  "26,16,-1": "bridge_of_blah",
 };
 
 export const worldData = {
@@ -108,6 +110,7 @@ export const worldData = {
   bridge_of_blah,
   mountain_pass,
   mountain_peak,
+  textlandia_entrance,
 };
 
 /**

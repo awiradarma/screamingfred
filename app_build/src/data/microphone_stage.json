@@ -115,6 +115,14 @@
           },
           {
             "stage": 5,
+            "text": "\"Wait, I almost forgot. A traveler dropped this shiny piece of metal earlier. It's incredibly reflective — perhaps you'll find a use for it!\"",
+            "onComplete": {
+              "action": "give_item",
+              "itemId": "item_shiny_reflector"
+            }
+          },
+          {
+            "stage": 6,
             "text": "\"The Mountains of Misery lie to the East. Go forth and sing your way to destiny!\"",
             "onComplete": {
               "action": "set_flag",
@@ -122,7 +130,7 @@
             }
           },
           {
-            "stage": 6,
+            "stage": 7,
             "text": "\"Your performance was... unforgettable, Fred. Truly. Now move along before I change my mind about your encore.\""
           }
         ]

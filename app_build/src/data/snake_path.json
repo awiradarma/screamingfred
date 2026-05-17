@@ -56,10 +56,10 @@
     },
     "item_potato_2": {
       "passable": true,
-      "description": "A potato is wedged between two jagged rocks. It's dusty but definitely a potato.",
+      "description": "A dense, rich potato is wedged between two jagged rocks. It's covered in rich forest soil.",
       "item": {
-        "name": "Rock Potato",
-        "itemId": "food_potato",
+        "name": "Forest Spud",
+        "itemId": "item_forest_spud",
         "actions": [
           "interact",
           "search"

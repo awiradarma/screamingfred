@@ -1,22 +1,47 @@
 {
   "room_id": "bridge_of_blah",
   "room_name": "Bridge of BLAAAAAAaaaah",
-  "world_coord": "26,16,0",
+  "world_coord": "26,16,-1",
   "description": "A 52-mile long bridge of brittle wood. You feel an overwhelming urge to say 'blah' every five minutes.",
   "onEnter": {
     "action": "remove_item",
     "itemId": "tool_magnifying_glass",
     "message": "Barry suddenly appears and snatches the Magnifying Glass! 'WHOOPS!' he screeches, dropping it into the Chasm of Chaos!"
   },
-  "player_start": { "x": 0, "y": 4 },
+  "player_start": {
+    "x": 1,
+    "y": 2
+  },
   "tiles": {
-    "▓": { "name": "Chasm of Chaos", "passable": false, "icon": " " },
-    "=": { "name": "Brittle Wood", "passable": true, "icon": "=", "description": "The wood creaks ominously." },
+    "W": {
+      "name": "West Pathway",
+      "passable": true,
+      "icon": "▙",
+      "description": "A stone archway leading back down to the Great Farm.",
+      "targetRoomId": "great_farm",
+      "targetPosition": {
+        "x": 3,
+        "y": 2
+      }
+    },
+    "▓": {
+      "name": "Chasm of Chaos",
+      "passable": false,
+      "icon": " "
+    },
+    "=": {
+      "name": "Brittle Wood",
+      "passable": true,
+      "icon": "=",
+      "description": "The wood creaks ominously."
+    },
     "B": {
       "name": "Barry",
       "passable": false,
       "icon": "🔋",
       "description": "Barry is blocking the way, looking smug.",
+      "hiddenIf": "barry_chasm",
+      "hiddenTileType": "=",
       "npc": {
         "name": "Barry",
         "dialogue": [
@@ -35,22 +60,27 @@
         ]
       }
     },
-    "E": { 
-      "name": "Exit", 
-      "passable": true, 
-      "icon": "▟", 
-      "targetRoomId": "endless_jumping", 
-      "conditions": { "requiredFlag": "barry_chasm" } 
+    "G": {
+      "name": "Locked Gate",
+      "passable": true,
+      "icon": "🚪",
+      "description": "A heavy iron gate blocks the way back to Shoeboxlandia. It requires Chapter 2 to open.",
+      "conditions": {
+        "requiredFlag": "chapter_2_unlocked",
+        "failMessage": "The gate is locked tight. The path to Shoeboxlandia will open in Chapter 2."
+      },
+      "targetRoomId": "shoeboxlandia_street",
+      "targetPosition": {
+        "x": 0,
+        "y": 3
+      }
     }
   },
   "grid": [
-    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
-    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
-    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
-    ["=", "=", "=", "=", "=", "B", "=", "E"],
-    ["=", "=", "=", "=", "=", "=", "=", "="],
-    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
-    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
-    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"]
+    ["▓", "▓", "▓", "▓", "▓"],
+    ["▓", "▓", "▓", "▓", "▓"],
+    ["▓", "W", "B", "G", "▓"],
+    ["▓", "▓", "▓", "▓", "▓"],
+    ["▓", "▓", "▓", "▓", "▓"]
   ]
 }

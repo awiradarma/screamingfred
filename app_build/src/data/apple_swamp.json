@@ -1,54 +1,107 @@
 {
   "room_id": "apple_swamp",
-  "room_name": "Great Humid Swamp",
-  "world_coord": "24,16,0",
-  "description": "The air is thick with orange fog. The water below is expired apple juice, with rotten cores floating lazily.",
-  "player_start": { "x": 0, "y": 4 },
+  "world_coord": "24,16,-1",
+  "room_name": "Apple Swamp",
+  "theme": "Swamp",
+  "description": "A murky, bubbling pool of expired apple juice and marsh weed. The air smells strongly of fermentation and vinegar.",
+  "grid": [
+    ["▓", "▓", "▓", "▓", "▓"],
+    ["▓", "~", "B", "~", "▓"],
+    ["▓", "W", "P", "E", "▓"],
+    ["▓", "~", "H", "~", "▓"],
+    ["▓", "▓", "▓", "▓", "▓"]
+  ],
+  "player_start": {
+    "x": 1,
+    "y": 2
+  },
   "tiles": {
-    "▓": { "name": "Thick Fog", "passable": false, "icon": "░" },
-    "~": { "name": "Apple Juice", "passable": false, "icon": "≈", "effect": "damage", "damageAmount": 2, "effectMessage": "The expired juice is acidic!" },
-    "B": {
-      "name": "Giant Banana",
+    "W": {
+      "name": "West Pathway",
+      "passable": true,
+      "icon": "▙",
+      "description": "A gate opening back to the Scary Scrapyard.",
+      "targetRoomId": "scary_scrapyard",
+      "targetPosition": {
+        "x": 3,
+        "y": 2
+      }
+    },
+    "▓": {
       "passable": false,
-      "icon": "🍌",
-      "description": "A giant banana claiming to be Fred from the future.",
+      "description": "Dense, tangled walls of swamp bramble and petrified apple branches."
+    },
+    ".": {
+      "passable": true,
+      "description": "Slightly muddy, sticky ground near the swamp edge."
+    },
+    "~": {
+      "passable": false,
+      "description": "Deep, bubbling pools of fermented apple juice. Far too sticky to walk through."
+    },
+    "B": {
+      "name": "Banana Bridge Builder NPC",
+      "passable": false,
+      "icon": "🐒",
+      "description": "A clever-looking monkey wearing overalls. He seems willing to help you cross for a fee.",
       "npc": {
-        "name": "Future Fred",
+        "name": "Banzo the Builder",
         "dialogue": [
           {
-            "id": "start",
-            "text": "Hello! I'm you from the future. I traveled back to help you cross this disgusting swamp.",
-            "options": [
-              { "text": "How do we cross?", "next": "cross" }
-            ]
+            "stage": 0,
+            "text": "\"Ah, travelers! You want to cross the apple juice swamp? It's extremely sticky. I can construct a sturdy bridge out of giant bananas, but it requires a lot of energy. Bring me some Spicy Noodles to keep me going!\"",
+            "hint": "Collect Spicy Noodles from the noodle factory."
           },
           {
-            "id": "cross",
-            "text": "I'll lay on my side. You can walk across me. Don't think about it too much.",
-            "onComplete": { "action": "set_flag", "flagSet": "banana_bridge" }
+            "stage": 1,
+            "text": "\"Do you have the Spicy Noodles? I'm starving!\" Banzo asks expectantly."
+          },
+          {
+            "stage": 2,
+            "text": "\"Mmm! These noodles have a serious kick!\" Banzo cheers as he devours them. In a flurry of motion, he lashes together massive bananas to form a bridge! \"There you go! Safely crossable!\"",
+            "requiresItem": "spicy_noodles",
+            "onComplete": {
+              "action": "set_flag",
+              "flagSet": "banana_bridge"
+            }
+          },
+          {
+            "stage": 3,
+            "text": "\"Have a safe trip across the Banana Bridge! And remember, starchy meals are the key to building speed!\" Banzo waves."
           }
         ]
       }
     },
-    "P": { "name": "Banana Bridge", "passable": true, "icon": "█", "description": "The back of a giant banana. It's surprisingly stable.", "condition": { "requiredFlag": "banana_bridge" } },
+    "P": {
+      "name": "Banana Bridge",
+      "passable": true,
+      "icon": "█",
+      "description": "The back of a giant banana. It's surprisingly stable.",
+      "conditions": {
+        "requiredFlag": "banana_bridge",
+        "failMessage": "There's only expired apple juice here. You need a way to cross!"
+      }
+    },
     "H": {
-      "name": "Dark Hollow",
+      "name": "Swamp Hollow",
       "passable": true,
       "icon": "🕳️",
-      "description": "A pitch-black hole in a giant rotten apple core. You can see something shimmering inside!",
-      "visibleIf": "corner_illuminated",
-      "item": { "itemId": "swamp_gem", "name": "Swamp Gem", "description": "A glowing gem found in the dark swamp." }
+      "description": "A hollow in a petrified tree trunk. Safe from the sticky mud."
     },
-    "E": { "name": "Exit", "passable": true, "icon": "▟", "targetRoomId": "great_farm" }
+    "E": {
+      "name": "Exit East",
+      "passable": true,
+      "icon": "▟",
+      "description": "A small mud trail leading out of the swamp towards a cultivated field.",
+      "targetRoomId": "great_farm",
+      "targetPosition": {
+        "x": 1,
+        "y": 2
+      }
+    }
   },
-  "grid": [
-    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
-    ["▓", "~", "~", "~", "~", "~", "H", "▓"],
-    ["▓", "~", "~", "~", "~", "~", "~", "▓"],
-    ["▓", "~", "P", "P", "P", "P", "E", "▓"],
-    [".", "P", "P", "B", "~", "~", "~", "▓"],
-    ["▓", "~", "~", "~", "~", "~", "~", "▓"],
-    ["▓", "~", "~", "~", "~", "~", "~", "▓"],
-    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"]
-  ]
+  "entities": [],
+  "state_flags": {
+    "banana_bridge": false
+  }
 }

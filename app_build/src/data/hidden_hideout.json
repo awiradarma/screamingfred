@@ -1,91 +1,90 @@
 {
   "room_id": "hidden_hideout",
+  "world_coord": "21,16,-1",
   "room_name": "Hidden Hideout",
-  "world_coord": "21,16,0",
-  "description": "A cramped underground bunker filled with strange machinery and cobwebs. The air smells of dust and old wood.",
-  "player_start": { "x": 1, "y": 7 },
+  "theme": "Underground",
+  "description": "A dust-choked chamber hidden beneath the base of the mountains. Laces hang from the stone ceiling like cobwebs. A dim light filters down from a hole in the ceiling above. Willy warned you not to enter, but here you are — Fred accidentally fell down the hole!",
+  "grid": [
+    ["▓", "▓", "▓", "▓", "▓"],
+    ["▓", "S", "exit_up", ".", "▓"],
+    ["▓", ".", "H", "E", "▓"],
+    ["▓", ".", ".", ".", "▓"],
+    ["▓", "▓", "▓", "▓", "▓"]
+  ],
+  "player_start": {
+    "x": 2,
+    "y": 2
+  },
   "tiles": {
-    "▓": { "name": "Stone Wall", "passable": false, "icon": "▓" },
-    ".": { "name": "Dusty Floor", "passable": true, "icon": " " },
-    "H": { "name": "Hole", "passable": true, "icon": "O", "description": "The hole you fell through. It's too high to climb back up." },
-    "S": { 
-      "name": "Sue & Saul", 
-      "passable": false, 
-      "icon": "✂", 
-      "description": "A sewing machine named Sue and a grunting saw named Saul.",
-      "npc": {
-        "name": "Sue",
-        "dialogue": [
-          {
-            "id": "start",
-            "text": "Oh! A visitor! I'm Sue, and this is Saul. He only grunts since he got stuck in wood.",
-            "options": [
-              { "text": "Have you seen a screaming shoe?", "next": "ask_fred" },
-              { "text": "What is this place?", "next": "about_place" }
-            ]
-          },
-          {
-            "id": "ask_fred",
-            "text": "A screaming shoe? Yes, we heard a loud scream in the west corridor. Poor thing sounded terrified.",
-            "options": [
-              { "text": "I need to find him!", "next": "find_fred" }
-            ]
-          },
-          {
-            "id": "about_place",
-            "text": "This is our hideout. We have a movie room, a shoe assassination chamber... don't question those.",
-            "options": [
-              { "text": "Understood.", "next": "start" }
-            ]
-          },
-          {
-            "id": "find_fred",
-            "text": "Go through the corridor to the west. Just be careful not to head to Creativity or the Unknown Lands!",
-            "onComplete": { "action": "set_flag", "flagSet": "sue_met" }
-          }
-        ]
+    "▓": {
+      "passable": false,
+      "description": "Raw, jagged stone walls that sweat cold mountain moisture."
+    },
+    ".": {
+      "passable": true,
+      "description": "Cold, damp stone floors covered in a layer of fine dust."
+    },
+    "S": {
+      "name": "Stash of Freddista",
+      "passable": true,
+      "icon": "📦",
+      "description": "A heavy wooden chest. Freddista's stash of stolen items.",
+      "item": {
+        "name": "Stolen Pasta",
+        "type": "pasta",
+        "description": "A box of dried spaghetti. It has Fred's name written on it in marker.",
+        "opened_description": "The chest is open, and all the stolen pasta is gone.",
+        "onUse": {
+          "action": "quest_progress",
+          "flagSet": "pasta_recovered",
+          "successMessage": "You recovered your stolen pasta! Freddista's crimes are laid bare!"
+        }
       }
     },
     "F": {
-      "name": "Fred",
+      "name": "Freddista's Stare",
       "passable": false,
-      "icon": "👞",
-      "description": "It's Fred! He looks a bit dusty but otherwise fine.",
-      "condition": { "requiredFlag": "sue_met" },
+      "icon": "👁️",
+      "description": "A chilling pair of eyes looking out from a dark portrait.",
       "npc": {
-        "name": "Fred",
+        "name": "Freddista",
         "dialogue": [
           {
-            "id": "start",
-            "text": "See? I told you it wasn't that large! I just slipped, that's all.",
-            "options": [
-              { "text": "Let's get out of here.", "next": "leave" }
-            ]
-          },
-          {
-            "id": "leave",
-            "text": "Right! Saul showed me the way out. Let's head back to the plains.",
-            "onComplete": { "action": "set_flag", "flagSet": "fred_recovered" }
+            "stage": 0,
+            "text": "\"Your screams... they echo... even here...\" whispers a voice from the shadows."
           }
         ]
       }
     },
-    "E": { 
-      "name": "Exit", 
-      "passable": true, 
-      "icon": "▟", 
+    "exit_up": {
+      "name": "Hole to the Surface",
+      "passable": true,
+      "icon": "🕳️",
+      "description": "A shaft of dim light from the Peak of Misery above. You could climb back up.",
+      "targetRoomId": "mountain_peak",
+      "targetPosition": {
+        "x": 2,
+        "y": 3
+      }
+    },
+    "H": {
+      "name": "Hideout Hearth",
+      "passable": true,
+      "icon": "🔥",
+      "description": "A cold stone fireplace. It hasn't been used in years."
+    },
+    "E": {
+      "name": "Escape Route",
+      "passable": true,
+      "icon": "▟",
+      "description": "A low-hanging crawlspace leading further East into the mountain roots.",
       "targetRoomId": "noodle_factory",
-      "conditions": { "requiredFlag": "fred_recovered", "failMessage": "We can't leave without Fred!" }
+      "targetPosition": {
+        "x": 1,
+        "y": 2
+      }
     }
   },
-  "grid": [
-    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
-    ["▓", ".", ".", ".", ".", ".", ".", "▓"],
-    ["▓", "F", ".", "▓", "▓", "▓", ".", "▓"],
-    ["▓", ".", ".", "▓", "E", "▓", ".", "▓"],
-    ["▓", ".", ".", "▓", ".", "▓", ".", "▓"],
-    ["▓", ".", "S", "▓", ".", ".", ".", "▓"],
-    ["▓", ".", ".", ".", ".", ".", ".", "▓"],
-    ["▓", "H", ".", "▓", "▓", "▓", "▓", "▓"]
-  ]
+  "entities": [],
+  "state_flags": {}
 }

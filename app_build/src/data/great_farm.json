@@ -1,29 +1,75 @@
 {
   "room_id": "great_farm",
+  "world_coord": "25,16,-1",
   "room_name": "The Great Farm",
-  "world_coord": "25,16,0",
-  "description": "The only farm in the world. It's surprisingly tiny and mostly filled with rotten produce.",
-  "player_start": { "x": 1, "y": 7 },
-  "tiles": {
-    "▓": { "name": "Wooden Wall", "passable": false, "icon": "▓" },
-    ".": { "name": "Dirt Floor", "passable": true, "icon": " " },
-    "R": { "name": "Rotten Produce", "passable": true, "icon": "🍅", "description": "It's completely rotten." },
-    "P": { 
-      "name": "Suitable Potato", 
-      "passable": true, 
-      "icon": "🥔", 
-      "item": { "itemId": "suitable_potato", "name": "Suitable Potato", "description": "A rare, non-rotten potato from the Great Farm." }
-    },
-    "E": { "name": "Exit", "passable": true, "icon": "▟", "targetRoomId": "bridge_of_blah" }
-  },
+  "theme": "Agricultural",
+  "description": "A subterranean farm under artificial sunlamps. Orderly rows of glowing root vegetables stretch out into the shadows.",
   "grid": [
-    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
-    ["▓", "R", ".", "R", ".", "P", ".", "▓"],
-    ["▓", ".", ".", ".", ".", ".", ".", "▓"],
-    ["▓", "R", ".", "R", ".", "R", ".", "▓"],
-    ["▓", ".", ".", ".", ".", ".", ".", "▓"],
-    ["▓", "R", ".", "R", ".", "R", "E", "▓"],
-    ["▓", ".", ".", ".", ".", ".", ".", "▓"],
-    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"]
-  ]
+    ["▓", "▓", "▓", "▓", "▓"],
+    ["▓", "R", ".", "P", "▓"],
+    ["▓", "W", "R", "E", "▓"],
+    ["▓", ".", ".", ".", "▓"],
+    ["▓", "▓", "▓", "▓", "▓"]
+  ],
+  "player_start": {
+    "x": 1,
+    "y": 2
+  },
+  "tiles": {
+    "W": {
+      "name": "West Pathway",
+      "passable": true,
+      "icon": "▙",
+      "description": "A small mud trail leading back to the Apple Swamp.",
+      "targetRoomId": "apple_swamp",
+      "targetPosition": {
+        "x": 3,
+        "y": 2
+      }
+    },
+    "▓": {
+      "passable": false,
+      "description": "Tall wooden fences and support beams keeping the mountain from collapsing."
+    },
+    ".": {
+      "passable": true,
+      "description": "Tilled soil that is warm and soft to step on."
+    },
+    "R": {
+      "name": "Rotten Produce",
+      "passable": true,
+      "icon": "🍄",
+      "description": "A heap of decaying agricultural waste. It smells strongly of mold."
+    },
+    "P": {
+      "name": "Suitable Potato",
+      "passable": true,
+      "icon": "🥔",
+      "description": "A highly prized, perfectly healthy subterranean potato growing in a special plot.",
+      "item": {
+        "name": "Suitable Potato",
+        "type": "quest",
+        "description": "A rare, non-rotten potato from the Great Farm. It looks almost too perfect.",
+        "opened_description": "The special plot has been harvested.",
+        "onUse": {
+          "action": "quest_progress",
+          "flagSet": "potato_acquired",
+          "successMessage": "You harvested a Suitable Potato! It's solid, clean, and highly nutritious."
+        }
+      }
+    },
+    "E": {
+      "name": "Exit East",
+      "passable": true,
+      "icon": "▟",
+      "description": "A tunnel exit that leads back up towards the surface bridge.",
+      "targetRoomId": "bridge_of_blah",
+      "targetPosition": {
+        "x": 1,
+        "y": 2
+      }
+    }
+  },
+  "entities": [],
+  "state_flags": {}
 }

@@ -1,70 +1,98 @@
 {
   "room_id": "scary_scrapyard",
+  "world_coord": "23,16,-1",
   "room_name": "Scary Scrapyard",
-  "world_coord": "23,16,0",
-  "description": "A desolate field of old cars and mechanical lamps. You feel like something is watching you from the shadows.",
-  "player_start": { "x": 1, "y": 1 },
+  "theme": "Industrial",
+  "description": "A dark yard piled high with discarded metal, old boots, and rusted cans. Sparks occasionally fly from exposed wires.",
+  "grid": [
+    ["▓", "▓", "▓", "▓", "▓"],
+    ["▓", "L", ".", "M", "▓"],
+    ["▓", "W", "C", "E", "▓"],
+    ["▓", ".", "B", ".", "▓"],
+    ["▓", "▓", "▓", "▓", "▓"]
+  ],
+  "player_start": {
+    "x": 1,
+    "y": 2
+  },
   "tiles": {
-    "▓": { "name": "Scrap Heap", "passable": false, "icon": "🚜" },
-    ".": { "name": "Oil-Stained Ground", "passable": true, "icon": " " },
-    "L": { "name": "Mechanical Lamp", "passable": false, "icon": "💡", "description": "A flickering mechanical lamp. It looks ancient." },
-    "M": {
-      "name": "Magnifying Glass",
+    "W": {
+      "name": "West Pathway",
+      "passable": true,
+      "icon": "▙",
+      "description": "A heavy metal door leading back to the Noodle Factory.",
+      "targetRoomId": "noodle_factory",
+      "targetPosition": {
+        "x": 3,
+        "y": 2
+      }
+    },
+    "▓": {
+      "passable": false,
+      "description": "Unstable mountains of compressed scrap metal that loom overhead."
+    },
+    ".": {
+      "passable": true,
+      "description": "Oil-stained ground littered with sharp metal shavings."
+    },
+    "L": {
+      "name": "Lost Lens",
       "passable": true,
       "icon": "🔍",
-      "item": { "itemId": "tool_magnifying_glass", "name": "Magnifying Glass", "description": "Willy's prized possession, recovered from the scrapyard." }
+      "description": "A small metallic compartment buried under a heap of broken gears.",
+      "item": {
+        "name": "Magnifying Lens",
+        "type": "quest",
+        "description": "A highly polished glass lens that focuses ambient light. Perfect for studying tiny details.",
+        "opened_description": "The compartment is empty.",
+        "onUse": {
+          "action": "quest_progress",
+          "flagSet": "lens_acquired",
+          "successMessage": "You found a Magnifying Lens! Combined with a frame, it might make a useful tool."
+        }
+      }
     },
-    "B": {
-      "name": "Broken Sorter",
+    "M": {
+      "name": "Metal Heap",
       "passable": true,
-      "icon": "⚙️",
-      "description": "A massive machine for sorting scrap. It's jammed with cutlery.",
-      "visibleIf": "machinery_detected",
-      "conditions": {
-        "requiredFlag": "master_tinkerer_check",
-        "failMessage": "The machine is far too complex for a normal shoe to fix. If only you were a Master Tinkerer..."
+      "icon": "📦",
+      "description": "A pile of discarded brass and iron scraps.",
+      "item": {
+        "name": "Sturdy Brass Frame",
+        "type": "quest",
+        "description": "A heavy frame crafted from antique brass. It has a circular opening in the center.",
+        "opened_description": "The heap has been searched.",
+        "onUse": {
+          "action": "quest_progress",
+          "flagSet": "frame_acquired",
+          "successMessage": "You salvaged a Sturdy Brass Frame! It looks like a handle or support of some kind."
+        }
       }
     },
     "C": {
-      "name": "Cutlery Monster",
+      "name": "Compact Crusher",
       "passable": false,
-      "icon": "🍴",
-      "description": "A terrifying mass of forks, knives, and spoons!",
-      "visibleIf": "life_form_detected",
-      "npc": {
-        "name": "Cutlery Monster",
-        "dialogue": [
-          {
-            "id": "start",
-            "text": "CLANK! CLATTER! (It's about to slice you to shoelaces!)",
-            "options": [
-              { "text": "RUN!", "next": "run" }
-            ]
-          },
-          {
-            "id": "run",
-            "text": "You barely escape the creature's reach!",
-            "onComplete": { "action": "set_flag", "flagSet": "monster_escaped" }
-          }
-        ]
-      }
+      "icon": "⚙️",
+      "description": "A slow-moving piston that periodically crushes heaps of junk."
     },
-    "E": { 
-      "name": "Exit", 
-      "passable": true, 
-      "icon": "▟", 
+    "B": {
+      "name": "Broken Boiler",
+      "passable": true,
+      "icon": "🌋",
+      "description": "An old steam boiler that has cold ash spilling out of its furnace."
+    },
+    "E": {
+      "name": "Exit East",
+      "passable": true,
+      "icon": "▟",
+      "description": "A heavy metal security gate that creaks open just enough to pass.",
       "targetRoomId": "apple_swamp",
-      "conditions": { "requiredItem": "tool_magnifying_glass" }
+      "targetPosition": {
+        "x": 1,
+        "y": 2
+      }
     }
   },
-  "grid": [
-    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
-    ["▓", ".", ".", "L", ".", ".", "M", "▓"],
-    ["▓", ".", "▓", "▓", "▓", ".", ".", "▓"],
-    ["▓", "B", "▓", "C", "▓", ".", ".", "▓"],
-    ["▓", ".", "▓", ".", "▓", ".", ".", "▓"],
-    ["▓", "L", ".", ".", ".", ".", "E", "▓"],
-    ["▓", ".", ".", ".", ".", ".", ".", "▓"],
-    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"]
-  ]
+  "entities": [],
+  "state_flags": {}
 }

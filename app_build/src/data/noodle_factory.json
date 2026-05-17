@@ -1,63 +1,96 @@
 {
   "room_id": "noodle_factory",
-  "room_name": "Great Noodle Factory",
-  "world_coord": "22,16,0",
-  "description": "A pasta paradise! Shelves are lined with ramen, Mac and Cheese, and Indomie. The air is thick with the scent of boiling wheat.",
-  "player_start": { "x": 1, "y": 7 },
+  "world_coord": "22,16,-1",
+  "room_name": "Mysterious Noodle Factory",
+  "theme": "Industrial",
+  "description": "A complex network of steam pipes and assembly lines producing... pasta? The air is warm and smells faintly of garlic.",
+  "grid": [
+    ["▓", "▓", "▓", "▓", "▓"],
+    ["▓", "N", ".", "H", "▓"],
+    ["▓", "W", "B", "T", "▓"],
+    ["▓", "J", ".", "J", "▓"],
+    ["▓", "▓", "▓", "▓", "▓"]
+  ],
+  "player_start": {
+    "x": 1,
+    "y": 2
+  },
   "tiles": {
-    "▓": { "name": "Pasta Wall", "passable": false, "icon": "▓" },
-    ".": { "name": "Polished Floor", "passable": true, "icon": " " },
-    "J": { "name": "Jelly Floor", "passable": true, "icon": "🍮", "effect": "launch", "description": "A jiggly, jelly-like surface. Stepping here might launch you!" },
-    "N": { 
-      "name": "Spicy Noodles", 
-      "passable": true, 
-      "icon": "🍜", 
-      "item": { "itemId": "spicy_noodles", "name": "Spicy Noodles", "description": "Exotic and very spicy noodles from the factory." }
+    "W": {
+      "name": "West Pathway",
+      "passable": true,
+      "icon": "▙",
+      "description": "A dark crawlspace leading back to the Hidden Hideout.",
+      "targetRoomId": "hidden_hideout",
+      "targetPosition": {
+        "x": 3,
+        "y": 2
+      }
     },
-    "B": {
-      "name": "Deformed Barry",
+    "▓": {
       "passable": false,
-      "icon": "🔋",
-      "description": "It's Barry, but he looks half-melted and sparking with rage!",
+      "description": "Thick steel-plated walls that vibrate with heavy machinery."
+    },
+    ".": {
+      "passable": true,
+      "description": "Polished metal floor plates, slightly slippery from condensation."
+    },
+    "N": {
+      "name": "Noodle Vats",
+      "passable": true,
+      "icon": "🍜",
+      "description": "Giant boiling vats of starchy broth and noodles.",
+      "item": {
+        "name": "Spicy Noodles",
+        "type": "quest",
+        "description": "Exotic and very spicy noodles from the factory. Hot enough to melt ice!",
+        "opened_description": "The vats are boiling, but no more spicy noodles can be safely scooped.",
+        "onUse": {
+          "action": "quest_progress",
+          "flagSet": "noodle_acquired",
+          "successMessage": "You collected some Spicy Noodles! The fiery aroma makes your eyes water!"
+        }
+      }
+    },
+    "H": {
+      "name": "Noodle Maker NPC",
+      "passable": false,
+      "icon": "👨‍🍳",
+      "description": "A chef wearing a white hat, frantically stirring a pot.",
       "npc": {
-        "name": "Barry",
+        "name": "Chef Tortellini",
         "dialogue": [
           {
-            "id": "start",
-            "text": "YOU WON'T GET AWAY WITH THIS! TAKE A SEAT IN THE SCRAPYARD!",
-            "onComplete": { "action": "set_flag", "flagSet": "barry_factory_encounter" }
+            "stage": 0,
+            "text": "\"The recipe must be exact! No mistakes! Starch is the secret to all life!\" Chef Tortellini shouts frantically."
           }
         ]
       }
     },
-    "T": {
-      "name": "Scrapyard Portal",
+    "B": {
+      "name": "Assembly Line Belt",
       "passable": true,
-      "icon": "🌀",
-      "targetRoomId": "scary_scrapyard",
-      "conditions": { "requiredFlag": "barry_factory_encounter" }
+      "icon": "⚙️",
+      "description": "A mechanical conveyor belt transporting uncooked pasta shapes."
     },
-    "H": {
-      "name": "Maintenance Hatch",
+    "J": {
+      "name": "Jammed Valve",
+      "passable": false,
+      "icon": "🔧",
+      "description": "A large steam valve that has rusted shut. It refuses to turn."
+    },
+    "T": {
+      "name": "Pneumatic Tube Portal",
       "passable": true,
-      "icon": "🚪",
-      "description": "A heavy metal hatch. It looks like it hasn't been opened in years.",
-      "visibleIf": "machinery_detected",
-      "conditions": {
-        "requiredFlag": "master_tinkerer_check",
-        "failMessage": "The hatch is stuck tight. You need specialized knowledge to open this without a key."
-      },
-      "item": { "itemId": "factory_blueprints", "name": "Factory Blueprints", "description": "Detailed blueprints of the Noodle Factory. Very valuable!" }
+      "icon": "▟",
+      "description": "A giant pneumatic transport tube. It seems to lead to a different part of the facility.",
+      "targetRoomId": "scary_scrapyard",
+      "targetPosition": {
+        "x": 1,
+        "y": 2
+      }
     }
   },
-  "grid": [
-    ["▓", "▓", "▓", "▓", "▓", "▓", "▓", "▓"],
-    ["▓", ".", ".", "N", ".", ".", "H", "▓"],
-    ["▓", ".", "J", "J", "J", ".", ".", "▓"],
-    ["▓", ".", "J", ".", "J", ".", ".", "▓"],
-    ["▓", ".", "J", "J", "J", "B", ".", "▓"],
-    ["▓", ".", ".", ".", ".", ".", "T", "▓"],
-    ["▓", ".", ".", ".", ".", ".", ".", "▓"],
-    ["▓", ".", ".", ".", ".", ".", ".", "▓"]
-  ]
+  "entities": [],
+  "state_flags": {}
 }

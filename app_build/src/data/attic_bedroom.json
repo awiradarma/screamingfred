@@ -16,7 +16,7 @@
       "wall",
       "item_photo",
       "floor",
-      "floor",
+      "item_magnifying_lens",
       "wall"
     ],
     [
@@ -89,6 +89,18 @@
       "description": "An old, dusty photo lying face down on the floor.",
       "item": {
         "itemId": "flavor_photo",
+        "actions": [
+          "interact",
+          "search"
+        ]
+      }
+    },
+    "item_magnifying_lens": {
+      "passable": true,
+      "description": "A highly polished magnifying lens is catching the sliver of moonlight.",
+      "item": {
+        "name": "Magnifying Lens",
+        "itemId": "item_magnifying_lens",
         "actions": [
           "interact",
           "search"
