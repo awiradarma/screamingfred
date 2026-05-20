@@ -1004,36 +1004,88 @@ function handleScream(state, messages, globalItems = {}) {
 
     if (currentStage?.requiresScream) {
       const nextStageIdx = Math.min(currentStageIdx + 1, dialogueStages.length - 1);
-      newState = {
-        ...newState,
-        npcStages: { ...newState.npcStages, [npcKey]: nextStageIdx }
-      };
       
-      // Handle special flags or items from the next stage immediately
+      let finalFlags = { ...newState.stateFlags };
+      let finalInventory = [...newState.inventory];
+      let finalNpcStages = {
+        ...newState.npcStages,
+        [npcKey]: Math.min(nextStageIdx + 1, dialogueStages.length - 1)
+      };
+
+      const giveReward = (item, sourceName, uniqueKey) => {
+        if (!finalFlags[uniqueKey]) {
+          finalInventory.push(item);
+          finalFlags[uniqueKey] = true;
+          messages.push({ 
+            text: `🎁 ${sourceName} gave you: ${item.name}!`, 
+            type: 'loot' 
+          });
+          return true;
+        }
+        return false;
+      };
+
       const nextStage = dialogueStages[nextStageIdx];
+
+      // Handle Rewards (New format: givesItem)
+      if (nextStage.givesItem) {
+        const rewardKey = `reward_${npcKey}_stage${nextStageIdx}_item`;
+        giveReward(
+          { ...nextStage.givesItem },
+          tileData.name || tileData.npc.name,
+          rewardKey
+        );
+      }
+
+      // Handle onComplete actions (Standard format)
       if (nextStage.onComplete) {
         const { action, itemId, flagSet, value, effect } = nextStage.onComplete;
+        
         if (action === 'give_item' && itemId && globalItems[itemId]) {
-          newState.inventory = [...newState.inventory, { ...globalItems[itemId], itemId }];
-          messages.push({ text: `🎁 ${tileData.npc.name} gave you: ${globalItems[itemId].name}!`, type: 'loot' });
+          const rewardKey = `reward_${npcKey}_stage${nextStageIdx}_${itemId}`;
+          giveReward(
+            { ...globalItems[itemId], itemId },
+            tileData.name || tileData.npc.name,
+            rewardKey
+          );
         }
         if (action === 'remove_item' && itemId) {
-          newState.inventory = newState.inventory.filter(i => i.itemId !== itemId && i.name !== itemId);
+          finalInventory = finalInventory.filter(i => i.itemId !== itemId && i.name !== itemId);
           const itemName = globalItems[itemId]?.name || itemId;
           messages.push({ text: `The ${itemName} has been taken!`, type: 'warning' });
         }
         if (action === 'set_flag' && flagSet) {
-          newState.stateFlags = { ...newState.stateFlags, [flagSet]: true };
+          finalFlags[flagSet] = true;
         }
         if (action === 'damage_player' && value) {
-          modifyPlayerHP(newState, -value, messages);
+          let finalDamage = value;
+          if (newState.abilities?.some(a => a.id === 'bio_synthesizer')) {
+             finalDamage = Math.max(1, finalDamage - 1);
+             messages.push({ text: `✨ Your Bio-Synthesizer absorbed some of the impact!`, type: 'narrative' });
+          }
+          modifyPlayerHP(newState, -finalDamage, messages);
         }
         if (action === 'apply_effect_to_player' && effect) {
           if (!newState.activeEffects) newState.activeEffects = [];
-          newState.activeEffects = [...newState.activeEffects, { ...effect }];
-          messages.push({ text: `⚠️ You are afflicted by ${effect.name}!`, type: 'danger' });
+          const alreadyActive = newState.activeEffects.some(e => e.type === effect.type);
+          if (!alreadyActive) {
+            newState.activeEffects = [...newState.activeEffects, { ...effect }];
+            messages.push({ text: `⚠️ You are afflicted by ${effect.name}! (${effect.duration} turns)`, type: 'danger' });
+          }
         }
       }
+
+      // Handle direct setFlag
+      if (nextStage.setFlag) {
+        finalFlags[nextStage.setFlag] = true;
+      }
+
+      newState = {
+        ...newState,
+        inventory: finalInventory,
+        stateFlags: finalFlags,
+        npcStages: finalNpcStages,
+      };
 
       messages.push({ text: getNPCDialogue(tileData.npc, nextStageIdx), type: 'dialogue' });
     }
@@ -1107,7 +1159,20 @@ function handleInventory(state, messages) {
   if (state.inventory.length === 0) {
     messages.push({ text: 'Your pockets are empty. Fred\'s pasta and potatoes are still missing.', type: 'system' });
   } else {
-    const items = state.inventory.map(i => `  • ${i.name} (${i.type}): ${i.description || 'No description available.'}`).join('\n');
+    const grouped = [];
+    state.inventory.forEach(item => {
+      const existing = grouped.find(g => g.name === item.name);
+      if (existing) {
+        existing.count += 1;
+      } else {
+        grouped.push({ ...item, count: 1 });
+      }
+    });
+
+    const items = grouped.map(i => {
+      const countStr = i.count > 1 ? ` (x${i.count})` : '';
+      return `  • ${i.name}${countStr} (${i.type}): ${i.description || 'No description available.'}`;
+    }).join('\n');
     messages.push({ text: `Inventory:\n${items}`, type: 'system' });
   }
   return { state, messages };

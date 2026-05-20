@@ -20,6 +20,16 @@ export default function PlayerHUD({ playerHP, maxHP, inventory, position, roomNa
     (i.type === 'food' || i.type === 'potato') && !i.name?.toLowerCase().includes('pasta')
   ).length;
 
+  const groupedInventory = [];
+  inventory.forEach(item => {
+    const existing = groupedInventory.find(g => g.name === item.name);
+    if (existing) {
+      existing.count += 1;
+    } else {
+      groupedInventory.push({ ...item, count: 1 });
+    }
+  });
+
   const handleItemClick = (item) => {
     if (onCommand) {
       onCommand(`use ${item.name}`);
@@ -86,10 +96,10 @@ export default function PlayerHUD({ playerHP, maxHP, inventory, position, roomNa
               ) : (
                 <>
                   <div className="inventory-category-header">Usables</div>
-                  {inventory.filter(i => i.onUse || ['food', 'potion', 'tool', 'pasta', 'potato', 'weapon', 'drink'].includes(i.type)).length === 0 && (
+                  {groupedInventory.filter(i => i.onUse || ['food', 'potion', 'tool', 'pasta', 'potato', 'weapon', 'drink'].includes(i.type)).length === 0 && (
                     <div className="selector-empty">No usable items.</div>
                   )}
-                  {inventory
+                  {groupedInventory
                     .filter(i => i.onUse || ['food', 'potion', 'tool', 'pasta', 'potato', 'weapon', 'drink'].includes(i.type))
                     .map((item, idx) => {
                       const isExpanded = expandedKey === `usable-${idx}`;
@@ -103,7 +113,9 @@ export default function PlayerHUD({ playerHP, maxHP, inventory, position, roomNa
                           <div className="selector-item-header" style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%' }}>
                             <span className="selector-item-icon">{getItemIcon(item.type, item.name)}</span>
                             <div className="selector-item-info">
-                              <span className="selector-item-name">{item.name}</span>
+                              <span className="selector-item-name">
+                                {item.name} {item.count > 1 ? `(x${item.count})` : ''}
+                              </span>
                               <span className="selector-item-type">{item.type}</span>
                             </div>
                             {item.onUse && <span className="use-hint" title="Can be used">⚡</span>}
@@ -132,10 +144,10 @@ export default function PlayerHUD({ playerHP, maxHP, inventory, position, roomNa
                     })}
                   
                   <div className="inventory-category-header" style={{ marginTop: '10px' }}>Conquest & Lore</div>
-                  {inventory.filter(i => !i.onUse && !['food', 'potion', 'tool', 'pasta', 'potato', 'weapon', 'drink'].includes(i.type)).length === 0 && (
+                  {groupedInventory.filter(i => !i.onUse && !['food', 'potion', 'tool', 'pasta', 'potato', 'weapon', 'drink'].includes(i.type)).length === 0 && (
                     <div className="selector-empty">No conquest items.</div>
                   )}
-                  {inventory
+                  {groupedInventory
                     .filter(i => !i.onUse && !['food', 'potion', 'tool', 'pasta', 'potato', 'weapon', 'drink'].includes(i.type))
                     .map((item, idx) => {
                       const isExpanded = expandedKey === `conquest-${idx}`;
@@ -149,7 +161,9 @@ export default function PlayerHUD({ playerHP, maxHP, inventory, position, roomNa
                           <div className="selector-item-header" style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%' }}>
                             <span className="selector-item-icon">{getItemIcon(item.type, item.name)}</span>
                             <div className="selector-item-info">
-                              <span className="selector-item-name">{item.name}</span>
+                              <span className="selector-item-name">
+                                {item.name} {item.count > 1 ? `(x${item.count})` : ''}
+                              </span>
                               <span className="selector-item-type">{item.type}</span>
                             </div>
                             <span className="expand-indicator" style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginLeft: 'auto' }}>

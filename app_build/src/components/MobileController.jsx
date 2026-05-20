@@ -8,31 +8,41 @@ import { getAvailableActions } from '../engine/roomEngine';
  * MobileController — Floating touch controls for movement and actions.
  * Only visible on small screens.
  */
+const checkBlocking = (lastActionTimeRef, update = true) => {
+  const now = Date.now();
+  if (now - lastActionTimeRef.current < 150) return true;
+  if (update) lastActionTimeRef.current = now;
+  return false;
+};
+
 export default function MobileController({ onSubmit, disabled }) {
   const [showActions, setShowActions] = useState(false);
   const [showItemSelection, setShowItemSelection] = useState(false);
   const { gameState } = useStore();
   const inventory = gameState?.inventory || [];
   
+  const groupedInventory = [];
+  inventory.forEach(item => {
+    const existing = groupedInventory.find(g => g.name === item.name);
+    if (existing) {
+      existing.count += 1;
+    } else {
+      groupedInventory.push({ ...item, count: 1 });
+    }
+  });
+  
   // Track last interaction time to prevent ghost clicks/rapid fire
   const lastActionTime = useRef(0);
-  const isBlocking = (update = true) => {
-    const now = Date.now();
-    // Reduced delay slightly for better feel, but still prevents ghost taps
-    if (now - lastActionTime.current < 150) return true;
-    if (update) lastActionTime.current = now;
-    return false;
-  };
 
   const handleMove = (dir) => {
-    if (disabled || isBlocking(true)) return;
+    if (disabled || checkBlocking(lastActionTime, true)) return;
     onSubmit(dir);
     setShowActions(false);
     setShowItemSelection(false);
   };
 
   const handleAction = (action) => {
-    if (disabled || isBlocking()) return;
+    if (disabled || checkBlocking(lastActionTime)) return;
     
     if (action === 'use') {
       if (inventory.length === 0) {
@@ -49,7 +59,7 @@ export default function MobileController({ onSubmit, disabled }) {
   };
 
   const handleUseItem = (item) => {
-    if (disabled || isBlocking()) return;
+    if (disabled || checkBlocking(lastActionTime)) return;
     onSubmit(`use ${item.name}`);
     setShowActions(false);
     setShowItemSelection(false);
@@ -58,7 +68,7 @@ export default function MobileController({ onSubmit, disabled }) {
   const toggleActions = (e) => {
     e.stopPropagation();
     // Don't update the timer for menu toggles, just check it
-    if (disabled || isBlocking(false)) return;
+    if (disabled || checkBlocking(lastActionTime, false)) return;
     
     if (showItemSelection) {
       setShowItemSelection(false);
@@ -114,16 +124,16 @@ export default function MobileController({ onSubmit, disabled }) {
       <div className={`action-menu item-selection-menu ${showItemSelection ? 'is-visible' : ''}`}>
         <div className="menu-header">Use what?</div>
         <div className="item-list-scroll">
-          {inventory.map((item, idx) => (
+          {groupedInventory.map((item, idx) => (
             <button
-              key={`${item.itemId}-${idx}`}
+              key={`${item.itemId || item.name}-${idx}`}
               className="action-btn item-btn"
               onClick={(e) => {
                 e.stopPropagation();
                 handleUseItem(item);
               }}
             >
-              <span className="action-label">{item.name}</span>
+              <span className="action-label">{item.name}{item.count > 1 ? ` (x${item.count})` : ''}</span>
             </button>
           ))}
         </div>
