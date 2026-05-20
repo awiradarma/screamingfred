@@ -824,7 +824,7 @@ function handleTalk(state, messages, globalItems = {}) {
   const dialogueStages = npcData.dialogue || [];
   
   if (dialogueStages.length === 0) {
-    messages.push({ text: '"..."', type: 'dialogue' });
+    messages.push({ text: '"..."', type: 'dialogue', speaker: npcData.name || npcData.id || tileData.name });
     return { state, messages };
   }
 
@@ -850,7 +850,7 @@ function handleTalk(state, messages, globalItems = {}) {
     }
   }
 
-  messages.push({ text: bestStage.text || '...', type: 'dialogue' });
+  messages.push({ text: bestStage.text || '...', type: 'dialogue', speaker: npcData.name || npcData.id || tileData.name });
   if (bestStage.hint) {
     messages.push({ text: `💡 ${bestStage.hint}`, type: 'hint' });
   }
@@ -1087,7 +1087,7 @@ function handleScream(state, messages, globalItems = {}) {
         npcStages: finalNpcStages,
       };
 
-      messages.push({ text: getNPCDialogue(tileData.npc, nextStageIdx), type: 'dialogue' });
+      messages.push({ text: getNPCDialogue(tileData.npc, nextStageIdx), type: 'dialogue', speaker: tileData.npc.name || tileData.npc.id || tileData.name });
     }
   }
 

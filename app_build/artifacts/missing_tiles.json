@@ -1,0 +1,453 @@
+{
+  "▓": {
+    "files": [
+      "apple_swamp.json",
+      "bridge_of_blah.json",
+      "great_farm.json",
+      "hidden_hideout.json",
+      "noodle_factory.json",
+      "scary_scrapyard.json"
+    ],
+    "meta": {
+      "passable": false,
+      "description": "Unstable mountains of compressed scrap metal that loom overhead."
+    }
+  },
+  "~": {
+    "files": [
+      "apple_swamp.json"
+    ],
+    "meta": {
+      "passable": false,
+      "description": "Deep, bubbling pools of fermented apple juice. Far too sticky to walk through."
+    }
+  },
+  "B": {
+    "files": [
+      "apple_swamp.json",
+      "bridge_of_blah.json",
+      "noodle_factory.json",
+      "scary_scrapyard.json"
+    ],
+    "meta": {
+      "name": "Broken Boiler",
+      "passable": true,
+      "icon": "🌋",
+      "description": "An old steam boiler that has cold ash spilling out of its furnace."
+    }
+  },
+  "W": {
+    "files": [
+      "apple_swamp.json",
+      "bridge_of_blah.json",
+      "great_farm.json",
+      "noodle_factory.json",
+      "scary_scrapyard.json"
+    ],
+    "meta": {
+      "name": "West Pathway",
+      "passable": true,
+      "icon": "▙",
+      "description": "A heavy metal door leading back to the Noodle Factory.",
+      "targetRoomId": "noodle_factory",
+      "targetPosition": {
+        "x": 3,
+        "y": 2
+      }
+    }
+  },
+  "P": {
+    "files": [
+      "apple_swamp.json",
+      "great_farm.json"
+    ],
+    "meta": {
+      "name": "Suitable Potato",
+      "passable": true,
+      "icon": "🥔",
+      "description": "A highly prized, perfectly healthy subterranean potato growing in a special plot.",
+      "item": {
+        "name": "Suitable Potato",
+        "type": "quest",
+        "description": "A rare, non-rotten potato from the Great Farm. It looks almost too perfect.",
+        "opened_description": "The special plot has been harvested.",
+        "onUse": {
+          "action": "quest_progress",
+          "flagSet": "potato_acquired",
+          "successMessage": "You harvested a Suitable Potato! It's solid, clean, and highly nutritious."
+        }
+      }
+    }
+  },
+  "E": {
+    "files": [
+      "apple_swamp.json",
+      "great_farm.json",
+      "hidden_hideout.json",
+      "scary_scrapyard.json"
+    ],
+    "meta": {
+      "name": "Exit East",
+      "passable": true,
+      "icon": "▟",
+      "description": "A heavy metal security gate that creaks open just enough to pass.",
+      "targetRoomId": "apple_swamp",
+      "targetPosition": {
+        "x": 1,
+        "y": 2
+      }
+    }
+  },
+  "H": {
+    "files": [
+      "apple_swamp.json",
+      "electric_desert_entrance.json",
+      "hidden_hideout.json",
+      "noodle_factory.json"
+    ],
+    "meta": {
+      "name": "Noodle Maker NPC",
+      "passable": false,
+      "icon": "👨‍🍳",
+      "description": "A chef wearing a white hat, frantically stirring a pot.",
+      "npc": {
+        "name": "Chef Tortellini",
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "\"The recipe must be exact! No mistakes! Starch is the secret to all life!\" Chef Tortellini shouts frantically."
+          }
+        ]
+      }
+    }
+  },
+  "G": {
+    "files": [
+      "bridge_of_blah.json"
+    ],
+    "meta": {
+      "name": "Locked Gate",
+      "passable": true,
+      "icon": "🚪",
+      "description": "A heavy iron gate blocks the way back to Shoeboxlandia. It requires Chapter 2 to open.",
+      "conditions": {
+        "requiredFlag": "chapter_2_unlocked",
+        "failMessage": "The gate is locked tight. The path to Shoeboxlandia will open in Chapter 2."
+      },
+      "targetRoomId": "shoeboxlandia_street",
+      "targetPosition": {
+        "x": 0,
+        "y": 3
+      }
+    }
+  },
+  "ground": {
+    "files": [
+      "forest_creek.json",
+      "forest_exit.json",
+      "forest_thicket.json"
+    ],
+    "meta": {
+      "passable": true,
+      "description": "A floor of dried leaves and leather scraps."
+    }
+  },
+  "?": {
+    "files": [
+      "forest_deep.json"
+    ],
+    "meta": {
+      "name": "Dark Corner",
+      "passable": true,
+      "icon": " ",
+      "description": "A very dark corner. You can't see anything here.",
+      "visibleIf": "corner_illuminated",
+      "hiddenTileType": "wall",
+      "item": {
+        "name": "Hidden Message",
+        "itemId": "quest_note_forest",
+        "description": "A wet note stuck to the wall. It says: 'The path to the desert is guarded by a battery. Bring something shiny.'",
+        "actions": [
+          "interact",
+          "search"
+        ]
+      }
+    }
+  },
+  "lint_moss": {
+    "files": [
+      "forest_entrance.json"
+    ],
+    "meta": {
+      "passable": true,
+      "description": "A soft, springy layer of lint moss."
+    }
+  },
+  "marsh_ground": {
+    "files": [
+      "forest_marsh.json"
+    ],
+    "meta": {
+      "passable": true,
+      "description": "Soggy, yielding lint-marsh."
+    }
+  },
+  "edge_n": {
+    "files": [
+      "freddista_shack.json",
+      "neighbors_house.json",
+      "shoeboxlandia_street.json",
+      "snake_path.json"
+    ],
+    "meta": {
+      "passable": true,
+      "description": "The path leads back north toward the forest thicket.",
+      "targetRoomId": "forest_thicket",
+      "targetPosition": {
+        "x": 2,
+        "y": 4
+      }
+    }
+  },
+  "R": {
+    "files": [
+      "great_farm.json"
+    ],
+    "meta": {
+      "name": "Rotten Produce",
+      "passable": true,
+      "icon": "🍄",
+      "description": "A heap of decaying agricultural waste. It smells strongly of mold."
+    }
+  },
+  ".": {
+    "files": [
+      "great_farm.json",
+      "hidden_hideout.json",
+      "noodle_factory.json",
+      "scary_scrapyard.json"
+    ],
+    "meta": {
+      "passable": true,
+      "description": "Oil-stained ground littered with sharp metal shavings."
+    }
+  },
+  "S": {
+    "files": [
+      "hidden_hideout.json"
+    ],
+    "meta": {
+      "name": "Stash of Freddista",
+      "passable": true,
+      "icon": "📦",
+      "description": "A heavy wooden chest. Freddista's stash of stolen items.",
+      "item": {
+        "name": "Stolen Pasta",
+        "type": "pasta",
+        "description": "A box of dried spaghetti. It has Fred's name written on it in marker.",
+        "opened_description": "The chest is open, and all the stolen pasta is gone.",
+        "onUse": {
+          "action": "quest_progress",
+          "flagSet": "pasta_recovered",
+          "successMessage": "You recovered your stolen pasta! Freddista's crimes are laid bare!"
+        }
+      }
+    }
+  },
+  "peak_telescope": {
+    "files": [
+      "mountain_peak.json"
+    ],
+    "meta": {
+      "name": "Battered Telescope",
+      "passable": true,
+      "icon": "🔭",
+      "description": "A telescope pointing toward the horizon.",
+      "onInteract": "You look through the telescope. You see the far-off lands of Textlandia, where words have weight and commas are sharp."
+    }
+  },
+  "hideout_hole": {
+    "files": [
+      "mountain_peak.json"
+    ],
+    "meta": {
+      "name": "Dark Hole",
+      "passable": true,
+      "icon": "🕳️",
+      "description": "A gaping hole in the mountain floor. You can hear echoes from below. Willy warned you not to go in... but the path forward lies through the depths.",
+      "targetRoomId": "hidden_hideout",
+      "targetPosition": {
+        "x": 2,
+        "y": 2
+      }
+    }
+  },
+  "N": {
+    "files": [
+      "noodle_factory.json"
+    ],
+    "meta": {
+      "name": "Noodle Vats",
+      "passable": true,
+      "icon": "🍜",
+      "description": "Giant boiling vats of starchy broth and noodles.",
+      "item": {
+        "name": "Spicy Noodles",
+        "type": "quest",
+        "description": "Exotic and very spicy noodles from the factory. Hot enough to melt ice!",
+        "opened_description": "The vats are boiling, but no more spicy noodles can be safely scooped.",
+        "onUse": {
+          "action": "quest_progress",
+          "flagSet": "noodle_acquired",
+          "successMessage": "You collected some Spicy Noodles! The fiery aroma makes your eyes water!"
+        }
+      }
+    }
+  },
+  "T": {
+    "files": [
+      "noodle_factory.json"
+    ],
+    "meta": {
+      "name": "Pneumatic Tube Portal",
+      "passable": true,
+      "icon": "▟",
+      "description": "A giant pneumatic transport tube. It seems to lead to a different part of the facility.",
+      "targetRoomId": "scary_scrapyard",
+      "targetPosition": {
+        "x": 1,
+        "y": 2
+      }
+    }
+  },
+  "J": {
+    "files": [
+      "noodle_factory.json"
+    ],
+    "meta": {
+      "name": "Jammed Valve",
+      "passable": false,
+      "icon": "🔧",
+      "description": "A large steam valve that has rusted shut. It refuses to turn."
+    }
+  },
+  "bacon_strip": {
+    "files": [
+      "path_to_breakfastopia.json"
+    ],
+    "meta": {
+      "passable": true,
+      "description": "A piece of bacon lies on the ground, baking in the sun.",
+      "interactionVerb": "EAT",
+      "item": {
+        "contains": {
+          "name": "Concrete Bacon",
+          "type": "food"
+        },
+        "onCollect": "You try a bite... BLERGH! It tastes like concrete! Freddista gives you a disgusted look. \"You do know those have been out in the sun and been stepped on right?\"",
+        "setFlag": "tasted_bacon"
+      }
+    }
+  },
+  "L": {
+    "files": [
+      "scary_scrapyard.json"
+    ],
+    "meta": {
+      "name": "Lost Lens",
+      "passable": true,
+      "icon": "🔍",
+      "description": "A small metallic compartment buried under a heap of broken gears.",
+      "item": {
+        "name": "Magnifying Lens",
+        "type": "quest",
+        "description": "A highly polished glass lens that focuses ambient light. Perfect for studying tiny details.",
+        "opened_description": "The compartment is empty.",
+        "onUse": {
+          "action": "quest_progress",
+          "flagSet": "lens_acquired",
+          "successMessage": "You found a Magnifying Lens! Combined with a frame, it might make a useful tool."
+        }
+      }
+    }
+  },
+  "M": {
+    "files": [
+      "scary_scrapyard.json"
+    ],
+    "meta": {
+      "name": "Metal Heap",
+      "passable": true,
+      "icon": "📦",
+      "description": "A pile of discarded brass and iron scraps.",
+      "item": {
+        "name": "Sturdy Brass Frame",
+        "type": "quest",
+        "description": "A heavy frame crafted from antique brass. It has a circular opening in the center.",
+        "opened_description": "The heap has been searched.",
+        "onUse": {
+          "action": "quest_progress",
+          "flagSet": "frame_acquired",
+          "successMessage": "You salvaged a Sturdy Brass Frame! It looks like a handle or support of some kind."
+        }
+      }
+    }
+  },
+  "C": {
+    "files": [
+      "scary_scrapyard.json"
+    ],
+    "meta": {
+      "name": "Compact Crusher",
+      "passable": false,
+      "icon": "⚙️",
+      "description": "A slow-moving piston that periodically crushes heaps of junk."
+    }
+  },
+  "glowing_floor": {
+    "files": [
+      "secret_cave.json"
+    ],
+    "meta": {
+      "passable": true,
+      "description": "The floor of the cave glows with a soft, bioluminescent light."
+    }
+  },
+  "lace_vine": {
+    "files": [
+      "secret_cave.json"
+    ],
+    "meta": {
+      "passable": true,
+      "description": "A single, incredibly strong shoelace vine hangs from the ceiling.",
+      "interactionVerb": "SCREAM",
+      "item": {
+        "contains": {
+          "name": "Strong Shoelace",
+          "itemId": "tool_strong_shoelace"
+        },
+        "onCollect": "Your scream vibrates the vine, causing it to snap and fall into your hands!"
+      }
+    }
+  },
+  "shelf_floor": {
+    "files": [
+      "shoe_rack.json"
+    ],
+    "meta": {
+      "passable": true,
+      "description": "The smooth, dusty wood of the shelf."
+    }
+  },
+  "portal_core": {
+    "files": [
+      "textlandia_entrance.json"
+    ],
+    "meta": {
+      "name": "Lexicon Sphere",
+      "passable": true,
+      "icon": "🔮",
+      "description": "A glowing sphere constructed of pure alphabetic characters. It hums with the rules of spelling and grammar."
+    }
+  }
+}

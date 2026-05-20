@@ -5,6 +5,74 @@ import { fetchWorldRooms } from '../firebase/worldPersistence.js';
 import { fetchItemRegistry, loadRegistryFromLocal, migrateStaticItems } from '../firebase/registryPersistence.js';
 import { savePlayerSession, loadPlayerSession, clearPlayerSession, verifyAdminSecret } from '../firebase/sessionPersistence.js';
 import staticItems from '../data/items.json';
+import { 
+  playSynthSFX, 
+  playRetroBleep, 
+  playDialogueBleeps, 
+  speakDialogue, 
+  setBgmVolume, 
+  transitionBGM,
+  BGM_THEME_MAPS
+} from '../utils/audioManager.js';
+
+// Helper to resolve BGM from room theme name
+function getBgmForTheme(theme) {
+  if (!theme) return BGM_THEME_MAPS.adventure;
+  const lower = theme.toLowerCase();
+  if (lower.includes('home') || lower.includes('house') || lower.includes('bedroom')) return BGM_THEME_MAPS.home;
+  if (lower.includes('desert') || lower.includes('sand')) return BGM_THEME_MAPS.desert;
+  if (lower.includes('mountain') || lower.includes('peak')) return BGM_THEME_MAPS.mountain;
+  if (lower.includes('forest') || lower.includes('swamp') || lower.includes('woods')) return BGM_THEME_MAPS.forest;
+  if (lower.includes('factory') || lower.includes('industrial') || lower.includes('stage')) return BGM_THEME_MAPS.factory;
+  if (lower.includes('shoeboxlandia') || lower.includes('town') || lower.includes('street')) return BGM_THEME_MAPS.home;
+  return BGM_THEME_MAPS.adventure;
+}
+
+// Play corresponding game sound effects or vocalizations based on game engine messages
+function playAudioForMessages(messages, activeAction, storeState) {
+  if (!messages || messages.length === 0) return;
+  const { audioSettings } = storeState;
+  if (!audioSettings) return;
+
+  const master = audioSettings.masterVolume;
+  const sfxVol = audioSettings.sfxVolume * master;
+  const voiceVol = audioSettings.voiceVolume * master;
+  const mode = audioSettings.mode || 'bleeps'; // 'voice', 'bleeps', or 'muted'
+
+  // If the player explicitly chose to scream, play the synthesized scream SFX
+  if (activeAction === 'scream') {
+    playSynthSFX('scream', sfxVol);
+  }
+
+  messages.forEach(msg => {
+    if (!msg) return;
+    const type = msg.type;
+    switch (type) {
+      case 'loot':
+        playSynthSFX('loot', sfxVol);
+        break;
+      case 'danger':
+      case 'damage':
+        playSynthSFX('danger', sfxVol);
+        break;
+      case 'defeat':
+        playSynthSFX('defeat', sfxVol);
+        break;
+      case 'victory':
+        playSynthSFX('victory', sfxVol);
+        break;
+      case 'dialogue':
+        if (mode === 'voice') {
+          speakDialogue(msg.speaker || 'unknown', msg.text || '', voiceVol);
+        } else if (mode === 'bleeps') {
+          playDialogueBleeps(msg.speaker || 'unknown', msg.text || '', voiceVol);
+        }
+        break;
+      default:
+        break;
+    }
+  });
+}
 
 export const CONQUEST_REWARDS = [
   {
@@ -70,6 +138,32 @@ export const useStore = create((set, get) => ({
   worldRooms: {},        // Cache for Firestore-backed rooms
   itemRegistry: {},      // Cache for Item templates
   isSyncing: false,      // background sync status
+
+  // Audio Settings State
+  audioSettings: (() => {
+    try {
+      const saved = localStorage.getItem('screamingfred_audio_settings');
+      if (saved) {
+        return {
+          masterVolume: 0.7,
+          bgmVolume: 0.5,
+          sfxVolume: 0.6,
+          voiceVolume: 0.8,
+          mode: 'bleeps',
+          ...JSON.parse(saved)
+        };
+      }
+    } catch (e) {
+      console.warn("Failed to load audio settings from localStorage:", e);
+    }
+    return {
+      masterVolume: 0.7,
+      bgmVolume: 0.5,
+      sfxVolume: 0.6,
+      voiceVolume: 0.8,
+      mode: 'bleeps',
+    };
+  })(),
 
   // UI / View State
   activeView: 'game',    // 'game' | 'world_map' | 'editor'
@@ -140,6 +234,7 @@ export const useStore = create((set, get) => ({
       activeView: 'game',
     });
 
+    get().handleRoomBgmTransition(initialState.room);
     get().startIdleTimer();
   },
 
@@ -187,6 +282,39 @@ export const useStore = create((set, get) => ({
   setView: (view) => set({ activeView: view }),
 
   /**
+   * Update audio settings and persist them.
+   */
+  updateAudioSettings: (updates) => {
+    set(state => {
+      const newSettings = { ...state.audioSettings, ...updates };
+      try {
+        localStorage.setItem('screamingfred_audio_settings', JSON.stringify(newSettings));
+      } catch (e) {
+        console.warn("Failed to save audio settings to localStorage:", e);
+      }
+      
+      // Update BGM player volume dynamically
+      if (updates.masterVolume !== undefined || updates.bgmVolume !== undefined) {
+        const effectiveBgmVolume = newSettings.bgmVolume * newSettings.masterVolume;
+        setBgmVolume(effectiveBgmVolume);
+      }
+      
+      return { audioSettings: newSettings };
+    });
+  },
+
+  /**
+   * Transitions BGM loop cleanly for a room's theme
+   */
+  handleRoomBgmTransition: (room) => {
+    if (!room) return;
+    const { audioSettings } = get();
+    const bgmUrl = getBgmForTheme(room.theme);
+    const effectiveVolume = audioSettings.bgmVolume * audioSettings.masterVolume;
+    transitionBGM(bgmUrl, effectiveVolume);
+  },
+
+  /**
    * Directly load a room definition and start playing it.
    */
   teleportToRoom: (roomData) => {
@@ -221,6 +349,7 @@ export const useStore = create((set, get) => ({
       activeView: 'game',
     });
 
+    get().handleRoomBgmTransition(newState.room);
     savePlayerSession(newState);
     get().startIdleTimer();
   },
@@ -283,6 +412,10 @@ export const useStore = create((set, get) => ({
       }
       return;
     }
+
+    const oldRoomCoord = get().gameState?.room?.world_coord;
+    let allGeneratedMessages = [];
+    const action = rawInput.toLowerCase().trim().split(/\s+/)[0];
 
     // Process game command with functional update to avoid stale state bugs
     set(state => {
@@ -365,6 +498,8 @@ export const useStore = create((set, get) => ({
       newState.activeEffects = finalActiveEffects;
 
       const timestampedMessages = messages.map(m => ({ ...m, timestamp: Date.now() }));
+      
+      allGeneratedMessages = [...messages, ...tickMessages];
 
       return {
         gameState: newState,
@@ -375,6 +510,19 @@ export const useStore = create((set, get) => ({
     // Side effects after state is updated
     const updatedState = get().gameState;
     if (updatedState) {
+      const { audioSettings } = get();
+      const sfxVol = audioSettings.sfxVolume * audioSettings.masterVolume;
+
+      // 1. Check if coordinate changed -> transition BGM and play footstep SFX
+      const newRoomCoord = updatedState.room?.world_coord;
+      if (oldRoomCoord && newRoomCoord !== oldRoomCoord) {
+        get().handleRoomBgmTransition(updatedState.room);
+        playSynthSFX('footstep', sfxVol);
+      }
+
+      // 2. Play audio corresponding to generated messages and the user's action
+      playAudioForMessages(allGeneratedMessages, action, get());
+
       savePlayerSession(updatedState);
       get().startIdleTimer();
     }
@@ -409,6 +557,7 @@ export const useStore = create((set, get) => ({
         gameState: newState,
         gameLog: [...gameLog, ...timestampedMessages],
       });
+      playAudioForMessages(messages, 'idle', get());
     }
 
     // Always restart the timer to allow for repeated attacks if still idle

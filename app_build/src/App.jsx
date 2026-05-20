@@ -7,6 +7,7 @@ import PlayerHUD from './components/PlayerHUD';
 import MobileController from './components/MobileController';
 import WorldMap from './components/WorldMap';
 import LevelEditor from './components/LevelEditor';
+import AudioSettings from './components/AudioSettings';
 import { useStore } from './store/useStore';
 import pkg from '../package.json';
 
@@ -111,6 +112,7 @@ export default function App() {
               </button>
             )}
           </nav>
+          <AudioSettings />
           <button className="restart-btn" onClick={() => {
             console.log('Restart button requested');
             setShowRestartConfirm(true);
