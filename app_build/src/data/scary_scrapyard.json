@@ -3,10 +3,10 @@
   "world_coord": "23,16,-1",
   "room_name": "Scary Scrapyard",
   "theme": "Industrial",
-  "description": "A dark yard piled high with discarded metal, old boots, and rusted cans. Sparks occasionally fly from exposed wires.",
+  "description": "A dark yard piled high with discarded metal, old boots, and rusted cans. Sparks occasionally fly from exposed wires. A dangerous Cutlery Monster stalker is lurking here!",
   "grid": [
     ["scrap_wall", "scrap_wall", "scrap_wall", "scrap_wall", "scrap_wall"],
-    ["scrap_wall", "lost_lens", "scrapyard_floor", "metal_heap", "scrap_wall"],
+    ["scrap_wall", "crevice_magnifying_glass", "scrapyard_floor", "scrap_magnet", "scrap_wall"],
     ["scrap_wall", "exit_west", "compact_crusher", "exit_east", "scrap_wall"],
     ["scrap_wall", "scrapyard_floor", "broken_boiler", "scrapyard_floor", "scrap_wall"],
     ["scrap_wall", "scrap_wall", "scrap_wall", "scrap_wall", "scrap_wall"]
@@ -33,35 +33,21 @@
       "passable": true,
       "description": "Oil-stained ground littered with sharp metal shavings."
     },
-    "lost_lens": {
+    "crevice_magnifying_glass": {
       "passable": true,
-      "description": "A small metallic compartment buried under a heap of broken gears.",
+      "description": "A narrow fissure in a pile of compressed engines. Something brass and glass glints deep inside.",
       "item": {
-        "name": "Magnifying Lens",
-        "type": "quest",
-        "description": "A highly polished glass lens that focuses ambient light. Perfect for studying tiny details.",
-        "opened_description": "The compartment is empty.",
-        "onUse": {
-          "action": "quest_progress",
-          "flagSet": "lens_acquired",
-          "successMessage": "You found a Magnifying Lens! Combined with a frame, it might make a useful tool."
-        }
+        "name": "Magnifying Glass",
+        "itemId": "tool_magnifying_glass",
+        "type": "tool",
+        "description": "A thick glass lens with a brass handle. It makes small things look large, or can focus light into a burning point.",
+        "opened_description": "The crevice is empty.",
+        "onCollect": "You reach into the tight crevice and pull out Willy's lost Magnifying Glass! It's dirty but intact!"
       }
     },
-    "metal_heap": {
+    "scrap_magnet": {
       "passable": true,
-      "description": "A pile of discarded brass and iron scraps.",
-      "item": {
-        "name": "Sturdy Brass Frame",
-        "type": "quest",
-        "description": "A heavy frame crafted from antique brass. It has a circular opening in the center.",
-        "opened_description": "The heap has been searched.",
-        "onUse": {
-          "action": "quest_progress",
-          "flagSet": "frame_acquired",
-          "successMessage": "You salvaged a Sturdy Brass Frame! It looks like a handle or support of some kind."
-        }
-      }
+      "description": "A massive industrial electromagnet hanging from a rusted crane structure. The control panel is dead and filled with cut wires. Interacting with it might let a Master Tinkerer rewire it!"
     },
     "compact_crusher": {
       "passable": false,
@@ -78,9 +64,26 @@
       "targetPosition": {
         "x": 1,
         "y": 2
+      },
+      "conditions": {
+        "requiredItem": "tool_magnifying_glass",
+        "failMessage": "You can't leave yet! You need to find Willy's Magnifying Glass in the crevice before escaping this dangerous scrapyard!"
       }
     }
   },
-  "entities": [],
-  "state_flags": {}
+  "entities": [
+    {
+      "id": "cutlery_monster",
+      "name": "Cutlery Monster",
+      "behavior": "stalk",
+      "detectionRange": 10,
+      "damage": 2,
+      "hp": 10,
+      "x": 3,
+      "y": 3
+    }
+  ],
+  "state_flags": {
+    "magnet_active": false
+  }
 }

@@ -188,6 +188,126 @@ export function processCommand(state, rawInput, itemRegistry = {}) {
     return { state, messages };
   }
 
+  // --- DERF CLIMAX INTERCEPTIONS ---
+  if (state.room?.room_id === "bridge_of_blah") {
+    if (state.stateFlags.derf_stage === 1) {
+      if (command.action === "talk") {
+        let finalState = { ...state };
+        finalState.stateFlags = { ...finalState.stateFlags, derf_stage: 2 };
+        const localMessages = [
+          {
+            text: "You stammer, trembling in mid-air: \"I... I don't...\"",
+            type: "dialogue",
+            speaker: "Fred"
+          },
+          {
+            text: "The figure laughs bitterly. \"Well, I am Derf, your long lost brother! One day while we were in the backyard, a mosquito bit you. You thought I did it! You were so angry at me that you kicked me all the way behind the Mountains of Misery!\"",
+            type: "dialogue",
+            speaker: "Derf"
+          },
+          {
+            text: "\"Then you drank those amnesia pills and ate that concrete, so you forgot about me entirely! Your foolish mistake made your friend die, and now... say goodbye to Freddista!\"",
+            type: "dialogue",
+            speaker: "Derf"
+          },
+          {
+            text: "⚡ Before you can even blink, another bolt of lightning strikes Freddista! She vanishes in a puff of smoke. Willy and Freddista are both gone.",
+            type: "danger"
+          },
+          {
+            text: "Derf hovers closer, a malicious grin on his face. \"Now, Fred, any last words?\"",
+            type: "dialogue",
+            speaker: "Derf"
+          },
+          {
+            text: "(Hint: In your sorrow and despair, the only thing you can do is SCREAM! Type 'scream'.)",
+            type: "hint"
+          }
+        ];
+        return { state: finalState, messages: localMessages };
+      } else {
+        const localMessages = [
+          { text: "Derf's dark magic suspends you in mid-air! You must TALK to him!", type: "warning" }
+        ];
+        return { state, messages: localMessages };
+      }
+    }
+
+    if (state.stateFlags.derf_stage === 2) {
+      if (command.action === "scream") {
+        let finalState = { ...state };
+        finalState.stateFlags = { 
+          ...finalState.stateFlags, 
+          derf_stage: 3,
+          chapter_2_unlocked: true,
+          chapter_1_completed: true 
+        };
+        const localMessages = [
+          {
+            text: "Fred, filled with overwhelming sorrow, regret, and a desperate hope for his friends' return, opens his mouth and lets out a scream. But this isn't a normal scream—it is a scream of pure love, hoping to continue the days of his childhood!",
+            type: "scream"
+          },
+          {
+            text: "🔊 A blinding, pulsing white light emerges from deep within Fred, filling the entire sky and pushing the shadows away!",
+            type: "narrative"
+          },
+          {
+            text: "In the warm light, the bread crumbs and syrup rearrange themselves back into Willy the Waffle! Freddista's body slowly fades back into existence! They are alive!",
+            type: "loot"
+          },
+          {
+            text: "Derf recoils, shielding his eyes, his voice fading away: \"See you in the land of endless jumping...\" He vanishes in a swirl of dark mist.",
+            type: "dialogue",
+            speaker: "Derf"
+          },
+          {
+            text: "The light fades, and you gently float back down to the wooden planks. Willy and Freddista look around, rubbing their heads. \"We... we're alive!\" Willy gasps.",
+            type: "narrative"
+          },
+          {
+            text: "Willy points to the large metal gate blocking the path to Shoeboxlandia. \"Fred, you should have the key, since you live here.\"",
+            type: "dialogue",
+            speaker: "Willy"
+          },
+          {
+            text: "You tremble with fear and pat your empty pockets. \"I... I forgot mine at home.\"",
+            type: "dialogue",
+            speaker: "Fred"
+          },
+          {
+            text: "Willy groans loudly: \"Why?! The only other person who has one, that's not in Shoeboxlandia, must be someone in Creativity!\"",
+            type: "dialogue",
+            speaker: "Willy"
+          },
+          {
+            text: "Freddista rolls her eyes: \"Oh, brother. What could possibly be in Creativity? Remember, Sue advised us not to go there.\"",
+            type: "dialogue",
+            speaker: "Freddista"
+          },
+          {
+            text: "\"Well, unless you want to be locked out of Shoeboxlandia, we're taking a detour through the Unknown Lands to get to Creativity!\" grumbles Willy.",
+            type: "dialogue",
+            speaker: "Willy"
+          },
+          {
+            text: "🎉 CHAPTER 1 COMPLETED! Fred and his companions embark on a detour through the Unknown Lands!",
+            type: "loot"
+          },
+          {
+            text: "Type 'move east' to pass through the locked gate and proceed to the next chapter!",
+            type: "hint"
+          }
+        ];
+        return { state: finalState, messages: localMessages };
+      } else {
+        const localMessages = [
+          { text: "Derf prepares to finish you! In your sorrow and despair, the only thing you can do is SCREAM!", type: "warning" }
+        ];
+        return { state, messages: localMessages };
+      }
+    }
+  }
+
   switch (command.action) {
     case 'empty':
       return { state, messages: [] };
@@ -245,6 +365,92 @@ export function processCommand(state, rawInput, itemRegistry = {}) {
   if (turnTakingActions.includes(command.action)) {
     const entityResult = processLivingEntities(newState, messages);
     newState = entityResult.state;
+  }
+
+  // --- CUSTOM SCRIPTED TRANSITIONS ---
+
+  // 1. Noodle Factory Barry Ambush
+  if (newState.room?.room_id === "noodle_factory" && 
+      newState.stateFlags.room_noodle_factory_tile_noodle_vats_opened && 
+      !newState.stateFlags.barry_factory_throw) {
+    
+    newState.stateFlags.barry_factory_throw = true;
+    
+    messages.push({
+      text: "💥 Suddenly, the noodle factory's grand double doors burst open with a loud CRASH! A familiar figure steps through the rising steam...",
+      type: "danger"
+    });
+    messages.push({
+      text: "It is BARRY THE BATTERY! But he is completely deformed now—sparking wildly, smoking, and half-melted from his previous defeat in the desert puddle. His mechanical red eyes glare at you with absolute fury!",
+      type: "danger"
+    });
+    messages.push({
+      text: "⚡ Barry crackles: \"YOUR UPRIGHT PERSISTENCE ANNOYS ME!\" He charges forward, sparks flying. Before you, Willy, or Freddista can react, Barry grabs you with his sparking metallic claws and FLINGS you with immense force out of the factory window!",
+      type: "danger"
+    });
+    messages.push({
+      text: "🌀 You fly through the air, screaming, and crash hard onto the oil-stained ground of a dark scrapyard. The Magnifying Glass slips from your hands and slides deep into a pile of compressed engines. Willy and Freddista land beside you in a heap.",
+      type: "narrative"
+    });
+
+    const scrapyardRoom = getRoomData("scary_scrapyard");
+    if (scrapyardRoom) {
+      newState.room = scrapyardRoom;
+      newState.playerPosition = { x: 1, y: 2 };
+      
+      const coordKey = scrapyardRoom.world_coord;
+      let newDiscovered = newState.discoveredRooms || [];
+      if (coordKey && !newDiscovered.includes(coordKey)) {
+        newDiscovered = [...newDiscovered, coordKey];
+      }
+      newState.discoveredRooms = newDiscovered;
+      
+      // Remove magnifying glass from inventory (fell in crevice!)
+      newState.inventory = newState.inventory.filter(i => i.itemId !== "tool_magnifying_glass" && i.name !== "Magnifying Glass");
+      
+      messages.push({
+        text: describeRoom(scrapyardRoom, newState.stateFlags),
+        type: "narrative"
+      });
+    }
+  }
+
+  // 2. Bridge of Blah Derf Climax Stage 1 Trigger
+  if (newState.room?.room_id === "bridge_of_blah" && 
+      newState.stateFlags.barry_chasm && 
+      !newState.stateFlags.derf_stage) {
+    
+    newState.stateFlags.derf_stage = 1;
+    
+    messages.push({
+      text: "⚡ Suddenly, a violent purple bolt of lightning tears through the sky, lighting up the Bridge of Blah! A booming, ominous voice echoes from the clouds: \"You really thought it would be that easy?\"",
+      type: "danger"
+    });
+    messages.push({
+      text: "Before you can react, you float into the sky! Gravity reverses, suspending you in mid-air, unable to move!",
+      type: "danger"
+    });
+    messages.push({
+      text: "The sky flashes with purple lightning. The booming voice speaks again: \"Who should I destroy first? I know! Willy!\"",
+      type: "danger"
+    });
+    messages.push({
+      text: "Immediately, a bolt of dark energy strikes Willy! The poor waffle disintegrates instantly into a sticky pile of bread crumbs and syrup on the wooden planks!",
+      type: "danger"
+    });
+    messages.push({
+      text: "A figure in a crimson cape with glowing, deep red eyes descends from the clouds, hovering before you. It is the figure from your forgotten memories...",
+      type: "danger"
+    });
+    messages.push({
+      text: "He sneers: \"Fred, do you recognize me?\"",
+      type: "dialogue",
+      speaker: "Crimson Figure"
+    });
+    messages.push({
+      text: "(Hint: Use the 'talk' command to respond to the dark figure.)",
+      type: "hint"
+    });
   }
 
   return { state: newState, messages };
@@ -479,6 +685,9 @@ export function handleMove(state, direction, messages) {
     
     if (transitionRoom.onEnter) {
       const { action, itemId, message, flagSet } = transitionRoom.onEnter;
+      if (message && action !== 'remove_item') {
+        messages.push({ text: message, type: 'narrative' });
+      }
       if (action === 'remove_item' && itemId) {
         const itemToRemove = updatedInventory.find(i => i.itemId === itemId || i.name === itemId);
         if (itemToRemove) {
@@ -677,6 +886,37 @@ function applyTileEffects(state, x, y, messages, direction) {
 function handleInteract(state, target, messages, globalItems = {}) {
   const tileType = getCurrentTile(state);
   const tileData = getTileData(state.room, tileType);
+
+  if (tileType === 'scrap_magnet') {
+    let newState = { ...state };
+    const hasTinkerer = state.abilities?.some(a => a.id === 'master_tinkerer');
+    if (hasTinkerer) {
+      if (state.stateFlags.magnet_active) {
+        messages.push({ text: "The heavy scrap magnet hums loudly, holding the sparking Cutlery Monster pinned flat against it.", type: "narrative" });
+        return { state, messages };
+      }
+      newState.stateFlags = { 
+        ...newState.stateFlags, 
+        magnet_active: true,
+        cutlery_monster_defeated: true 
+      };
+      newState.entities = newState.entities.map(e => e.id === "cutlery_monster" ? { ...e, x: 3, y: 1 } : e);
+      messages.push({ 
+        text: "✨ Spirit of the Master Tinkerer! Using your advanced tinkering knowledge, you quickly strip the insulation off two heavy copper cables and cross-wire them into the industrial battery pack of the giant electromagnet.",
+        type: "loot" 
+      });
+      messages.push({
+        text: "🔊 CLANG! WHIRRRRRR! The giant electromagnet surges to life with a deafening electric hum! A massive magnetic force field ripples across the yard. The Cutlery Monster is instantly ripped off its feet and dragged screaming across the junk piles, pinned flat against the magnet where it sparks and twitches helplessly! The scrapyard is safe!",
+        type: "narrative"
+      });
+    } else {
+      messages.push({
+        text: "⚠️ You inspect the massive scrap electromagnet. The cables are cut and the internal coils are a tangled mess. You don't have the tinkering skills to repair it. You'll have to lure the monster away manually!",
+        type: "warning"
+      });
+    }
+    return { state: newState, messages };
+  }
 
   if (!tileData?.item && !tileData?.onInteract) {
     messages.push({ text: 'There\'s nothing to interact with here.', type: 'system' });

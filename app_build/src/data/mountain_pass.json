@@ -3,6 +3,11 @@
   "world_coord": "21,16,0",
   "room_name": "Winding Mountain Pass",
   "theme": "Mountains_of_Misery",
+  "onEnter": {
+    "action": "set_flag",
+    "flagSet": "pass_flashback_triggered",
+    "message": "As you step into the cold mountain pass, the thin air triggers a sudden, violent headache. Memories of amnesia pills, a buzzing mosquito, and a deep, buried regret flash before your eyes... You stumble. Willy notices and asks, 'Are you okay, Fred? You look like you've seen a ghost.' You sob quietly. Freddista grunts, checking her phone, but shoots you a concerned look."
+  },
   "description": "The path narrows here, hugging the side of the cliff. To the west, the descent back to Barry's domain. To the east, the trail continues toward the summit. The wind howls through the narrow gaps.",
   "grid": [
     [

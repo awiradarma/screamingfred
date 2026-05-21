@@ -178,11 +178,7 @@
           },
           {
             "stage": 6,
-            "text": "Willy looks at the ruined Magnifying Glass. \"Well, he's gone — I can see him cooling off in a puddle way down the mountain. But the glass is toast. At least we don't have to sit in that creepy chair anymore. The path east is clear!\"",
-            "onComplete": {
-              "action": "remove_item",
-              "itemId": "tool_magnifying_glass"
-            }
+            "text": "Willy looks at the Magnifying Glass. \"Well, he's gone — I can see him cooling off in a puddle way down the mountain. The magnifying glass is a bit warm, but still fully functional! At least we don't have to sit in that creepy chair anymore. The path east is clear!\""
           }
         ]
       }

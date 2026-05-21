@@ -3,10 +3,10 @@
   "world_coord": "24,16,-1",
   "room_name": "Apple Swamp",
   "theme": "Swamp",
-  "description": "A murky, bubbling pool of expired apple juice and marsh weed. The air smells strongly of fermentation and vinegar.",
+  "description": "A murky, bubbling pool of expired apple juice and marsh weed. The air smells strongly of fermentation and vinegar. A giant banana stands near the bank.",
   "grid": [
     ["swamp_wall", "swamp_wall", "swamp_wall", "swamp_wall", "swamp_wall"],
-    ["swamp_wall", "swamp_pool", "banzo_builder", "swamp_pool", "swamp_wall"],
+    ["swamp_wall", "swamp_pool", "future_banana", "swamp_pool", "swamp_wall"],
     ["swamp_wall", "exit_west", "banana_bridge", "exit_east", "swamp_wall"],
     ["swamp_wall", "swamp_pool", "swamp_hollow", "swamp_pool", "swamp_wall"],
     ["swamp_wall", "swamp_wall", "swamp_wall", "swamp_wall", "swamp_wall"]
@@ -37,43 +37,34 @@
       "passable": false,
       "description": "Deep, bubbling pools of fermented apple juice. Far too sticky to walk through."
     },
-    "banzo_builder": {
+    "future_banana": {
       "passable": false,
-      "description": "A clever-looking monkey wearing overalls. He seems willing to help you cross for a fee.",
+      "description": "A giant banana. He seems completely out of place in this swamp.",
       "npc": {
-        "name": "Banzo the Builder",
+        "name": "Future Banana",
         "dialogue": [
           {
             "stage": 0,
-            "text": "\"Ah, travelers! You want to cross the apple juice swamp? It's extremely sticky. I can construct a sturdy bridge out of giant bananas, but it requires a lot of energy. Bring me some Spicy Noodles to keep me going!\"",
-            "hint": "Collect Spicy Noodles from the noodle factory."
+            "text": "\"Excellent question, I teleported,\" says the giant banana. \"Well, I'm actually from the future, where I am Fred! I was about to die, so I traveled to the past and landed here.\" Willy looks unimpressed: \"This is ridiculous. Banana guy, do you have any way to cross?\""
           },
           {
             "stage": 1,
-            "text": "\"Do you have the Spicy Noodles? I'm starving!\" Banzo asks expectantly."
+            "text": "\"Oh, I do!\" the banana replies. The giant banana lays on his side, forming a fleshy, yellow bridge across the expired apple juice! \"That is so disgusting!\" you yell. \"Well, do you see any other way to cross?\" responds the banana.",
+            "setFlag": "banana_bridge"
           },
           {
             "stage": 2,
-            "text": "\"Mmm! These noodles have a serious kick!\" Banzo cheers as he devours them. In a flurry of motion, he lashes together massive bananas to form a bridge! \"There you go! Safely crossable!\"",
-            "requiresItem": "spicy_noodles",
-            "onComplete": {
-              "action": "set_flag",
-              "flagSet": "banana_bridge"
-            }
-          },
-          {
-            "stage": 3,
-            "text": "\"Have a safe trip across the Banana Bridge! And remember, starchy meals are the key to building speed!\" Banzo waves."
+            "text": "\"Hurry up and cross!\" the giant banana sighs. \"Before I turn into brown banana bread!\""
           }
         ]
       }
     },
     "banana_bridge": {
       "passable": true,
-      "description": "The back of a giant banana. It's surprisingly stable.",
+      "description": "The back of a giant banana. It's surprisingly stable but squishy.",
       "conditions": {
         "requiredFlag": "banana_bridge",
-        "failMessage": "There's only expired apple juice here. You need a way to cross!"
+        "failMessage": "There's only expired apple juice here. You need to talk to the Future Banana to find a way to cross!"
       }
     },
     "swamp_hollow": {

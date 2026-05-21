@@ -3,11 +3,16 @@
   "world_coord": "22,16,-1",
   "room_name": "Mysterious Noodle Factory",
   "theme": "Industrial",
-  "description": "A complex network of steam pipes and assembly lines producing... pasta? The air is warm and smells faintly of garlic.",
+  "onEnter": {
+    "action": "set_flag",
+    "flagSet": "freddista_thrown",
+    "message": "Freddista, losing her patience, grabs you and hurls you through the entrance! You crash onto the warm steel plates, surrounded by the steam of boiling pasta."
+  },
+  "description": "A true pasta paradise! Hundreds of ramen packets, Mac and Cheese packets, noodle packets, and even Indomie line the shelves. A grand staircase spiraled upward into two other floors, wrapped in a large golden railing embedded with noodles. The air is warm and smells of boiling broth.",
   "grid": [
     ["steel_wall", "steel_wall", "steel_wall", "steel_wall", "steel_wall"],
     ["steel_wall", "noodle_vats", "metal_floor", "chef_tortellini", "steel_wall"],
-    ["steel_wall", "exit_west", "assembly_belt", "tube_portal", "steel_wall"],
+    ["steel_wall", "exit_west", "assembly_belt", "metal_floor", "steel_wall"],
     ["steel_wall", "jammed_valve", "metal_floor", "jammed_valve", "steel_wall"],
     ["steel_wall", "steel_wall", "steel_wall", "steel_wall", "steel_wall"]
   ],
@@ -35,7 +40,7 @@
     },
     "noodle_vats": {
       "passable": true,
-      "description": "Giant boiling vats of starchy broth and noodles.",
+      "description": "Giant boiling vats filled with premium Indomie, steaming ramen, and delicious Mac and Cheese! The noodles look incredibly tempting.",
       "item": {
         "name": "Spicy Noodles",
         "type": "pasta",
@@ -63,20 +68,11 @@
     },
     "assembly_belt": {
       "passable": true,
-      "description": "A mechanical conveyor belt transporting uncooked pasta shapes."
+      "description": "A grand staircase spiraling upward to the upper floors, with a large golden railing embedded with noodles. Shelves of pasta packets line the stairs."
     },
     "jammed_valve": {
       "passable": false,
       "description": "A large steam valve that has rusted shut. It refuses to turn."
-    },
-    "tube_portal": {
-      "passable": true,
-      "description": "A giant pneumatic transport tube. It seems to lead to a different part of the facility.",
-      "targetRoomId": "scary_scrapyard",
-      "targetPosition": {
-        "x": 1,
-        "y": 2
-      }
     }
   },
   "entities": [],

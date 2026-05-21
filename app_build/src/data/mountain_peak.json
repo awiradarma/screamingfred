@@ -59,7 +59,7 @@
       "passable": true,
       "icon": "🔭",
       "description": "A telescope pointing toward the horizon.",
-      "onInteract": "You look through the telescope. You see the far-off lands of Textlandia, where words have weight and commas are sharp."
+      "onInteract": "You look through the telescope. You see the far-off lands of Textlandia, where words have weight and commas are sharp. But looking at the distant jagged valleys below brings a sharp stab of amnesia-induced regret. A tattered cape... deep red eyes... a childhood memory just out of reach."
     },
     "hideout_hole": {
       "name": "Dark Hole",
@@ -82,17 +82,8 @@
       }
     },
     "exit_east": {
-      "passable": true,
-      "description": "Step into the distortion...",
-      "targetRoomId": "textlandia_entrance",
-      "targetPosition": {
-        "x": 0,
-        "y": 2
-      },
-      "conditions": {
-        "requiredItem": "item_energy_crystal",
-        "failMessage": "The distortion is unstable! You need a powerful energy source to stabilize the portal. Maybe that humming capacitor back in the desert had something..."
-      }
+      "passable": false,
+      "description": "An unstable spatial distortion that crackles with wild energy. Willy warns: 'The portal has completely collapsed! We have to find another way. Look, that dark hole in the peak floor seems to be the only path forward!'"
     }
   },
   "entities": [],

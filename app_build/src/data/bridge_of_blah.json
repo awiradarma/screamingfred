@@ -37,21 +37,15 @@
       "hiddenIf": "barry_chasm",
       "hiddenTileType": "brittle_wood",
       "npc": {
-        "name": "Barry",
+        "name": "Barry the Battery",
         "dialogue": [
           {
-            "id": "start",
-            "text": "Your perseverance annoys me! Now you have no choice but to TAKE A SEAT!",
-            "options": [
-              {
-                "text": "Freddista, do something!",
-                "next": "freddista_action"
-              }
-            ]
+            "stage": 0,
+            "text": "\"Your perseverance annoys me!\" Barry sneers, deformed and sparking wildly. \"You thought you were so cool, with your magnifying glass thingy! Well, whoops!\" He grabs the Magnifying Glass and drops it into the Chasm of Chaos! Willy screeches: \"NOOOO! Not my magnifying glass again! I have to order another one off of-\" \"So take a seat!\" Barry interrupts."
           },
           {
-            "id": "freddista_action",
-            "text": "Freddista rushes over and hurls Barry into the chasm! 'That's it!' she snaps.",
+            "stage": 1,
+            "text": "\"Oh, that's it!\" snaps Freddista. She rushes over to Barry, grabs him by his melted terminals, and hurls him into the deep abyss of the Chasm of Chaos!",
             "onComplete": {
               "action": "set_flag",
               "flagSet": "barry_chasm"
