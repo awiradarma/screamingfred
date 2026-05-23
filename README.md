@@ -64,8 +64,30 @@ app_build/src/
 ├── data/            # Room JSON definitions
 ├── components/      # React UI (ChatLog, GridViewer, HUD)
 ├── store/           # Zustand state management
+├── tests/           # Headless Node.js regression & playthrough tests
 └── firebase/        # Firebase configuration
 ```
+
+## 🧪 Testing & Regression Verification
+
+Screaming Fred implements a robust, headless test bed that runs entirely in Node.js without browser dependencies. This setup acts as a deterministic regression testing suite for core game mechanics, room transitions, dialogues, and items.
+
+### Running Tests
+To execute verification and playthrough runs, navigate to the `app_build` directory and run:
+
+```bash
+# Run unit tests verifying dialogue skips, item actions, and balance fixes
+node src/tests/test_fixes.js
+
+# Run the full automated playthrough simulator for Chapter 1
+node src/tests/run_full_playthrough.js
+```
+
+### Extensibility & Architecture
+* **Pure Engine Integration**: The engine exposes pure functions (`initGameState` and `processCommand`) making commands fully deterministic and runnable under standard Node.js without mocking DOM/local storage.
+* **Deterministic Seeding**: Tests can directly modify a mock state (e.g. setting coordinates or injecting items into the player's inventory) to instantly test late-game conditions in isolation.
+* **Declarative Playbooks**: The playthrough suite uses a simple array of command steps. As new rooms or features are added, you can expand testing by simply declaring the new step expectations.
+* **Procedural Synth Verification**: The procedural Web Audio synthesized BGM system replaces large external assets, meaning the regression test suite operates completely offline with zero flakey network timeouts.
 
 ## 📖 Lore
 
