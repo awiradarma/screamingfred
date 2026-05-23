@@ -239,7 +239,6 @@ export function processCommand(state, rawInput, itemRegistry = {}) {
         finalState.stateFlags = { 
           ...finalState.stateFlags, 
           derf_stage: 3,
-          chapter_2_unlocked: true,
           chapter_1_completed: true 
         };
         const localMessages = [
@@ -294,7 +293,7 @@ export function processCommand(state, rawInput, itemRegistry = {}) {
             type: "loot"
           },
           {
-            text: "Type 'move east' to pass through the locked gate and proceed to the next chapter!",
+            text: "This is the end of Chapter 1. The adventure will continue in Chapter 2!",
             type: "hint"
           }
         ];

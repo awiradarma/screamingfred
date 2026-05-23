@@ -229,8 +229,8 @@ const steps = [
   { cmd: 'talk', expectRoom: 'bridge_of_blah' },  // Talk 1 -> Stage 0 (Barry drops Magnifying Glass into chasm)
   { cmd: 'talk', expectRoom: 'bridge_of_blah' },  // Talk 2 -> Stage 1 (Freddista throws Barry into chasm, sets barry_chasm, triggers Derf climax Stage 1!)
   { cmd: 'talk', expectRoom: 'bridge_of_blah' },  // Talk 3 -> plays Derf Stage 1 (disintegrates Willy, sets derf_stage to 2!)
-  { cmd: 'scream', expectRoom: 'bridge_of_blah' }, // Scream -> plays Derf Stage 2 (love scream, restores friends, Derf vanishes, sets chapter_2_unlocked!)
-  { cmd: 'east', expectRoom: 'shoeboxlandia_street' }   // Passes through the unlocked gate into Chapter 2!
+  { cmd: 'scream', expectRoom: 'bridge_of_blah' }, // Scream -> plays Derf Stage 2 (love scream, restores friends, Derf vanishes)
+  { cmd: 'east', expectRoom: 'bridge_of_blah' }   // Attempt to move east into the locked gate (keeps player in bridge_of_blah)
 ];
 
 let state = initGameState(worldData.freds_house);
