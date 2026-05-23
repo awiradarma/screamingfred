@@ -4,7 +4,7 @@ import { worldData, getRoomAt } from '../data/worldData.js';
 import { fetchWorldRooms } from '../firebase/worldPersistence.js';
 import { fetchItemRegistry, loadRegistryFromLocal, migrateStaticItems } from '../firebase/registryPersistence.js';
 import { savePlayerSession, loadPlayerSession, clearPlayerSession, verifyAdminSecret } from '../firebase/sessionPersistence.js';
-import staticItems from '../data/items.json';
+import staticItems from '../data/items.json' assert { type: 'json' };
 import { 
   playSynthSFX, 
   playRetroBleep, 
@@ -590,3 +590,4 @@ export const useStore = create((set, get) => ({
     }));
   },
 }));
+export const createStore = () => useStore;

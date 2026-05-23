@@ -1,4 +1,4 @@
-import { db, auth } from './config';
+import { db, auth } from './config.js';
 import { doc, getDoc, setDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { signInAnonymously } from 'firebase/auth';
 

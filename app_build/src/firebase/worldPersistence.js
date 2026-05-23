@@ -1,4 +1,4 @@
-import { db } from './config';
+import { db } from './config.js';
 import { collection, doc, setDoc, getDocs, getDoc, query, where, serverTimestamp } from 'firebase/firestore';
 
 const WORLD_ROOMS_COLLECTION = 'world_rooms';
@@ -8,6 +8,7 @@ const REGION_THEMES_COLLECTION = 'region_themes';
  * Save or update a room at specific world coordinates.
  */
 export const saveRoomToWorld = async (x, y, roomData) => {
+    if (!db) return;
     const z = roomData.world_coord?.split(',')[2] || 0;
     const coordKey = `${x},${y},${z}`;
     
@@ -42,6 +43,7 @@ export const saveRoomToWorld = async (x, y, roomData) => {
  * Fetch all rooms currently assigned to the world.
  */
 export const fetchWorldRooms = async () => {
+    if (!db) return {};
     try {
         const querySnapshot = await getDocs(collection(db, WORLD_ROOMS_COLLECTION));
         const rooms = {};
@@ -81,6 +83,7 @@ export const fetchWorldRooms = async () => {
  * Assign a theme to a specific coordinate (Admin tool).
  */
 export const setRegionTheme = async (x, y, theme) => {
+    if (!db) return;
     const coordKey = `${x},${y}`;
     try {
         await setDoc(doc(db, REGION_THEMES_COLLECTION, coordKey), {
@@ -100,6 +103,7 @@ export const setRegionTheme = async (x, y, theme) => {
  * Get the assigned theme for a coordinate.
  */
 export const getRegionTheme = async (x, y) => {
+    if (!db) return null;
     const coordKey = `${x},${y}`;
     try {
         const docSnap = await getDoc(doc(db, REGION_THEMES_COLLECTION, coordKey));

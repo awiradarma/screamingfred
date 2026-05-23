@@ -1,6 +1,6 @@
-import { db } from './config';
+import { db } from './config.js';
 import { collection, getDocs, setDoc, doc } from 'firebase/firestore';
-import { initDB } from '../db/indexedStorage';
+import { initDB } from '../db/indexedStorage.js';
 
 const ITEM_REGISTRY_COLL = 'item_registry';
 const IDB_STORE = 'itemRegistry';

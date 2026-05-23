@@ -1,4 +1,4 @@
-import { db } from './config';
+import { db } from './config.js';
 import { collection, addDoc, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
 
 const LEVELS_COLLECTION = 'levels';

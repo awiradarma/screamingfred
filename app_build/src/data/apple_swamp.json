@@ -38,7 +38,7 @@
       "description": "Deep, bubbling pools of fermented apple juice. Far too sticky to walk through."
     },
     "future_banana": {
-      "passable": false,
+      "passable": true,
       "description": "A giant banana. He seems completely out of place in this swamp.",
       "npc": {
         "name": "Future Banana",
@@ -61,11 +61,7 @@
     },
     "banana_bridge": {
       "passable": true,
-      "description": "The back of a giant banana. It's surprisingly stable but squishy.",
-      "conditions": {
-        "requiredFlag": "banana_bridge",
-        "failMessage": "There's only expired apple juice here. You need to talk to the Future Banana to find a way to cross!"
-      }
+      "description": "The back of a giant banana. It's surprisingly stable but squishy."
     },
     "swamp_hollow": {
       "passable": true,
@@ -78,6 +74,10 @@
       "targetPosition": {
         "x": 1,
         "y": 2
+      },
+      "conditions": {
+        "requiredFlag": "banana_bridge",
+        "failMessage": "The expired apple juice is too deep and sticky to exit east! Talk to the Future Banana to get him to act as a bridge first."
       }
     }
   },

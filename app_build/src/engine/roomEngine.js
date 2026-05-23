@@ -1069,7 +1069,25 @@ function handleTalk(state, messages, globalItems = {}) {
   }
 
   // Track sequential progression using npcStages
-  const currentStageLimit = state.npcStages[npcKey] || 0;
+  let currentStageLimit = state.npcStages[npcKey] || 0;
+  
+  // If the current stage we are trying to reach has conditions that are not met,
+  // and it is marked as 'skipIfFailed', we can skip past it to the next stage index.
+  while (currentStageLimit < dialogueStages.length) {
+    const stage = dialogueStages[currentStageLimit];
+    if (stage.skipIfFailed) {
+      const hasRequiresFlag = !stage.requiresFlag || state.stateFlags[stage.requiresFlag];
+      const hasCondFlag = !stage.conditions?.requiredFlag || 
+                          (stage.conditions.requiredFlag.startsWith('!') ? 
+                           !state.stateFlags[stage.conditions.requiredFlag.substring(1)] : 
+                           state.stateFlags[stage.conditions.requiredFlag]);
+      if (!hasRequiresFlag || !hasCondFlag) {
+        currentStageLimit++;
+        continue;
+      }
+    }
+    break;
+  }
   
   // Find the best dialogue stage (scanned in reverse from the current allowed limit)
   let bestStage = dialogueStages[0];
@@ -1711,4 +1729,30 @@ export function getWelcomeMessages(roomData) {
         roomData.room_id
       ), type: 'narrative' },
   ];
+}
+export class RoomEngine {
+  /**
+   * @param {object} store - Zustand store created by createStore()
+   * @param {object} worldData - Loaded world data JSON
+   */
+  constructor(store, worldData) {
+    this.store = store;
+    this.worldData = worldData;
+    const state = this.store.getState();
+    if (!state.room) {
+      const initState = initGameState(this.worldData);
+      this.store.setState(initState);
+    }
+  }
+
+  /**
+   * Process a command string using the engine logic.
+   * Updates store state and returns result { state, messages }.
+   */
+  processCommand(command) {
+    const current = this.store.getState();
+    const result = processCommand(current, command);
+    this.store.setState(result.state);
+    return result;
+  }
 }

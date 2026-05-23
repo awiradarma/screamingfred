@@ -141,7 +141,8 @@
               "action": "damage_player",
               "value": 2
             },
-            "hint": "You need to move to the Cursed Chair and use the 'interact' command (or tap it on mobile) to sit down."
+            "hint": "You need to move to the Cursed Chair and use the 'interact' command (or tap it on mobile) to sit down.",
+            "skipIfFailed": true
           },
           {
             "stage": 3,
@@ -157,7 +158,8 @@
                 "duration": 3,
                 "value": 1
               }
-            }
+            },
+            "hint": "You need to move to the Cursed Chair and use the 'interact' command (or tap it on mobile) to sit down first."
           },
           {
             "stage": 4,
@@ -165,7 +167,8 @@
             "conditions": {
               "requiredFlag": "sat_in_chair"
             },
-            "hint": "Move next to Barry and type 'use tool_magnifying_glass' or open your inventory and use the Magnifying Glass."
+            "hint": "Move next to Barry and type 'use tool_magnifying_glass' or open your inventory and use the Magnifying Glass.",
+            "skipIfFailed": true
           },
           {
             "stage": 5,

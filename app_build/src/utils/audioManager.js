@@ -10,12 +10,12 @@ let bgmFadeInterval = null;
 
 // Map game themes to royalty-free loopable background music tracks (SoundHelix public files as stable defaults)
 export const BGM_THEME_MAPS = {
-  home: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',       // Cozy, nostalgic
-  desert: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',     // Warm, atmospheric
-  mountain: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',   // Epic, heroic
-  forest: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',     // Natural, rhythmic
-  factory: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',    // Industrial, techno
-  adventure: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',  // General gameplay
+  home: 'home',
+  desert: 'desert',
+  mountain: 'mountain',
+  forest: 'forest',
+  factory: 'factory',
+  adventure: 'adventure',
 };
 
 // Speaker profiles for speech synthesis and text-bleeps
@@ -240,30 +240,285 @@ export const speakDialogue = (speakerName, text, volume = 0.8) => {
   window.speechSynthesis.speak(utterance);
 };
 
+class ProceduralPlayer {
+  constructor(theme, ctx, outputNode) {
+    this.theme = theme;
+    this.ctx = ctx;
+    this.outputNode = outputNode;
+    
+    // Create local gain node for fading
+    this.gainNode = this.ctx.createGain();
+    this.gainNode.gain.setValueAtTime(0, this.ctx.currentTime);
+    this.gainNode.connect(this.outputNode);
+
+    this.isPlaying = false;
+    this.timerId = null;
+    this.activeNodes = new Set();
+    
+    // Musical parameters based on theme
+    this.tempo = 100; // BPM
+    this.stepDuration = 60 / this.tempo / 2; // eighth notes
+    this.currentStep = 0;
+    this.nextNoteTime = this.ctx.currentTime;
+    
+    this.setupTheme();
+  }
+  
+  setupTheme() {
+    // Define notes and rhythms
+    switch (this.theme) {
+      case 'home':
+        this.tempo = 100;
+        this.bassPattern = [48, 48, 52, 52, 45, 45, 48, 48]; // MIDI numbers (C3, E3, A2, C3)
+        this.melodyPattern = [
+          [60, 64, 67], [64, 67, 72], [57, 60, 64], [60, 64, 67]
+        ];
+        this.waveType = 'triangle';
+        break;
+      case 'desert':
+        this.tempo = 75;
+        this.bassPattern = [46, 46, 46, 46, 47, 47, 47, 47]; // Bb2, B2
+        this.melodyPattern = [
+          [58, 62, 65], [62, 65, 68], [59, 63, 66], [63, 66, 69]
+        ];
+        this.waveType = 'sine';
+        break;
+      case 'mountain':
+        this.tempo = 120;
+        this.bassPattern = [43, 47, 50, 47, 40, 43, 47, 43]; // G2, B2, D3, B2, E2...
+        this.melodyPattern = [
+          [55, 59, 62], [59, 62, 67], [52, 55, 59], [55, 59, 62]
+        ];
+        this.waveType = 'square';
+        break;
+      case 'forest':
+        this.tempo = 110;
+        this.bassPattern = [53, 53, 53, 53, 57, 57, 57, 57]; // F2, A2
+        this.melodyPattern = [
+          [65, 69, 72], [69, 72, 77], [60, 64, 67], [64, 67, 72]
+        ];
+        this.waveType = 'triangle';
+        break;
+      case 'factory':
+        this.tempo = 125;
+        this.bassPattern = [36, 36, 48, 36, 36, 36, 48, 36]; // C2, C3
+        this.melodyPattern = [
+          [48, 51, 55], [51, 55, 60], [48, 51, 55], [51, 55, 60]
+        ];
+        this.waveType = 'sawtooth';
+        break;
+      case 'adventure':
+      default:
+        this.tempo = 115;
+        this.bassPattern = [48, 55, 48, 55, 50, 57, 50, 57]; // C3, G3, D3, A3
+        this.melodyPattern = [
+          [60, 64, 67], [67, 72, 76], [62, 66, 69], [69, 74, 78]
+        ];
+        this.waveType = 'square';
+        break;
+    }
+    this.stepDuration = 60 / this.tempo / 2; // Duration of one eighth note in seconds
+  }
+  
+  midiToFreq(midi) {
+    return 440 * Math.pow(2, (midi - 69) / 12);
+  }
+  
+  scheduleNote(step, time) {
+    if (this.ctx.state === 'suspended') return;
+    const now = this.ctx.currentTime;
+    if (time < now - 0.1) return; // Don't schedule in the past
+    
+    // Play Bass note on every beat (even steps)
+    if (step % 2 === 0) {
+      const bassIndex = Math.floor(step / 2) % this.bassPattern.length;
+      const bassMidi = this.bassPattern[bassIndex];
+      this.playTone(this.midiToFreq(bassMidi), 'triangle', time, this.stepDuration * 1.8, 0.4);
+    }
+    
+    // Play melody note/chord on specific steps
+    const chordIndex = Math.floor(step / 4) % this.melodyPattern.length;
+    const chord = this.melodyPattern[chordIndex];
+    if (step % 4 === 0) {
+      // Arpeggiate
+      chord.forEach((midi, idx) => {
+        const noteTime = time + idx * 0.08;
+        this.playTone(this.midiToFreq(midi), this.waveType, noteTime, 0.15, 0.15);
+      });
+    } else if (step % 4 === 2) {
+      // Offbeat melody note
+      const noteMidi = chord[step % 3];
+      this.playTone(this.midiToFreq(noteMidi + 12), this.waveType, time, 0.1, 0.1);
+    }
+    
+    // Simple drum beat
+    if (step % 4 === 0) {
+      this.playKick(time);
+    } else if (step % 4 === 2) {
+      this.playSnare(time);
+    }
+  }
+
+  playTone(freq, type, time, duration, vol) {
+    const osc = this.ctx.createOscillator();
+    const gainNode = this.ctx.createGain();
+    
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, time);
+    
+    // Avoid clicking with quick ramp in and exponential ramp out
+    gainNode.gain.setValueAtTime(0, time);
+    gainNode.gain.linearRampToValueAtTime(vol, time + 0.01);
+    gainNode.gain.setValueAtTime(vol, time + duration - 0.01);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, time + duration);
+    
+    osc.connect(gainNode);
+    gainNode.connect(this.gainNode);
+    
+    osc.start(time);
+    osc.stop(time + duration);
+    
+    this.activeNodes.add(osc);
+    setTimeout(() => {
+      this.activeNodes.delete(osc);
+    }, (time + duration - this.ctx.currentTime) * 1000 + 100);
+  }
+
+  playKick(time) {
+    const osc = this.ctx.createOscillator();
+    const gainNode = this.ctx.createGain();
+    
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(120, time);
+    osc.frequency.exponentialRampToValueAtTime(40, time + 0.1);
+    
+    gainNode.gain.setValueAtTime(0, time);
+    gainNode.gain.linearRampToValueAtTime(0.3, time + 0.005);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.1);
+    
+    osc.connect(gainNode);
+    gainNode.connect(this.gainNode);
+    
+    osc.start(time);
+    osc.stop(time + 0.1);
+    
+    this.activeNodes.add(osc);
+    setTimeout(() => {
+      this.activeNodes.delete(osc);
+    }, 200);
+  }
+
+  playSnare(time) {
+    const bufferSize = this.ctx.sampleRate * 0.1; // 0.1s
+    const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+    
+    const noise = this.ctx.createBufferSource();
+    noise.buffer = buffer;
+    
+    const filter = this.ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 1000;
+    
+    const gainNode = this.ctx.createGain();
+    gainNode.gain.setValueAtTime(0, time);
+    gainNode.gain.linearRampToValueAtTime(0.15, time + 0.005);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.08);
+    
+    noise.connect(filter);
+    filter.connect(gainNode);
+    gainNode.connect(this.gainNode);
+    
+    noise.start(time);
+    noise.stop(time + 0.08);
+    
+    this.activeNodes.add(noise);
+    setTimeout(() => {
+      this.activeNodes.delete(noise);
+    }, 200);
+  }
+  
+  start() {
+    if (this.isPlaying) return;
+    this.isPlaying = true;
+    this.nextNoteTime = this.ctx.currentTime + 0.05;
+    this.scheduler();
+  }
+  
+  scheduler() {
+    if (!this.isPlaying) return;
+    
+    // Schedule notes up to 200ms in advance
+    const scheduleAheadTime = 0.2;
+    if (this.ctx.state === 'suspended') {
+      this.nextNoteTime = this.ctx.currentTime + 0.05;
+    } else {
+      while (this.nextNoteTime < this.ctx.currentTime + scheduleAheadTime) {
+        this.scheduleNote(this.currentStep, this.nextNoteTime);
+        this.nextNoteTime += this.stepDuration;
+        this.currentStep = (this.currentStep + 1) % 64;
+      }
+    }
+    
+    this.timerId = setTimeout(() => this.scheduler(), 50);
+  }
+  
+  stop() {
+    this.isPlaying = false;
+    if (this.timerId) {
+      clearTimeout(this.timerId);
+      this.timerId = null;
+    }
+    this.activeNodes.forEach(node => {
+      try {
+        node.stop();
+      } catch (e) {}
+    });
+    this.activeNodes.clear();
+    try {
+      this.gainNode.disconnect();
+    } catch (e) {}
+  }
+  
+  get volume() {
+    return this.gainNode.gain.value;
+  }
+  
+  set volume(val) {
+    this.gainNode.gain.setValueAtTime(val, this.ctx.currentTime);
+  }
+}
+
 /**
  * Starts background music (BGM) loop with smooth crossfade.
  */
-export const transitionBGM = (url, targetVolume = 0.4) => {
-  if (!url) {
+export const transitionBGM = (themeKey, targetVolume = 0.4) => {
+  if (!themeKey) {
     stopAllBGM();
     return;
   }
 
   // If already playing this track, adjust volume if needed and exit
-  if (currentBgmPlayer && currentBgmPlayer.src === url) {
+  if (currentBgmPlayer && currentBgmPlayer.theme === themeKey) {
     currentBgmPlayer.volume = targetVolume;
     return;
   }
 
   clearInterval(bgmFadeInterval);
 
-  // Initialize new track
-  nextBgmPlayer = new Audio(url);
-  nextBgmPlayer.loop = true;
-  nextBgmPlayer.volume = 0;
+  const ctx = initAudioContext();
+  if (!ctx) return;
+  if (ctx.state === 'suspended') {
+    ctx.resume().catch(() => {});
+  }
 
-  // Let browser play the track once ready
-  nextBgmPlayer.play().catch(e => console.info("BGM deferred until first user interaction"));
+  // Initialize new track
+  nextBgmPlayer = new ProceduralPlayer(themeKey, ctx, masterVolumeNode || ctx.destination);
+  nextBgmPlayer.volume = 0;
+  nextBgmPlayer.start();
 
   // Smooth Crossfade Loop
   const fadeDuration = 1500; // ms
@@ -290,7 +545,7 @@ export const transitionBGM = (url, targetVolume = 0.4) => {
       clearInterval(bgmFadeInterval);
       
       if (currentBgmPlayer) {
-        currentBgmPlayer.pause();
+        currentBgmPlayer.stop();
         currentBgmPlayer = null;
       }
 
@@ -315,11 +570,11 @@ export const setBgmVolume = (volume) => {
 export const stopAllBGM = () => {
   clearInterval(bgmFadeInterval);
   if (currentBgmPlayer) {
-    currentBgmPlayer.pause();
+    currentBgmPlayer.stop();
     currentBgmPlayer = null;
   }
   if (nextBgmPlayer) {
-    nextBgmPlayer.pause();
+    nextBgmPlayer.stop();
     nextBgmPlayer = null;
   }
 };

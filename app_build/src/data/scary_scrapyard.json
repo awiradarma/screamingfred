@@ -23,6 +23,10 @@
       "targetPosition": {
         "x": 3,
         "y": 2
+      },
+      "conditions": {
+        "requiredItem": "tool_magnifying_glass",
+        "failMessage": "The heavy metal door is jammed shut by fallen scrap from the Barry crash! You need to find Willy's Magnifying Glass in the crevice before you can force it open!"
       }
     },
     "scrap_wall": {
@@ -77,8 +81,8 @@
       "name": "Cutlery Monster",
       "behavior": "stalk",
       "detectionRange": 10,
-      "damage": 2,
-      "hp": 10,
+      "damage": 1,
+      "hp": 6,
       "x": 3,
       "y": 3
     }
