@@ -1701,6 +1701,7 @@ export function getAvailableActions(state) {
   const entityEnemy = state.entities.find(e => e.x === state.playerPosition.x && e.y === state.playerPosition.y && !state.stateFlags[`${e.id}_defeated`]);
 
   if (tileData?.npc) actions.push('talk');
+  if (tileData?.npc?.trades) actions.push('trade');
   if (tileData?.item && !state.stateFlags[`room_${state.room.room_id}_tile_${tileType}_opened`]) actions.push('interact');
   if ((tileData?.enemy && !state.stateFlags[`${tileType.replace(/^enemy_/, '')}_defeated`]) || entityEnemy) {
     actions.push('attack');

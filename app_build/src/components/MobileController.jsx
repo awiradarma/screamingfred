@@ -18,7 +18,7 @@ const checkBlocking = (lastActionTimeRef, update = true) => {
 export default function MobileController({ onSubmit, disabled }) {
   const [showActions, setShowActions] = useState(false);
   const [showItemSelection, setShowItemSelection] = useState(false);
-  const { gameState } = useStore();
+  const { gameState, openShop } = useStore();
   const inventory = gameState?.inventory || [];
   
   const groupedInventory = [];
@@ -44,6 +44,18 @@ export default function MobileController({ onSubmit, disabled }) {
   const handleAction = (action) => {
     if (disabled || checkBlocking(lastActionTime)) return;
     
+    if (action === 'trade') {
+      if (gameState) {
+        const tileType = gameState.room.grid[gameState.playerPosition.y]?.[gameState.playerPosition.x];
+        const tileData = gameState.room.tiles?.[tileType];
+        if (tileData?.npc?.trades) {
+          openShop(tileType, tileData.npc.name, tileData.npc.trades);
+        }
+      }
+      setShowActions(false);
+      return;
+    }
+
     if (action === 'use') {
       if (inventory.length === 0) {
         setShowActions(false);
@@ -86,6 +98,7 @@ export default function MobileController({ onSubmit, disabled }) {
   const allActions = [
     { id: 'interact', label: 'Interact', icon: '✋' },
     { id: 'talk', label: 'Talk', icon: '💬' },
+    { id: 'trade', label: 'Trade', icon: '🛒' },
     { id: 'use', label: 'Use', icon: '🎒' },
     { id: 'attack', label: 'Attack', icon: '⚔️' },
     { id: 'scream', label: 'Scream', icon: '😱' },
