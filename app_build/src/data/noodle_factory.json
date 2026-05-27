@@ -70,8 +70,8 @@
             "id": "chef_ultra_potato_to_vitality",
             "name": "Ultra Starch Soup Boost",
             "give": { "itemId": "food_ultra_potato", "count": 1, "name": "Ultra Golden Potato" },
-            "receive": { "type": "max_hp", "value": 2 },
-            "description": "Process 1 Ultra Golden Potato into a starch soup to permanently increase Max HP by 2."
+            "receive": { "type": "max_hp", "value": 5 },
+            "description": "Process 1 Ultra Golden Potato into a starch soup to permanently increase Max HP by 5."
           },
           {
             "id": "chef_drink_to_stable_footing",

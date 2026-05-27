@@ -164,8 +164,8 @@
             "id": "sal_ultra_potato_to_vitality",
             "name": "Golden Vitality Boost",
             "give": { "itemId": "food_ultra_potato", "count": 1, "name": "Ultra Golden Potato" },
-            "receive": { "type": "max_hp", "value": 2 },
-            "description": "Trade 1 Ultra Golden Potato to permanently increase Max HP by 2."
+            "receive": { "type": "max_hp", "value": 5 },
+            "description": "Trade 1 Ultra Golden Potato to permanently increase Max HP by 5."
           },
           {
             "id": "sal_crystal_to_iron_sole",
