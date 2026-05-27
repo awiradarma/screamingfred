@@ -1,0 +1,24 @@
+{
+  "name": "Screaming Fred: The Tactical Chronicles",
+  "short_name": "Screaming Fred",
+  "description": "A multiplayer text adventure set in Sentientworldia. Explore, scream, and find your stolen pasta!",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0a0e17",
+  "theme_color": "#00e5ff",
+  "display": "standalone",
+  "orientation": "portrait"
+}
