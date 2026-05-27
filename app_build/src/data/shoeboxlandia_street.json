@@ -154,30 +154,23 @@
         "name": "Sal the Sneaker",
         "trades": [
           {
-            "id": "sal_berries_to_bread",
-            "name": "Berries for Bread",
-            "give": { "itemId": "item_berries", "count": 3, "name": "Rubber Berries" },
-            "receive": { "type": "item", "itemId": "food_breadroll", "name": "Stale Breadroll", "count": 1 },
-            "description": "Trade 3 Rubber Berries for 1 Stale Breadroll."
-          },
-          {
-            "id": "sal_photo_to_pepper",
-            "name": "Old Photo for Spicy Pepper",
-            "give": { "itemId": "flavor_photo", "count": 1, "name": "Old Photo" },
+            "id": "sal_potato_to_pepper",
+            "name": "Potato for Spicy Pepper",
+            "give": { "itemId": "food_potato", "count": 1, "name": "Wild Potato" },
             "receive": { "type": "item", "itemId": "consumable_double_damage", "name": "Spicy Pepper", "count": 1 },
-            "description": "Trade your Old Photo for a Spicy Pepper (Double Damage for 3 turns)."
+            "description": "Trade 1 Wild Potato for a Spicy Pepper (Double Damage for 3 turns)."
           },
           {
-            "id": "sal_crystal_to_vitality",
-            "name": "Crystal Vitality Boost",
-            "give": { "itemId": "item_energy_crystal", "count": 2, "name": "Energy Crystal" },
+            "id": "sal_ultra_potato_to_vitality",
+            "name": "Golden Vitality Boost",
+            "give": { "itemId": "food_ultra_potato", "count": 1, "name": "Ultra Golden Potato" },
             "receive": { "type": "max_hp", "value": 2 },
-            "description": "Fuse 2 Energy Crystals to permanently increase Max HP by 2."
+            "description": "Trade 1 Ultra Golden Potato to permanently increase Max HP by 2."
           },
           {
-            "id": "sal_eyelet_to_iron_sole",
+            "id": "sal_crystal_to_iron_sole",
             "name": "Trade for Iron Sole",
-            "give": { "itemId": "item_silver_eyelet", "count": 1, "name": "Silver Eyelet" },
+            "give": { "itemId": "item_energy_crystal", "count": 1, "name": "Energy Crystal" },
             "receive": { 
               "type": "ability", 
               "ability": { 
@@ -188,7 +181,7 @@
                 "icon": "🛡️" 
               } 
             },
-            "description": "Trade a Silver Eyelet to learn the passive 'Iron Sole' ability (reduces incoming damage by 1).",
+            "description": "Trade 1 Energy Crystal to learn the passive 'Iron Sole' ability (reduces incoming damage by 1).",
             "maxTrades": 1
           }
         ],

@@ -60,23 +60,23 @@
         "name": "Chef Tortellini",
         "trades": [
           {
-            "id": "chef_mushrooms_to_potato",
-            "name": "Mushrooms for Potato",
-            "give": { "itemId": "item_mushrooms", "count": 2, "name": "Glowing Mushrooms" },
-            "receive": { "type": "item", "itemId": "food_potato", "name": "Wild Potato", "count": 1 },
-            "description": "Trade 2 Glowing Mushrooms for a fresh Wild Potato (+5 HP)."
+            "id": "chef_potato_to_drink",
+            "name": "Starch for Sparking Drink",
+            "give": { "itemId": "food_potato", "count": 2, "name": "Wild Potato" },
+            "receive": { "type": "item", "itemId": "consumable_energy_drink", "name": "Sparking Energy Drink", "count": 1 },
+            "description": "Trade 2 Wild Potatoes for a Sparking Energy Drink (restores 3 HP and cleanses debuffs)."
           },
           {
-            "id": "chef_pollen_to_vitality",
-            "name": "Pollen Starch Boost",
-            "give": { "itemId": "item_pollen", "count": 3, "name": "Yellow Pollen" },
+            "id": "chef_ultra_potato_to_vitality",
+            "name": "Ultra Starch Soup Boost",
+            "give": { "itemId": "food_ultra_potato", "count": 1, "name": "Ultra Golden Potato" },
             "receive": { "type": "max_hp", "value": 2 },
-            "description": "Process 3 Yellow Pollen into a starch soup to permanently increase Max HP by 2."
+            "description": "Process 1 Ultra Golden Potato into a starch soup to permanently increase Max HP by 2."
           },
           {
-            "id": "chef_vine_to_stable_footing",
+            "id": "chef_drink_to_stable_footing",
             "name": "Trade for Stable Footing",
-            "give": { "itemId": "item_vine", "count": 1, "name": "Pulsing Vine" },
+            "give": { "itemId": "consumable_energy_drink", "count": 1, "name": "Sparking Energy Drink" },
             "receive": {
               "type": "ability",
               "ability": {
@@ -87,7 +87,7 @@
                 "icon": "👞"
               }
             },
-            "description": "Trade a Pulsing Vine to learn the passive 'Stable Footing' ability (prevents jelly launching).",
+            "description": "Trade 1 Sparking Energy Drink to learn the passive 'Stable Footing' ability (prevents jelly launching).",
             "maxTrades": 1
           }
         ],
