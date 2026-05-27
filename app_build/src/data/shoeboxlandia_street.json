@@ -161,11 +161,11 @@
             "description": "Trade 1 Wild Potato for a Spicy Pepper (Double Damage for 3 turns)."
           },
           {
-            "id": "sal_ultra_potato_to_vitality",
-            "name": "Golden Vitality Boost",
+            "id": "sal_ultra_potato_to_magical_pasta",
+            "name": "Potato for Magical Pasta",
             "give": { "itemId": "food_ultra_potato", "count": 1, "name": "Ultra Golden Potato" },
-            "receive": { "type": "max_hp", "value": 5 },
-            "description": "Trade 1 Ultra Golden Potato to permanently increase Max HP by 5."
+            "receive": { "type": "item", "itemId": "magical_pasta", "name": "Magical Pasta", "count": 1 },
+            "description": "Trade 1 Ultra Golden Potato for 1 Magical Pasta (automatically revives you once when you die)."
           },
           {
             "id": "sal_crystal_to_iron_sole",

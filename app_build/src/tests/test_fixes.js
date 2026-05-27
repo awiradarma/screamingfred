@@ -146,7 +146,23 @@ result = processCommand(state, "talk");
 state = result.state;
 assert(state.npcStages.npc_barry > 3, `Dialogue advances past stage 3 now that player has sat (got ${state.npcStages.npc_barry})`);
 
+// --- TEST 7: Magical Pasta Auto-Revive Mechanic ---
+console.log("");
+console.log("--- Test 7: Magical Pasta Auto-Revive Mechanic ---");
+state = initGameState(mountain_base);
+state.playerHP = 1;
+state.inventory.push({ itemId: "magical_pasta", name: "Magical Pasta" });
+state.playerPosition = { x: 2, y: 2 };
+state.npcStages.npc_barry = 2; // stage 2 deals damage
+result = processCommand(state, "talk");
+state = result.state;
+assert(state.playerHP === 10, `Player HP should be restored to max (10) after auto-revive (got ${state.playerHP})`);
+const hasPasta = state.inventory.some(item => item.itemId === "magical_pasta");
+assert(hasPasta === false, "Magical Pasta should be consumed upon auto-revival");
+console.log("[PASS] Player was successfully revived and Magical Pasta was consumed!");
+
 // --- TEST 6: CONQUEST COMPLETENESS & ITEM PLACEMENTS ---
+console.log("");
 console.log("--- Test 6: Conquest Completeness & Item Placements ---");
 const availableItemIdsOrNames = new Set();
 

@@ -67,11 +67,11 @@
             "description": "Trade 2 Wild Potatoes for a Sparking Energy Drink (restores 3 HP and cleanses debuffs)."
           },
           {
-            "id": "chef_ultra_potato_to_vitality",
-            "name": "Ultra Starch Soup Boost",
+            "id": "chef_ultra_potato_to_magical_pasta",
+            "name": "Potato for Magical Pasta",
             "give": { "itemId": "food_ultra_potato", "count": 1, "name": "Ultra Golden Potato" },
-            "receive": { "type": "max_hp", "value": 5 },
-            "description": "Process 1 Ultra Golden Potato into a starch soup to permanently increase Max HP by 5."
+            "receive": { "type": "item", "itemId": "magical_pasta", "name": "Magical Pasta", "count": 1 },
+            "description": "Process 1 Ultra Golden Potato into a starch soup to create 1 Magical Pasta (automatically revives you once when you die)."
           },
           {
             "id": "chef_drink_to_stable_footing",

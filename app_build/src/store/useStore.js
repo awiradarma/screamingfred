@@ -536,6 +536,19 @@ export const useStore = create((set, get) => ({
       // Process through the engine
       const { state: newState, messages } = processCommand(gameState, rawInput, itemRegistry);
       
+      // Auto-Revive check (Magical Pasta)
+      if (newState.playerHP <= 0) {
+        const pastaIdx = newState.inventory.findIndex(item => item.itemId === 'magical_pasta' || item.name === 'Magical Pasta');
+        if (pastaIdx > -1) {
+          newState.inventory.splice(pastaIdx, 1);
+          newState.playerHP = newState.maxHP || 10;
+          messages.push({
+            text: "🔊 Space-time warps! The Magical Pasta in your inventory glows with a warm, starchy light! You are revived from the brink of defeat and your health is fully restored!",
+            type: "loot"
+          });
+        }
+      }
+
       // Check for Conquest Rewards
       // Automatically check after every action if any conquests are complete
       const finalInventory = [...newState.inventory];
@@ -650,6 +663,18 @@ export const useStore = create((set, get) => ({
     const { state: newState, messages } = getEnemyIdleAttacks(gameState);
     
     if (messages.length > 0) {
+      // Auto-Revive check (Magical Pasta)
+      if (newState.playerHP <= 0) {
+        const pastaIdx = newState.inventory.findIndex(item => item.itemId === 'magical_pasta' || item.name === 'Magical Pasta');
+        if (pastaIdx > -1) {
+          newState.inventory.splice(pastaIdx, 1);
+          newState.playerHP = newState.maxHP || 10;
+          messages.push({
+            text: "🔊 Space-time warps! The Magical Pasta in your inventory glows with a warm, starchy light! You are revived from the brink of defeat and your health is fully restored!",
+            type: "loot"
+          });
+        }
+      }
       const timestampedMessages = messages.map(m => ({ ...m, timestamp: Date.now() }));
       set({
         gameState: newState,

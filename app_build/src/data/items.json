@@ -228,5 +228,10 @@
     "name": "Shiny Reflector",
     "description": "A curved metallic dish that maximizes light emission. It looks like it was scavenged from an old torch.",
     "type": "quest"
+  },
+  "magical_pasta": {
+    "name": "Magical Pasta",
+    "description": "A glowing, legendary dish made of cosmic starch. If you take fatal damage while carrying this, it will automatically consume itself to revive you and restore your HP to max!",
+    "type": "quest"
   }
 }
