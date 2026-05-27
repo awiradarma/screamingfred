@@ -704,6 +704,7 @@ export function handleMove(state, direction, messages) {
         ...finalState,
         room: transitionRoom,
         playerPosition: transitionPos || { ...transitionRoom.player_start },
+        entities: (transitionRoom.entities || []).map(e => ({ ...e })),
         discoveredRooms: newDiscovered,
         inventory: updatedInventory,
         stateFlags: updatedFlags
@@ -1528,7 +1529,8 @@ function handleUse(state, itemTarget, messages, globalItems = {}) {
           newState = {
             ...newState,
             room: nextRoomData,
-            playerPosition: item.onUse.targetPosition || { ...nextRoomData.player_start }
+            playerPosition: item.onUse.targetPosition || { ...nextRoomData.player_start },
+            entities: (nextRoomData.entities || []).map(e => ({ ...e }))
           };
           messages.push({ text: successMessage || `🌀 Space-time ripples... you arrive at ${nextRoomData.room_name}!`, type: 'narrative' });
           usedSuccessfully = true;
