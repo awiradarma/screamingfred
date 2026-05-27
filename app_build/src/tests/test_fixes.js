@@ -3,6 +3,9 @@ import mountain_base from '../data/mountain_base.json' assert { type: 'json' };
 import scary_scrapyard from '../data/scary_scrapyard.json' assert { type: 'json' };
 import great_farm from '../data/great_farm.json' assert { type: 'json' };
 import { BGM_THEME_MAPS } from '../utils/audioManager.js';
+import { CONQUEST_REWARDS } from '../store/useStore.js';
+import staticItems from '../data/items.json' assert { type: 'json' };
+import { worldData } from '../data/worldData.js';
 
 let failedTestsCount = 0;
 
@@ -142,6 +145,79 @@ state.playerPosition = { x: 2, y: 2 };
 result = processCommand(state, "talk");
 state = result.state;
 assert(state.npcStages.npc_barry > 3, `Dialogue advances past stage 3 now that player has sat (got ${state.npcStages.npc_barry})`);
+
+// --- TEST 6: CONQUEST COMPLETENESS & ITEM PLACEMENTS ---
+console.log("--- Test 6: Conquest Completeness & Item Placements ---");
+const availableItemIdsOrNames = new Set();
+
+for (const roomId in worldData) {
+  const room = worldData[roomId];
+  if (!room.tiles) continue;
+  
+  for (const tileKey in room.tiles) {
+    const tile = room.tiles[tileKey];
+    
+    // 1. Check tile items
+    if (tile.item) {
+      if (tile.item.itemId) availableItemIdsOrNames.add(tile.item.itemId);
+      if (tile.item.name) availableItemIdsOrNames.add(tile.item.name);
+      if (tile.item.contains) {
+        if (tile.item.contains.itemId) availableItemIdsOrNames.add(tile.item.contains.itemId);
+        if (tile.item.contains.name) availableItemIdsOrNames.add(tile.item.contains.name);
+      }
+    }
+    
+    // 2. Check NPC dialogue awards
+    if (tile.npc && tile.npc.dialogue) {
+      tile.npc.dialogue.forEach(stage => {
+        if (stage.givesItem) {
+          if (stage.givesItem.itemId) availableItemIdsOrNames.add(stage.givesItem.itemId);
+          if (stage.givesItem.name) availableItemIdsOrNames.add(stage.givesItem.name);
+        }
+        if (stage.onComplete && stage.onComplete.action === 'give_item') {
+          availableItemIdsOrNames.add(stage.onComplete.itemId);
+        }
+      });
+    }
+    
+    // 3. Check Enemy drops
+    if (tile.enemy && tile.enemy.loot) {
+      availableItemIdsOrNames.add(tile.enemy.loot);
+    }
+  }
+
+  // 4. Check room entities
+  if (room.entities) {
+    room.entities.forEach(entity => {
+      if (entity.loot) {
+        availableItemIdsOrNames.add(entity.loot);
+      }
+    });
+  }
+}
+
+// Expand the set of available items by matching registered item names
+const allAvailableNames = new Set();
+availableItemIdsOrNames.forEach(idOrName => {
+  allAvailableNames.add(idOrName.toLowerCase());
+  if (staticItems[idOrName]) {
+    allAvailableNames.add(staticItems[idOrName].name.toLowerCase());
+  }
+});
+
+let totalConquestItemsVerified = 0;
+CONQUEST_REWARDS.forEach(conquest => {
+  conquest.requiredItems.forEach((reqId, index) => {
+    const reqName = conquest.requiredItemNames ? conquest.requiredItemNames[index] : null;
+    
+    const hasId = allAvailableNames.has(reqId.toLowerCase());
+    const hasName = reqName ? allAvailableNames.has(reqName.toLowerCase()) : false;
+    
+    assert(hasId || hasName, `Conquest item '${reqId}' (${reqName || 'no name'}) for '${conquest.name}' exists in the game world`);
+    totalConquestItemsVerified++;
+  });
+});
+console.log(`Verified ${totalConquestItemsVerified} conquest items across all room definitions!`);
 
 console.log("");
 if (failedTestsCount === 0) {
