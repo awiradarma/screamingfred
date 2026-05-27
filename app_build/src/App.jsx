@@ -10,6 +10,7 @@ import LevelEditor from './components/LevelEditor';
 import AudioSettings from './components/AudioSettings';
 import { useStore } from './store/useStore';
 import pkg from '../package.json';
+import ShopModal from './components/ShopModal';
 
 export default function App() {
   const {
@@ -190,6 +191,7 @@ export default function App() {
       </main>
 
     </div>
+    <ShopModal />
     <MobileController onSubmit={submitCommand} disabled={isDefeated} />
     </>
   );

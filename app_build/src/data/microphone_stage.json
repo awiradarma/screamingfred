@@ -92,7 +92,7 @@
           },
           {
             "stage": 2,
-            "text": "Fred clears his throat. \"OHHH OHh UMM Large microphone thingy, can you um please let us throoooough... If you won't that battery guy will catch us... What more could you want AHHHHHHHH!\"",
+            "text": "You clear your throat. \"OHHH OHh UMM Large microphone thingy, can you um please let us throoooough... If you won't that battery guy will catch us... What more could you want AHHHHHHHH!\"",
             "hint": "Use the SCREAM action to satisfy the microphone.",
             "requiresScream": true
           },

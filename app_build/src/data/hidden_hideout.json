@@ -3,7 +3,7 @@
   "world_coord": "21,16,-1",
   "room_name": "Hidden Hideout",
   "theme": "Underground",
-  "description": "A dust-choked chamber hidden beneath the base of the mountains. Laces hang from the stone ceiling like cobwebs. A dim light filters down from a hole in the ceiling above. Willy warned you not to enter, but here you are — Fred accidentally fell down the hole!",
+  "description": "A dust-choked chamber hidden beneath the base of the mountains. Laces hang from the stone ceiling like cobwebs. A dim light filters down from a hole in the ceiling above. Willy warned you not to enter, but here you are — you accidentally fell down the hole!",
   "grid": [
     ["stone_wall", "stone_wall", "stone_wall", "stone_wall", "stone_wall"],
     ["stone_wall", "sewing_machine_sue", "saw_saul", "stone_floor", "stone_wall"],
@@ -36,11 +36,11 @@
           },
           {
             "stage": 1,
-            "text": "Willy asks: \"Have you seen a screaming shoe that was lost?\""
+            "text": "Willy, brushing lint off his starch, asks: \"Sue, did you hear a loud crash or see where Fred landed when he fell?\""
           },
           {
             "stage": 2,
-            "text": "\"No,\" replies Sue, \"however, we heard a loud scream in the west corridor! That's definitely where you fell.\""
+            "text": "\"We heard a loud crash in the west corridor!\" replies Sue, looking at Fred. \"That's definitely where you fell. You're lucky Saul didn't try to saw you in half!\""
           },
           {
             "stage": 3,
@@ -72,7 +72,7 @@
     },
     "spiderweb_cellar": {
       "passable": true,
-      "description": "A small cramped cellar covered in thick spiderwebs and dust bunnies. This is where you fell down and lay yelping before Willy and Freddista found you."
+      "description": "A small cramped cellar covered in thick spiderwebs and dust bunnies. You crashed hard here after your accidental tumble from the peak. Fortunately, Willy and Freddista managed to scramble down the hole to join you, dusting off their soles."
     },
     "exit_up": {
       "passable": true,

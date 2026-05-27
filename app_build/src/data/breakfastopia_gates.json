@@ -107,7 +107,7 @@
           },
           {
             "stage": 1,
-            "text": "Fred steps forward angrily. \"We have come to extract the food you have STOLEN!\""
+            "text": "You step forward angrily. \"We have come to extract the food you have STOLEN!\""
           },
           {
             "stage": 2,
@@ -115,7 +115,7 @@
           },
           {
             "stage": 3,
-            "text": "Freddista shoves Fred aside. \"What my friend meant to say was, we are looking for some pasta and potatoes, that might have accidentally fallen into your hands. Have you received any lately?\""
+            "text": "Freddista shoves you aside. \"What my friend meant to say was, we are looking for some pasta and potatoes, that might have accidentally fallen into your hands. Have you received any lately?\""
           },
           {
             "stage": 4,
@@ -147,7 +147,7 @@
           },
           {
             "stage": 1,
-            "text": "Fred asks, \"Do you have any idea who stole my lunch?\" Willy sighs, \"I am afraid your lunch is lost. However, there is a way of making some new pasta and potatoes.\""
+            "text": "You ask, \"Do you have any idea who stole my lunch?\" Willy sighs, \"I am afraid your lunch is lost. However, there is a way of making some new pasta and potatoes.\""
           },
           {
             "stage": 2,
@@ -155,7 +155,7 @@
           },
           {
             "stage": 3,
-            "text": "Fred whines, \"That will take so long!\" Freddista mutters, \"It's not that long.\" Willy adjusts his glasses: \"Well, we better stop complaining, and head to the desert.\"",
+            "text": "You whine, \"That will take so long!\" Freddista mutters, \"It's not that long.\" Willy adjusts his glasses: \"Well, we better stop complaining, and head to the desert.\"",
             "onComplete": {
               "action": "set_flag",
               "flagSet": "willy_joined"

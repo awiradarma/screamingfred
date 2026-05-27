@@ -152,6 +152,46 @@
       "description": "A cheerful sneaker runs a small stall selling odds and ends. A hand-painted sign reads: 'Sal's Surplus — We've got what you need (probably)'.",
       "npc": {
         "name": "Sal the Sneaker",
+        "trades": [
+          {
+            "id": "sal_berries_to_bread",
+            "name": "Berries for Bread",
+            "give": { "itemId": "item_berries", "count": 3, "name": "Rubber Berries" },
+            "receive": { "type": "item", "itemId": "food_breadroll", "name": "Stale Breadroll", "count": 1 },
+            "description": "Trade 3 Rubber Berries for 1 Stale Breadroll."
+          },
+          {
+            "id": "sal_photo_to_pepper",
+            "name": "Old Photo for Spicy Pepper",
+            "give": { "itemId": "flavor_photo", "count": 1, "name": "Old Photo" },
+            "receive": { "type": "item", "itemId": "consumable_double_damage", "name": "Spicy Pepper", "count": 1 },
+            "description": "Trade your Old Photo for a Spicy Pepper (Double Damage for 3 turns)."
+          },
+          {
+            "id": "sal_crystal_to_vitality",
+            "name": "Crystal Vitality Boost",
+            "give": { "itemId": "item_energy_crystal", "count": 2, "name": "Energy Crystal" },
+            "receive": { "type": "max_hp", "value": 2 },
+            "description": "Fuse 2 Energy Crystals to permanently increase Max HP by 2."
+          },
+          {
+            "id": "sal_eyelet_to_iron_sole",
+            "name": "Trade for Iron Sole",
+            "give": { "itemId": "item_silver_eyelet", "count": 1, "name": "Silver Eyelet" },
+            "receive": { 
+              "type": "ability", 
+              "ability": { 
+                "id": "iron_sole", 
+                "name": "Iron Sole", 
+                "description": "Thick iron plating absorbs blows, reducing incoming damage by 1.", 
+                "type": "passive", 
+                "icon": "🛡️" 
+              } 
+            },
+            "description": "Trade a Silver Eyelet to learn the passive 'Iron Sole' ability (reduces incoming damage by 1).",
+            "maxTrades": 1
+          }
+        ],
         "dialogue": [
           {
             "stage": 0,

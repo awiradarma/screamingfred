@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import AbilitiesModal from './AbilitiesModal';
+import { useStore } from '../store/useStore';
 
 /**
  * PlayerHUD — Compact status bar showing player info.
@@ -8,6 +9,24 @@ export default function PlayerHUD({ playerHP, maxHP, inventory, position, roomNa
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const [isAbilitiesOpen, setIsAbilitiesOpen] = useState(false);
   const [expandedKey, setExpandedKey] = useState(null);
+
+  const room = useStore((state) => state.gameState?.room);
+  const openShop = useStore((state) => state.openShop);
+
+  // Find if current tile has trades
+  let hasShop = false;
+  let activeNpcName = '';
+  let activeTrades = [];
+
+  if (room && position) {
+    const tileType = room.grid[position.y]?.[position.x];
+    const tileData = room.tiles?.[tileType];
+    if (tileData?.npc?.trades) {
+      hasShop = true;
+      activeNpcName = tileData.npc.name;
+      activeTrades = tileData.npc.trades;
+    }
+  }
 
   const hpPercent = Math.max(0, (playerHP / maxHP) * 100);
   const hpColor = hpPercent > 60 ? 'var(--color-hp-high)' : hpPercent > 30 ? 'var(--color-hp-mid)' : 'var(--color-hp-low)';
@@ -191,6 +210,17 @@ export default function PlayerHUD({ playerHP, maxHP, inventory, position, roomNa
       <div className="hud-section hud-abilities" onClick={() => setIsAbilitiesOpen(true)} title="View Abilities & Status">
         <span className="hud-label">🌟</span>
       </div>
+
+      {hasShop && (
+        <div 
+          className="hud-section hud-shop glowing-shop-btn" 
+          onClick={() => openShop(room.grid[position.y]?.[position.x], activeNpcName, activeTrades)}
+          title="Open Shop / Trading Post"
+          style={{ cursor: 'pointer', background: 'rgba(74, 222, 128, 0.15)', border: '1px solid #4ade80', borderRadius: '6px', color: '#4ade80', animation: 'shopGlow 1.5s infinite alternate', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          <span className="hud-label" style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '0 4px', fontSize: '0.9rem', fontWeight: 'bold' }}>🛒 Trade</span>
+        </div>
+      )}
 
       <div className="hud-section hud-coords">
         <span className="coord-label">Pos</span>

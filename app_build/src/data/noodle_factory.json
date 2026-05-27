@@ -58,6 +58,39 @@
       "description": "A chef wearing a white hat, frantically stirring a pot.",
       "npc": {
         "name": "Chef Tortellini",
+        "trades": [
+          {
+            "id": "chef_mushrooms_to_potato",
+            "name": "Mushrooms for Potato",
+            "give": { "itemId": "item_mushrooms", "count": 2, "name": "Glowing Mushrooms" },
+            "receive": { "type": "item", "itemId": "food_potato", "name": "Wild Potato", "count": 1 },
+            "description": "Trade 2 Glowing Mushrooms for a fresh Wild Potato (+5 HP)."
+          },
+          {
+            "id": "chef_pollen_to_vitality",
+            "name": "Pollen Starch Boost",
+            "give": { "itemId": "item_pollen", "count": 3, "name": "Yellow Pollen" },
+            "receive": { "type": "max_hp", "value": 2 },
+            "description": "Process 3 Yellow Pollen into a starch soup to permanently increase Max HP by 2."
+          },
+          {
+            "id": "chef_vine_to_stable_footing",
+            "name": "Trade for Stable Footing",
+            "give": { "itemId": "item_vine", "count": 1, "name": "Pulsing Vine" },
+            "receive": {
+              "type": "ability",
+              "ability": {
+                "id": "stable_footing",
+                "name": "Stable Footing",
+                "description": "Your incredible balance allows you to walk safely on jiggly jelly surfaces.",
+                "type": "passive",
+                "icon": "👞"
+              }
+            },
+            "description": "Trade a Pulsing Vine to learn the passive 'Stable Footing' ability (prevents jelly launching).",
+            "maxTrades": 1
+          }
+        ],
         "dialogue": [
           {
             "stage": 0,

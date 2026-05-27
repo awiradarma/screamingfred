@@ -138,6 +138,7 @@ export const useStore = create((set, get) => ({
   worldRooms: {},        // Cache for Firestore-backed rooms
   itemRegistry: {},      // Cache for Item templates
   isSyncing: false,      // background sync status
+  shopActive: null,      // active shop: { npcId, npcName, trades } or null
 
   // Audio Settings State
   audioSettings: (() => {
@@ -280,6 +281,103 @@ export const useStore = create((set, get) => ({
    * Switch between Play, World Map, and Editor.
    */
   setView: (view) => set({ activeView: view }),
+
+  openShop: (npcId, npcName, trades) => {
+    set({ shopActive: { npcId, npcName, trades } });
+  },
+
+  closeShop: () => {
+    set({ shopActive: null });
+  },
+
+  executeTrade: (tradeId) => {
+    const { addMessage, gameState, itemRegistry } = get();
+    if (!gameState || !get().shopActive) return;
+
+    const { trades } = get().shopActive;
+    const trade = trades.find(t => t.id === tradeId);
+    if (!trade) return;
+
+    // Check if player has required items
+    const requiredItem = trade.give.itemId;
+    const requiredCount = trade.give.count;
+
+    const playerInventory = [...gameState.inventory];
+    const matchingItems = playerInventory.filter(item => item.itemId === requiredItem || item.name === trade.give.name);
+
+    if (matchingItems.length < requiredCount) {
+      addMessage(`Cannot trade: You do not have enough ${trade.give.name}. Required: ${requiredCount}, Have: ${matchingItems.length}`, 'warning');
+      return;
+    }
+
+    // Check single purchase limits (if already traded permanent ability/upgrade)
+    if (trade.maxTrades === 1) {
+      const key = `trade_completed_${tradeId}`;
+      if (gameState.stateFlags[key]) {
+        addMessage(`Cannot trade: You have already completed this unique trade!`, 'warning');
+        return;
+      }
+    }
+
+    // Process trade: Deduct items
+    let deducted = 0;
+    const updatedInventory = [];
+    for (const item of playerInventory) {
+      if (deducted < requiredCount && (item.itemId === requiredItem || item.name === trade.give.name)) {
+        deducted++;
+      } else {
+        updatedInventory.push(item);
+      }
+    }
+
+    // Build the updated state
+    const newState = {
+      ...gameState,
+      inventory: updatedInventory,
+      stateFlags: {
+        ...gameState.stateFlags,
+      }
+    };
+
+    // Track completed flag if limited
+    if (trade.maxTrades === 1) {
+      const key = `trade_completed_${tradeId}`;
+      newState.stateFlags[key] = true;
+    }
+
+    // Grant reward
+    const reward = trade.receive;
+    if (reward.type === 'item') {
+      const template = itemRegistry[reward.itemId] || { name: reward.name, type: 'resource' };
+      const newItem = { ...template, itemId: reward.itemId, type: template.type || 'resource' };
+      newState.inventory.push(newItem);
+      addMessage(`🤝 Traded ${requiredCount}x ${trade.give.name} for ${reward.count}x ${reward.name}!`, 'loot');
+    } else if (reward.type === 'max_hp') {
+      newState.maxHP = (newState.maxHP || 10) + reward.value;
+      newState.playerHP = (newState.playerHP || 10) + reward.value; // Heal as well
+      addMessage(`🤝 Traded ${requiredCount}x ${trade.give.name}! Your Max HP increased permanently by ${reward.value}! (Max HP is now ${newState.maxHP})`, 'loot');
+    } else if (reward.type === 'ability') {
+      if (!newState.abilities) newState.abilities = [];
+      newState.abilities.push(reward.ability);
+      addMessage(`🤝 Traded ${requiredCount}x ${trade.give.name}! You learned a new passive ability: ${reward.ability.icon} ${reward.ability.name}!`, 'loot');
+    }
+
+    // Play retro SFX for successful trade
+    const { audioSettings } = get();
+    const sfxVol = (audioSettings.sfxVolume || 0.6) * (audioSettings.masterVolume || 0.7);
+    playSynthSFX('loot', sfxVol);
+
+    set({ gameState: newState });
+    savePlayerSession(newState);
+
+    // Refresh active shop trades dynamically
+    const updatedTrades = trades.map(t => {
+      return t;
+    });
+    set(state => ({
+      shopActive: { ...state.shopActive, trades: updatedTrades }
+    }));
+  },
 
   /**
    * Update audio settings and persist them.
