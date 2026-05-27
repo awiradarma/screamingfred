@@ -54,7 +54,7 @@
       }
     },
     "chef_tortellini": {
-      "passable": false,
+      "passable": true,
       "description": "A chef wearing a white hat, frantically stirring a pot.",
       "npc": {
         "name": "Chef Tortellini",
