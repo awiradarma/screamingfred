@@ -340,7 +340,7 @@ export function processCommand(state, rawInput, itemRegistry = {}) {
       break;
 
     case 'stare':
-      result = handleStare(newState, command.target, messages);
+      result = handleStare(newState, command.target, messages, itemRegistry);
       break;
 
     case 'deduce':
@@ -1333,6 +1333,13 @@ function handleScream(state, messages, globalItems = {}) {
             if (nextHP <= 0) {
               newState.stateFlags = { ...newState.stateFlags, [`${enemyKey}_defeated`]: true };
               messages.push({ text: describeEnemyDefeated(adjEnemy), type: 'loot' });
+
+              // Handle Loot
+              if (adjEnemy.loot && globalItems[adjEnemy.loot]) {
+                const lootItem = { ...globalItems[adjEnemy.loot], itemId: adjEnemy.loot };
+                newState.inventory = [...newState.inventory, lootItem];
+                messages.push({ text: `💎 You looted: ${lootItem.name}!`, type: 'loot' });
+              }
             }
           }
         });
@@ -1439,7 +1446,7 @@ function handleScream(state, messages, globalItems = {}) {
   return { state: newState, messages };
 }
 
-export function handleStare(state, direction, messages) {
+export function handleStare(state, direction, messages, globalItems = {}) {
   if (state.activeCharacter !== 'freddista') {
     messages.push({ text: "Only Freddista has the terrifying killing stare ability!", type: 'warning' });
     return { state, messages };
@@ -1489,6 +1496,13 @@ export function handleStare(state, direction, messages) {
       if (nextHP <= 0) {
         newState.stateFlags = { ...newState.stateFlags, [`${enemyKey}_defeated`]: true };
         messages.push({ text: describeEnemyDefeated(enemy), type: 'loot' });
+
+        // Handle Loot
+        if (enemy.loot && globalItems[enemy.loot]) {
+          const lootItem = { ...globalItems[enemy.loot], itemId: enemy.loot };
+          newState.inventory = [...newState.inventory, lootItem];
+          messages.push({ text: `💎 You looted: ${lootItem.name}!`, type: 'loot' });
+        }
       } else {
         messages.push({ text: `The ${formatEntityName(enemy.name)} stands frozen in absolute terror, stunned!`, type: 'narrative' });
       }
@@ -1842,6 +1856,13 @@ function handleUse(state, itemTarget, messages, globalItems = {}) {
           if (nextHpVal <= 0) {
             newState.stateFlags = { ...newState.stateFlags, [`${enemyKeyName.replace(/^enemy_/, '')}_defeated`]: true };
             messages.push({ text: describeEnemyDefeated(targetEntity), type: 'loot' });
+
+            // Handle Loot
+            if (targetEntity.loot && globalItems[targetEntity.loot]) {
+              const lootItem = { ...globalItems[targetEntity.loot], itemId: targetEntity.loot };
+              newState.inventory = [...newState.inventory, lootItem];
+              messages.push({ text: `💎 You looted: ${lootItem.name}!`, type: 'loot' });
+            }
           }
         }
 

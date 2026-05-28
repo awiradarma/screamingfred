@@ -455,6 +455,123 @@ const highAscensionSolvable = isAdventureWorldSolvable(ascendedWorld.rooms, asce
 assert(highAscensionSolvable === true, "High Ascension world remains 100% procedurally path-solvable from start to victory portal!");
 console.log("");
 
+// --- TEST 7: PORTAL KEY LOOT DROP — ALL COMBAT PATHS ---
+console.log("--- Test 7: Portal Key Loot Drop via Attack / Scream / Stare ---");
+
+// Build a minimal adventure state with one Keeper entity at (2,2)
+const keeperEntity = {
+  id: "keeper_mob_2_2",
+  name: "Keeper of the Key (Battery Sentry)",
+  x: 2,
+  y: 2,
+  hp: 1, // 1 HP so any single hit kills it
+  maxHP: 1,
+  damage: 1,
+  behavior: "stalk",
+  loot: "item_portal_key"
+};
+
+const portalKeyRegistry = {
+  "item_portal_key": {
+    name: "Portal Key",
+    description: "A glowing starchy golden key.",
+    type: "quest"
+  }
+};
+
+const baseAdventureRoom = {
+  room_id: "gen_guaranteed",
+  world_coord: "0,-1,0",
+  room_name: "Key Room",
+  description: "A simple test room.",
+  grid: [
+    ["wall", "wall", "floor", "wall", "wall"],
+    ["wall", "floor", "floor", "floor", "wall"],
+    ["floor", "floor", "floor", "floor", "floor"],
+    ["wall", "floor", "floor", "floor", "wall"],
+    ["wall", "wall", "floor", "wall", "wall"]
+  ],
+  tiles: {
+    wall: { passable: false, description: "A wall." },
+    floor: { passable: true, description: "A floor." }
+  },
+  entities: [{ ...keeperEntity }],
+  state_flags: {}
+};
+
+// --- PATH A: Fred attack ---
+{
+  const stateA = {
+    room: baseAdventureRoom,
+    playerPosition: { x: 2, y: 2 },
+    playerHP: 10, maxHP: 10,
+    inventory: [], stateFlags: {}, enemyHP: {},
+    entities: [{ ...keeperEntity }],
+    activeCharacter: 'fred', characterLevel: 1, npcStages: {}, abilities: [],
+    activeEffects: [], generatedWorld: {}
+  };
+  const resA = processCommand(stateA, "attack", portalKeyRegistry);
+  const hasKey = resA.state.inventory.some(i => i.itemId === "item_portal_key");
+  assert(hasKey, "Fred ATTACK on Keeper of the Key correctly drops Portal Key");
+}
+
+// --- PATH B: Fred scream (direct hit at player position) ---
+{
+  const stateB = {
+    room: baseAdventureRoom,
+    playerPosition: { x: 2, y: 2 },
+    playerHP: 10, maxHP: 10,
+    inventory: [], stateFlags: {}, enemyHP: {},
+    entities: [{ ...keeperEntity }],
+    activeCharacter: 'fred', characterLevel: 1, npcStages: {}, abilities: [],
+    activeEffects: [], generatedWorld: {}
+  };
+  const resB = processCommand(stateB, "scream", portalKeyRegistry);
+  const hasKey = resB.state.inventory.some(i => i.itemId === "item_portal_key");
+  assert(hasKey, "Fred SCREAM on Keeper at same tile correctly drops Portal Key");
+}
+
+// --- PATH C: Fred scream Level 2 — adjacent splash kills Keeper ---
+{
+  // Player stands at (2,1), Keeper is adjacent at (2,2)
+  const adjacentKeeper = { ...keeperEntity, x: 2, y: 2, hp: 1, maxHP: 1 };
+  const stateC = {
+    room: baseAdventureRoom,
+    playerPosition: { x: 2, y: 1 },
+    playerHP: 10, maxHP: 10,
+    inventory: [], stateFlags: {}, enemyHP: {},
+    entities: [adjacentKeeper],
+    activeCharacter: 'fred', characterLevel: 2, npcStages: {}, abilities: [],
+    activeEffects: [], generatedWorld: {}
+  };
+  // First place a dummy enemy at player tile so scream fires
+  const dummyTileEnemy = { ...keeperEntity, id: "dummy_mob_1", x: 2, y: 1, hp: 999, maxHP: 999, loot: undefined };
+  stateC.entities = [adjacentKeeper, dummyTileEnemy];
+  const resC = processCommand(stateC, "scream", portalKeyRegistry);
+  const hasKey = resC.state.inventory.some(i => i.itemId === "item_portal_key");
+  assert(hasKey, "Fred SCREAM Lvl 2 splash kill on adjacent Keeper correctly drops Portal Key");
+}
+
+// --- PATH D: Freddista stare kills Keeper ---
+{
+  // Player at (2,1), Keeper at (2,2) — stare south
+  const starKeeper = { ...keeperEntity, x: 2, y: 2, hp: 2, maxHP: 2 };
+  const stateD = {
+    room: baseAdventureRoom,
+    playerPosition: { x: 2, y: 1 },
+    playerHP: 10, maxHP: 10,
+    inventory: [], stateFlags: {}, enemyHP: {},
+    entities: [starKeeper],
+    activeCharacter: 'freddista', characterLevel: 1, npcStages: {}, abilities: [],
+    activeEffects: [], generatedWorld: {}
+  };
+  const resD = processCommand(stateD, "stare south", portalKeyRegistry);
+  const hasKey = resD.state.inventory.some(i => i.itemId === "item_portal_key");
+  assert(hasKey, "Freddista STARE kill on Keeper of the Key correctly drops Portal Key");
+}
+
+console.log("");
+
 // --- SUMMARY AND REPORT ---
 if (failedTestsCount === 0) {
   console.log("ALL ADVENTURE TESTS COMPLETED SUCCESSFULLY! 🎉");
