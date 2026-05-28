@@ -1004,7 +1004,8 @@ function handleInteract(state, target, messages, globalItems = {}) {
   }
 
   const verb = tileData.interactionVerb || 'SEARCH';
-  const flagKey = `room_${state.room.room_id}_tile_${tileType}_opened`;
+  const flagKey = `room_${state.room.room_id}_tile_${tileType}_x${state.playerPosition.x}_y${state.playerPosition.y}_opened`;
+  const legacyFlagKey = `room_${state.room.room_id}_tile_${tileType}_opened`;
   
   // If it's an item that provides onInteract, we might want to let them interact again,
   // or at least not show "Already searched." if it's not a searchable thing.
@@ -1042,7 +1043,11 @@ function handleInteract(state, target, messages, globalItems = {}) {
   let newState = { ...state };
   
   if (isCollectable) {
-    newState.stateFlags = { ...newState.stateFlags, [flagKey]: true };
+    newState.stateFlags = { 
+      ...newState.stateFlags, 
+      [flagKey]: true,
+      [legacyFlagKey]: true
+    };
   }
 
   if (tileData.item) {
@@ -1517,7 +1522,8 @@ export function handleDeduce(state, messages) {
     const tileData = getTileData(state.room, tileType);
     
     // Check for chest/items
-    if (tileData?.item) {
+    const containerOpened = state.stateFlags[`room_${state.room.room_id}_tile_${tileType}_x${adj.pos.x}_y${adj.pos.y}_opened`] || state.stateFlags[`room_${state.room.room_id}_tile_${tileType}_opened`];
+    if (tileData?.item && !containerOpened) {
       messages.push({ text: `🔍 Clue: There is an unopened container containing a ${tileData.item.name} at coordinates (${adj.pos.x}, ${adj.pos.y}).`, type: 'loot' });
       foundClues = true;
     }
@@ -1943,7 +1949,7 @@ export function getAvailableActions(state) {
   if (tileData?.npc) actions.push('talk');
   if (tileData?.npc?.trades) actions.push('trade');
   const hasInteract = tileData?.item || tileData?.onInteract;
-  const isOpened = state.stateFlags[`room_${state.room.room_id}_tile_${tileType}_opened`];
+  const isOpened = state.stateFlags[`room_${state.room.room_id}_tile_${tileType}_x${state.playerPosition.x}_y${state.playerPosition.y}_opened`];
   if (hasInteract && (!tileData?.item || !isOpened)) actions.push('interact');
   if ((tileData?.enemy && !state.stateFlags[`${tileType.replace(/^enemy_/, '')}_defeated`]) || entityEnemy) {
     actions.push('attack');

@@ -96,7 +96,9 @@ export function describeTile(tileType, tileData, state, roomTiles = {}, roomId =
   }
 
   // Check if item has been opened
-  const flagKey = roomId ? `room_${roomId}_tile_${tileType}_opened` : `item_${tileName(tileType)}_opened`;
+  const px = state?.playerPosition?.x ?? 0;
+  const py = state?.playerPosition?.y ?? 0;
+  const flagKey = roomId ? `room_${roomId}_tile_${tileType}_x${px}_y${py}_opened` : `item_${tileName(tileType)}_opened`;
   if (tileData.item && stateFlags[flagKey]) {
     return tileData.item.opened_description || 'This has already been searched.';
   }

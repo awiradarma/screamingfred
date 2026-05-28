@@ -95,7 +95,7 @@ const TILE_CONFIG = {
 };
 
 
-function getTileConfig(tileType, stateFlags, roomTiles = {}, abilities = []) {
+function getTileConfig(tileType, stateFlags, roomTiles = {}, abilities = [], roomId = '', x = null, y = null) {
   const roomMeta = roomTiles[tileType];
   const mockState = { stateFlags, abilities };
   
@@ -105,7 +105,7 @@ function getTileConfig(tileType, stateFlags, roomTiles = {}, abilities = []) {
   if (!isVisible) {
     if (roomMeta?.hiddenTileType) {
       // Recursively resolve the hidden representation
-      return getTileConfig(roomMeta.hiddenTileType, stateFlags, roomTiles, abilities);
+      return getTileConfig(roomMeta.hiddenTileType, stateFlags, roomTiles, abilities, roomId, x, y);
     }
     // Default hidden style if no hiddenTileType is provided
     return { icon: '?', label: 'Unknown', className: 'tile-hidden' };
@@ -116,8 +116,13 @@ function getTileConfig(tileType, stateFlags, roomTiles = {}, abilities = []) {
     return { icon: '·', label: 'Clear', className: 'tile-floor tile-cleared' };
   }
   // Check if item is opened
-  if (tileType.startsWith('item_') && stateFlags[`${tileType}_opened`]) {
-    return { icon: '◇', label: 'Opened', className: 'tile-item tile-opened' };
+  if (tileType.startsWith('item_')) {
+    const isOpened = stateFlags[`${tileType}_opened`] ||
+                     (roomId && stateFlags[`room_${roomId}_tile_${tileType}_opened`]) ||
+                     (roomId && x !== null && y !== null && stateFlags[`room_${roomId}_tile_${tileType}_x${x}_y${y}_opened`]);
+    if (isOpened) {
+      return { icon: '◇', label: 'Opened', className: 'tile-item tile-opened' };
+    }
   }
 
   // Merge static config with room metadata
@@ -151,7 +156,7 @@ function getTileConfig(tileType, stateFlags, roomTiles = {}, abilities = []) {
   return baseConfig;
 }
 
-export default function GridViewer({ grid, playerPosition, stateFlags, entities, tiles: roomTiles, enemyHP, abilities = [], activeCharacter }) {
+export default function GridViewer({ grid, playerPosition, stateFlags, entities, tiles: roomTiles, enemyHP, abilities = [], activeCharacter, roomId }) {
   const [isExpanded, setIsExpanded] = React.useState(window.innerWidth > 768);
 
   const charSymbol = activeCharacter === 'willy' ? 'W' : 'F';
@@ -173,7 +178,7 @@ export default function GridViewer({ grid, playerPosition, stateFlags, entities,
               <div key={y} className="grid-row">
                 {row.map((tileType, x) => {
                   const isPlayer = playerPosition.x === x && playerPosition.y === y;
-                  const config = getTileConfig(tileType, stateFlags, roomTiles, abilities);
+                  const config = getTileConfig(tileType, stateFlags, roomTiles, abilities, roomId, x, y);
                   const cellEntities = (entities || []).filter(e => e.x === x && e.y === y && !stateFlags[`${e.id}_defeated`]);
 
                   return (

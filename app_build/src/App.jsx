@@ -221,6 +221,7 @@ export default function App() {
             enemyHP={gameState.enemyHP}
             abilities={gameState.abilities}
             activeCharacter={gameState.activeCharacter}
+            roomId={gameState.room.room_id}
           />
           <div className="grid-info-box">
             <div className="info-title">Room Info</div>
