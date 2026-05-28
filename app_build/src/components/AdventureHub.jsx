@@ -243,6 +243,7 @@ export default function AdventureHub() {
               🚀 Launch Run ({selectedAdventureCharacter.toUpperCase()})
             </button>
           </div>
+        </aside>
       </main>
 
       {/* Hall of Fame - Bottom Row */}
