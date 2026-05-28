@@ -1641,7 +1641,11 @@ function handleAttack(state, messages, globalItems = {}) {
 
 function handleInventory(state, messages) {
   if (state.inventory.length === 0) {
-    messages.push({ text: 'Your pockets are empty. Fred\'s pasta and potatoes are still missing.', type: 'system' });
+    if (state.generatedWorld) {
+      messages.push({ text: 'Your pockets are empty. Search chests or defeat enemies to scavenge items.', type: 'system' });
+    } else {
+      messages.push({ text: 'Your pockets are empty. Fred\'s pasta and potatoes are still missing.', type: 'system' });
+    }
   } else {
     const grouped = [];
     state.inventory.forEach(item => {
