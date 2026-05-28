@@ -26,7 +26,15 @@ export async function savePlayerSession(storeState) {
     const gameState = storeState.gameState || storeState;
     const activeMode = storeState.activeMode || 'story';
     const storySession = storeState.storySession || null;
-    const adventureSession = storeState.adventureSession || null;
+    let adventureSession = storeState.adventureSession || null;
+
+    // Dynamically merge active adventure run state to ensure progress is saved on every action
+    if (activeMode === 'adventure' && gameState) {
+      adventureSession = {
+        ...adventureSession,
+        ...gameState
+      };
+    }
 
     // Filter game state to only include session-relevant data
     const sessionData = {

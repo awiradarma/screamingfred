@@ -690,9 +690,16 @@ export const useStore = create((set, get) => ({
       
       allGeneratedMessages = [...messages, ...tickMessages];
 
+      const isAdventure = state.activeMode === 'adventure';
       return {
         gameState: newState,
         gameLog: [...gameLog, echoMsg, ...timestampedMessages, ...tickMessages],
+        ...(isAdventure ? {
+          adventureSession: {
+            ...state.adventureSession,
+            ...newState
+          }
+        } : {})
       };
     });
 
@@ -761,10 +768,17 @@ export const useStore = create((set, get) => ({
         }
       }
       const timestampedMessages = messages.map(m => ({ ...m, timestamp: Date.now() }));
-      set({
+      const isAdventure = get().activeMode === 'adventure';
+      set(state => ({
         gameState: newState,
-        gameLog: [...gameLog, ...timestampedMessages],
-      });
+        gameLog: [...state.gameLog, ...timestampedMessages],
+        ...(isAdventure ? {
+          adventureSession: {
+            ...state.adventureSession,
+            ...newState
+          }
+        } : {})
+      }));
       playAudioForMessages(messages, 'idle', get());
     }
 
