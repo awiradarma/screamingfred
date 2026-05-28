@@ -157,8 +157,12 @@ function modifyPlayerHP(state, amount, messages) {
   const diff = state.playerHP - oldHP;
 
   if (state.playerHP <= 0 && oldHP > 0) {
+    let charName = "Fred";
+    if (state.activeCharacter) {
+      charName = state.activeCharacter === 'freddista' ? 'Freddista' : state.activeCharacter === 'willy' ? 'Willy' : 'Fred';
+    }
     messages.push({ 
-      text: "⚠️ Everything goes cold... the light of the world flickers and dies. Fred has fallen. The void consumes all. 💀 Fred collapses! The world fades to black...", 
+      text: `⚠️ Everything goes cold... the light of the world flickers and dies. ${charName} has fallen. The void consumes all. 💀 ${charName} collapses! The world fades to black...`, 
       type: 'danger' 
     });
   }
