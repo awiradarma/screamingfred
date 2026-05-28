@@ -628,13 +628,13 @@ export function handleMove(state, direction, messages) {
   // If no transition and no tile (or impassable tile), it's blocked
   // Also block world-edge transitions if the explicit transition at that location is HIDDEN
   if (!transitionRoom && (!targetTile || !tileData?.passable)) {
-    messages.push({ text: describeBlocked(), type: 'warning' });
+    messages.push({ text: describeBlocked(state), type: 'warning' });
     return { state, messages };
   }
 
   // Double check: if targetTile exists but is HIDDEN, we should NOT transition to a world-edge room
   if (transitionRoom && targetTile && !isTargetVisible) {
-    messages.push({ text: describeBlocked(), type: 'warning' });
+    messages.push({ text: describeBlocked(state), type: 'warning' });
     return { state, messages };
   }
 
@@ -1256,7 +1256,7 @@ function handleTalk(state, messages, globalItems = {}) {
 }
 
 function handleScream(state, messages, globalItems = {}) {
-  messages.push({ text: describeScream(), type: 'scream' });
+  messages.push({ text: describeScream(state), type: 'scream' });
 
   const tileType = getCurrentTile(state);
   const tileData = getTileData(state.room, tileType);

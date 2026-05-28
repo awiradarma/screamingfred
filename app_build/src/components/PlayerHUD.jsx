@@ -79,10 +79,15 @@ export default function PlayerHUD({ playerHP, maxHP, inventory, position, roomNa
     return '📦';
   };
 
+  const activeCharacter = useStore((state) => state.gameState?.activeCharacter);
+  const characterName = activeCharacter 
+    ? activeCharacter.charAt(0).toUpperCase() + activeCharacter.slice(1) 
+    : 'Fred';
+
   return (
     <div className="player-hud">
       <div className="hud-section hud-identity">
-        <span className="hud-name">🥾 Fred</span>
+        <span className="hud-name">🥾 {characterName}</span>
         <span className="hud-location" title={`Theme: ${theme}`}>{roomName}</span>
       </div>
 

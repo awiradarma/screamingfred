@@ -145,15 +145,31 @@ export function describeMovement(direction) {
 /**
  * Generate blocked movement text.
  */
-export function describeBlocked() {
-  return pick(BLOCKED_FLAVOR);
+export function describeBlocked(state) {
+  const activeChar = state?.activeCharacter || 'fred';
+  const charName = activeChar.charAt(0).toUpperCase() + activeChar.slice(1);
+  const blockList = [
+    `You bump face-first into a wall. It doesn't budge. Neither does your dignity.`,
+    `A solid barrier blocks your path. Not even ${charName}'s power could move this.`,
+    `Nope. That's a wall. Walls tend to be non-negotiable.`,
+  ];
+  return pick(blockList);
 }
 
 /**
  * Generate scream text.
  */
-export function describeScream() {
-  return pick(SCREAM_FLAVOR);
+export function describeScream(state) {
+  const activeChar = state?.activeCharacter || 'fred';
+  const charName = activeChar.charAt(0).toUpperCase() + activeChar.slice(1);
+  const screamList = [
+    `${charName} lets out an earth-shattering scream! The lace-vines tremble!`,
+    `A sonic wave erupts from ${charName}! Nearby objects rattle!`,
+    `${charName} screams with the fury of a thousand morning alarms!`,
+    `The air splits with ${charName}'s legendary wail! Even the walls flinch!`,
+    `${charName}'s scream echoes through the chamber — raw, primal, magnificent!`,
+  ];
+  return pick(screamList);
 }
 
 /**

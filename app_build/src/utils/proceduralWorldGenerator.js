@@ -125,6 +125,10 @@ export function generateAdventureWorld(characterId, characterLevel) {
   // Pick one random outer room to host the Victory Tile
   const victoryRoomKey = ["north", "south", "east", "west"][Math.floor(Math.random() * 4)];
 
+  // Pick one random non-victory outer room to guarantee hosting an enemy so runs never feel completely empty
+  const remainingOuterKeys = ["north", "south", "east", "west"].filter(k => k !== victoryRoomKey);
+  const guaranteedEnemyRoomKey = remainingOuterKeys[Math.floor(Math.random() * remainingOuterKeys.length)];
+
   // Helper to build a room grid
   function generateGridForRoom(roomKey) {
     const isStart = roomKey === 'start';
@@ -158,9 +162,17 @@ export function generateAdventureWorld(characterId, characterLevel) {
     // Place special items/enemies
     if (isVictory) {
       grid[2][2] = 'victory_portal';
+      // 50% chance of a guarding enemy at (1,2)
+      if (Math.random() > 0.5) {
+        grid[1][2] = 'enemy_mob';
+      }
     } else if (!isStart) {
-      // explorations: 50% chance of enemy, 50% chance of chest
-      grid[2][2] = Math.random() > 0.5 ? 'enemy_mob' : 'item_chest';
+      if (roomKey === guaranteedEnemyRoomKey) {
+        grid[2][2] = 'enemy_mob';
+      } else {
+        // 60% chance of enemy, 40% chance of chest
+        grid[2][2] = Math.random() > 0.4 ? 'enemy_mob' : 'item_chest';
+      }
       if (Math.random() > 0.6) {
         grid[1][2] = 'item_chest';
       }
