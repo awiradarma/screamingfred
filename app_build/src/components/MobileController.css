@@ -222,12 +222,7 @@
   color: var(--accent-cyan);
 }
 
-/* Visibility Control */
-@media (min-width: 769px) {
-  .mobile-controller {
-    display: none;
-  }
-}
+/* Visibility Control - Enabled on all screen sizes to support mouse clicks and keyboard alternatives */
 
 .is-disabled {
   filter: grayscale(1) opacity(0.5);
