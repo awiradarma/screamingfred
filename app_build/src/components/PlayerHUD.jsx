@@ -84,10 +84,12 @@ export default function PlayerHUD({ playerHP, maxHP, inventory, position, roomNa
     ? activeCharacter.charAt(0).toUpperCase() + activeCharacter.slice(1) 
     : 'Fred';
 
+  const characterEmoji = activeCharacter === 'willy' ? '🥞' : activeCharacter === 'freddista' ? '🥾' : '👟';
+
   return (
     <div className="player-hud">
       <div className="hud-section hud-identity">
-        <span className="hud-name">🥾 {characterName}</span>
+        <span className="hud-name">{characterEmoji} {characterName}</span>
         <span className="hud-location" title={`Theme: ${theme}`}>{roomName}</span>
       </div>
 

@@ -151,8 +151,11 @@ function getTileConfig(tileType, stateFlags, roomTiles = {}, abilities = []) {
   return baseConfig;
 }
 
-export default function GridViewer({ grid, playerPosition, stateFlags, entities, tiles: roomTiles, enemyHP, abilities = [] }) {
+export default function GridViewer({ grid, playerPosition, stateFlags, entities, tiles: roomTiles, enemyHP, abilities = [], activeCharacter }) {
   const [isExpanded, setIsExpanded] = React.useState(window.innerWidth > 768);
+
+  const charSymbol = activeCharacter === 'willy' ? 'W' : 'F';
+  const charLabel = activeCharacter === 'willy' ? 'Willy' : activeCharacter === 'freddista' ? 'Freddista' : 'Fred';
 
   if (!grid) return null;
 
@@ -180,7 +183,7 @@ export default function GridViewer({ grid, playerPosition, stateFlags, entities,
                       title={`(${x},${y}) ${config.label}`}
                     >
                       {isPlayer ? (
-                        <span className="player-marker">F</span>
+                        <span className="player-marker">{charSymbol}</span>
                       ) : cellEntities.length > 0 ? (
                         <span className="entity-marker" title={cellEntities[0].name}>☠</span>
                       ) : (
@@ -211,7 +214,7 @@ export default function GridViewer({ grid, playerPosition, stateFlags, entities,
             ))}
           </div>
           <div className="grid-legend">
-            <span className="legend-item"><span className="legend-swatch swatch-player">F</span> Fred</span>
+            <span className="legend-item"><span className="legend-swatch swatch-player">{charSymbol}</span> {charLabel}</span>
             <span className="legend-item"><span className="legend-swatch swatch-npc">☺</span> NPC</span>
             <span className="legend-item"><span className="legend-swatch swatch-item">◈</span> Item</span>
             <span className="legend-item"><span className="legend-swatch swatch-enemy">☠</span> Enemy</span>

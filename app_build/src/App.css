@@ -818,6 +818,35 @@
   }
 }
 
+@media (max-width: 580px) {
+  .app-header {
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .header-left {
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 6px;
+    width: 100%;
+  }
+
+  .title-group {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .header-right {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+  }
+}
+
 @media (max-width: 480px) {
   .app-header {
     padding: 4px 8px;

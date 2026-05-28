@@ -220,6 +220,7 @@ export default function App() {
             tiles={gameState.room.tiles}
             enemyHP={gameState.enemyHP}
             abilities={gameState.abilities}
+            activeCharacter={gameState.activeCharacter}
           />
           <div className="grid-info-box">
             <div className="info-title">Room Info</div>
