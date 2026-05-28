@@ -309,12 +309,16 @@ class ProceduralPlayer {
         break;
       case 'adventure':
       default:
-        this.tempo = 115;
-        this.bassPattern = [48, 55, 48, 55, 50, 57, 50, 57]; // C3, G3, D3, A3
+        // A tense, spooky procedural chiptune theme utilizing diminished intervals and low bass tritones
+        this.tempo = 85;
+        this.bassPattern = [40, 40, 46, 46, 40, 40, 41, 41]; // E2, Bb2 (Tritone), E2, F2 (Tense half-step)
         this.melodyPattern = [
-          [60, 64, 67], [67, 72, 76], [62, 66, 69], [69, 74, 78]
+          [52, 55, 58], // E Diminished (spooky)
+          [55, 58, 64], 
+          [53, 56, 59], // F Diminished
+          [56, 59, 65]
         ];
-        this.waveType = 'square';
+        this.waveType = 'sawtooth'; // Ghostly buzzing saw-lead
         break;
     }
     this.stepDuration = 60 / this.tempo / 2; // Duration of one eighth note in seconds
