@@ -1256,6 +1256,10 @@ function handleTalk(state, messages, globalItems = {}) {
 }
 
 function handleScream(state, messages, globalItems = {}) {
+  if (state.activeCharacter && state.activeCharacter !== 'fred') {
+    messages.push({ text: "Only Fred has the legendary sonic scream ability!", type: 'warning' });
+    return { state, messages };
+  }
   messages.push({ text: describeScream(state), type: 'scream' });
 
   const tileType = getCurrentTile(state);
@@ -1915,7 +1919,15 @@ export function getEnemyIdleAttacks(state) {
 export function getAvailableActions(state) {
   const tileType = getCurrentTile(state);
   const tileData = getTileData(state.room, tileType);
-  const actions = ['look', 'move', 'scream'];
+  const actions = ['look', 'move'];
+
+  if (!state.activeCharacter || state.activeCharacter === 'fred') {
+    actions.push('scream');
+  } else if (state.activeCharacter === 'freddista') {
+    actions.push('stare');
+  } else if (state.activeCharacter === 'willy') {
+    actions.push('deduce');
+  }
 
   // Check for entities at current position
   const entityEnemy = state.entities.find(e => e.x === state.playerPosition.x && e.y === state.playerPosition.y && !state.stateFlags[`${e.id}_defeated`]);

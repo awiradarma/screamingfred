@@ -142,16 +142,37 @@ export function generateAdventureWorld(characterId, characterLevel) {
       ["wall", "wall", "floor", "wall", "wall"]
     ];
 
-    // If it's an outer room, close the outer edge exits
+    // If it's an outer room, close all outer edges EXCEPT the connection back to gen_start!
     if (roomKey === 'north') {
-      grid[0][2] = "wall"; // No exit North
+      grid[0][2] = "wall"; // North
+      grid[2][0] = "wall"; // West
+      grid[2][4] = "wall"; // East
     } else if (roomKey === 'south') {
-      grid[4][2] = "wall"; // No exit South
+      grid[4][2] = "wall"; // South
+      grid[2][0] = "wall"; // West
+      grid[2][4] = "wall"; // East
     } else if (roomKey === 'east') {
-      grid[2][4] = "wall"; // No exit East
+      grid[0][2] = "wall"; // North
+      grid[4][2] = "wall"; // South
+      grid[2][4] = "wall"; // East
     } else if (roomKey === 'west') {
-      grid[2][0] = "wall"; // No exit West
+      grid[0][2] = "wall"; // North
+      grid[4][2] = "wall"; // South
+      grid[2][0] = "wall"; // West
     }
+
+    // Randomly turn 1 or 2 corner floor tiles into walls to add rich procedural layout variety
+    const cornerFloors = [
+      { x: 1, y: 1 },
+      { x: 3, y: 1 },
+      { x: 1, y: 3 },
+      { x: 3, y: 3 }
+    ];
+    cornerFloors.forEach(pos => {
+      if (Math.random() > 0.5) {
+        grid[pos.y][pos.x] = "wall";
+      }
+    });
 
     // Place exit tags on grid
     if (grid[0][2] === 'floor') grid[0][2] = 'exit_north';
@@ -232,7 +253,11 @@ export function generateAdventureWorld(characterId, characterLevel) {
       tiles.victory_portal = {
         passable: true,
         description: bp.victoryTile.description,
-        targetRoomId: bp.victoryTile.targetRoomId
+        targetRoomId: bp.victoryTile.targetRoomId,
+        conditions: {
+          requiredItem: "item_portal_key",
+          failMessage: "⚠️ The victory portal is sealed by a shimmering starchy forcefield! You need the Portal Key to activate it. Exterminate the Keeper of the Key to loot it!"
+        }
       };
     }
 
@@ -251,6 +276,7 @@ export function generateAdventureWorld(characterId, characterLevel) {
     // Add Enemy definitions and placements
     const entities = [];
     const enemySpec = bp.enemies[Math.floor(Math.random() * bp.enemies.length)];
+    const isGuaranteedEnemyRoom = roomKey === guaranteedEnemyRoomKey;
 
     grid.forEach((row, ry) => {
       row.forEach((col, rx) => {
@@ -260,16 +286,20 @@ export function generateAdventureWorld(characterId, characterLevel) {
           
           // Scale enemy HP based on character level slightly to keep it fair
           const scaledHP = enemySpec.hp + (characterLevel - 1) * 2;
+          const isGuaranteedEnemy = isGuaranteedEnemyRoom && entities.length === 0;
           entities.push({
             id: `${enemySpec.id}_${ry}_${rx}`,
-            name: enemySpec.name,
+            name: isGuaranteedEnemy ? `Keeper of the Key (${enemySpec.name})` : enemySpec.name,
             x: rx,
             y: ry,
             hp: scaledHP,
             maxHP: scaledHP,
             damage: enemySpec.damage,
             behavior: enemySpec.behavior,
-            description: enemySpec.description
+            description: isGuaranteedEnemy 
+              ? `${enemySpec.description} It seems to be clutching a glowing golden Portal Key!`
+              : enemySpec.description,
+            loot: isGuaranteedEnemy ? "item_portal_key" : undefined
           });
         }
       });

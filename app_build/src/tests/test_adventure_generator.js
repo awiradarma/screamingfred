@@ -273,7 +273,7 @@ if (solutionPath) {
     playerPosition: { x: 2, y: 2 },
     playerHP: 10,
     maxHP: 10,
-    inventory: [],
+    inventory: [{ itemId: "item_portal_key", name: "Portal Key", type: "quest" }],
     stateFlags: {},
     npcStages: {},
     enemyHP: {},

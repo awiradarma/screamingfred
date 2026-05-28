@@ -208,6 +208,11 @@ export const useStore = create((set, get) => ({
             "consume": true,
             "successMessage": "You consume the Potato Battery! A starchy energy field surrounds you, blocking half of incoming damage for one turn!"
           }
+        },
+        "item_portal_key": {
+          "name": "Portal Key",
+          "description": "A glowing, starchy golden key pulsating with cosmic energy. Defeat the Keeper of the Key to loot it and unlock the victory portal!",
+          "type": "quest"
         }
       };
       set({ itemRegistry: registry });
