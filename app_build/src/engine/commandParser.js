@@ -21,6 +21,8 @@ const ACTION_ALIASES = {
   talk:     'talk',     speak: 'talk',  chat: 'talk',
   attack:   'attack',   hit: 'attack',  fight: 'attack',
   use:      'use',      apply: 'use',   consume: 'use',
+  stare:    'stare',    glare: 'stare', gaze: 'stare',
+  deduce:   'deduce',   magnify: 'deduce', scan: 'deduce',
 };
 
 /**
@@ -66,6 +68,8 @@ export function getHelpText() {
     { cmd: 'scream',                 desc: 'Use Fred\'s Sonic Scream ability' },
     { cmd: 'attack',                 desc: 'Attack an enemy on your tile' },
     { cmd: 'inventory / i',          desc: 'Check your inventory' },
+    { cmd: 'stare <dir>',            desc: 'Freddista\'s line stare (Adventure only)' },
+    { cmd: 'deduce',                 desc: 'Willy\'s path deduction (Adventure only)' },
     { cmd: 'help / ?',               desc: 'Show this help message' },
   ];
 }

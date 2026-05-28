@@ -17,19 +17,28 @@ async function ensureAuth() {
 /**
  * Save the player's current game session to Firestore.
  */
-export async function savePlayerSession(gameState) {
+export async function savePlayerSession(storeState) {
   try {
     const uid = await ensureAuth();
     const sessionDoc = doc(db, SESSIONS_COLL, uid);
 
+    // If storeState contains gameState, use it. Otherwise, assume storeState IS the gameState (backward compatibility)
+    const gameState = storeState.gameState || storeState;
+    const activeMode = storeState.activeMode || 'story';
+    const storySession = storeState.storySession || null;
+    const adventureSession = storeState.adventureSession || null;
+
     // Filter game state to only include session-relevant data
     const sessionData = {
+      activeMode,
+      storySession,
+      adventureSession,
       playerHP: gameState.playerHP,
       maxHP: gameState.maxHP,
       inventory: gameState.inventory,
       stateFlags: gameState.stateFlags,
       playerPosition: gameState.playerPosition,
-      roomCoordinates: gameState.room.world_coord || "(15, 15, 0)", // backup if missing
+      roomCoordinates: gameState.room?.world_coord || "(15, 15, 0)", // backup if missing
       discoveredRooms: gameState.discoveredRooms || [],
       abilities: gameState.abilities || [],
       activeEffects: gameState.activeEffects || [],
@@ -57,6 +66,7 @@ export async function loadPlayerSession() {
       const data = snap.data();
       // Ensure discoveredRooms exists even for older sessions
       if (!data.discoveredRooms) data.discoveredRooms = [];
+      if (!data.activeMode) data.activeMode = 'story';
       return data;
     }
     return null;

@@ -11,12 +11,14 @@ import AudioSettings from './components/AudioSettings';
 import { useStore } from './store/useStore';
 import pkg from '../package.json';
 import ShopModal from './components/ShopModal';
+import AdventureHub from './components/AdventureHub';
+import RunSummaryOverlay from './components/RunSummaryOverlay';
 
 export default function App() {
   const {
     gameState, gameLog, isGameStarted,
     initGame, resetGame, submitCommand,
-    activeView, setView, isAdmin
+    activeView, setView, isAdmin, activeMode
   } = useStore();
   const [showRestartConfirm, setShowRestartConfirm] = React.useState(false);
 
@@ -55,12 +57,20 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
   }, [submitCommand, gameState?.playerHP]);
 
-  if (!gameState) {
+  if (!gameState && activeView !== 'adventure_hub' && activeView !== 'adventure_summary') {
     return (
       <div className="app-loading">
         <div className="loading-text">Initializing Sentientworldia...</div>
       </div>
     );
+  }
+
+  if (activeView === 'adventure_hub') {
+    return <AdventureHub />;
+  }
+
+  if (activeView === 'adventure_summary') {
+    return <RunSummaryOverlay />;
   }
 
   if (activeView === 'world_map') {
@@ -71,7 +81,7 @@ export default function App() {
     return <LevelEditor />;
   }
 
-  const isDefeated = gameState.playerHP <= 0;
+  const isDefeated = gameState?.playerHP <= 0;
 
   return (
     <>
@@ -88,12 +98,28 @@ export default function App() {
           <nav className="admin-nav">
             <button 
               className={`nav-btn ${activeView === 'game' ? 'active' : ''}`}
-              onClick={() => setView('game')}
+              onClick={() => {
+                if (activeMode === 'adventure' && !gameState) {
+                  setView('adventure_hub');
+                } else {
+                  setView('game');
+                }
+              }}
               title="Play"
             >
               <span className="nav-icon">🎮</span>
               <span className="nav-text">Play</span>
             </button>
+            {activeMode === 'adventure' && (
+              <button 
+                className={`nav-btn ${activeView === 'adventure_hub' ? 'active' : ''}`}
+                onClick={() => setView('adventure_hub')}
+                title="Hub"
+              >
+                <span className="nav-icon">🏰</span>
+                <span className="nav-text">Hub</span>
+              </button>
+            )}
             <button 
               className={`nav-btn ${activeView === 'world_map' ? 'active' : ''}`}
               onClick={() => setView('world_map')}
@@ -113,6 +139,29 @@ export default function App() {
               </button>
             )}
           </nav>
+          
+          <button 
+            className="mode-toggle-btn title-glow-subtle" 
+            onClick={() => useStore.getState().toggleGameMode()}
+            style={{
+              background: activeMode === 'adventure' ? '#0f3f1b' : '#112a44',
+              border: activeMode === 'adventure' ? '1px solid #39ff14' : '1px solid #00d2ff',
+              color: '#fff',
+              padding: '6px 12px',
+              fontFamily: 'monospace',
+              fontSize: '12px',
+              cursor: 'pointer',
+              textTransform: 'uppercase',
+              textShadow: activeMode === 'adventure' ? '0 0 5px #39ff14' : '0 0 5px #00d2ff',
+              transition: 'all 0.3s ease',
+              marginRight: '10px',
+              borderRadius: '4px',
+              fontWeight: 'bold'
+            }}
+          >
+            {activeMode === 'story' ? '📖 Story' : '🌲 Adventure'}
+          </button>
+          
           <AudioSettings />
           <button className="restart-btn" onClick={() => {
             console.log('Restart button requested');

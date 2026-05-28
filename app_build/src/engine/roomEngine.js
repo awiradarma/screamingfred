@@ -335,6 +335,14 @@ export function processCommand(state, rawInput, itemRegistry = {}) {
       result = handleAttack(newState, messages, itemRegistry);
       break;
 
+    case 'stare':
+      result = handleStare(newState, command.target, messages);
+      break;
+
+    case 'deduce':
+      result = handleDeduce(newState, messages);
+      break;
+
     case 'inventory':
       result = handleInventory(newState, messages);
       break;
@@ -465,6 +473,13 @@ export function processCommand(state, rawInput, itemRegistry = {}) {
     }
   }
 
+  // Intercept Defeat in Adventure Mode procedural runs
+  if (newState.generatedWorld && newState.playerHP <= 0 && !newState.adventureCompleted) {
+    newState.adventureCompleted = true;
+    newState.adventureOutcome = 'defeat';
+    messages.push({ text: "💀 DEFEAT! You have perished inside the adventure run.", type: "defeat" });
+  }
+
   return { state: newState, messages };
 }
 
@@ -590,12 +605,21 @@ export function handleMove(state, direction, messages) {
         const nx = cx + dx;
         const ny = cy + dy;
 
-        // Note: we can't use require here in browser, using the imported functions
-        if (isValidCoordinate(nx, ny, cz)) {
-          transitionRoom = getRoomAt(nx, ny, cz);
-          if (transitionRoom) {
-            transitionPos = calculateEntryPosition(transitionRoom, direction);
+        // Intercept for Adventure Mode procedural worlds
+        if (state.generatedWorld) {
+          const coordKey = `${nx},${ny},${cz}`;
+          const matchingRoomId = Object.keys(state.generatedWorld).find(roomId => {
+            return state.generatedWorld[roomId].world_coord === coordKey;
+          });
+          if (matchingRoomId) {
+            transitionRoom = state.generatedWorld[matchingRoomId];
           }
+        } else if (isValidCoordinate(nx, ny, cz)) {
+          transitionRoom = getRoomAt(nx, ny, cz);
+        }
+
+        if (transitionRoom) {
+          transitionPos = calculateEntryPosition(transitionRoom, direction);
         }
       }
     }
@@ -619,7 +643,7 @@ export function handleMove(state, direction, messages) {
   let finalFlags = { ...state.stateFlags };
 
   // Check for locked door/gate (New Dynamic Conditions)
-  if (tileData.conditions) {
+  if (tileData && tileData.conditions) {
     const { requiredItem, requiredFlag, failMessage, onSuccess } = tileData.conditions;
 
     // Check if player has the item (check itemId or name)
@@ -677,6 +701,16 @@ export function handleMove(state, direction, messages) {
   }
 
   // Handle Room Transition (Specific trigger or Edge transition)
+  if (finalTileData?.targetRoomId === 'victory_exit') {
+    messages.push({ text: "🎉 VICTORY! You step into the cosmic glowing exit gate! Sentientworldia warps around you as you are safely returned to the hub...", type: 'victory' });
+    const victoryState = {
+      ...finalState,
+      adventureCompleted: true,
+      adventureOutcome: 'victory'
+    };
+    return { state: victoryState, messages };
+  }
+
   if (finalTileData?.targetRoomId) {
     // Explicit transition tile
     transitionRoom = getRoomData(finalTileData.targetRoomId);
@@ -1229,6 +1263,7 @@ function handleScream(state, messages, globalItems = {}) {
   const entityEnemy = state.entities.find(e => e.x === state.playerPosition.x && e.y === state.playerPosition.y && !state.stateFlags[`${e.id}_defeated`]);
 
   let newState = { ...state };
+  if (!newState.enemyHP) newState.enemyHP = {};
 
   // Scream effects on enemies (Tile or Entity)
   const target = entityEnemy || (tileData?.enemy?.scream_vulnerable ? tileData.enemy : null);
@@ -1239,7 +1274,10 @@ function handleScream(state, messages, globalItems = {}) {
     if (!state.stateFlags[defeatKey]) {
       const enemyKey = entityEnemy ? entityEnemy.id : tileType;
       const currentHP = state.enemyHP[enemyKey] ?? target.hp;
-      const newHP = currentHP - 2; // Scream does 2 damage
+      
+      // Scale scream damage based on level in Adventure Mode
+      const screamDmg = state.activeCharacter === 'fred' && state.characterLevel ? 2 * state.characterLevel : 2;
+      const newHP = Math.max(0, currentHP - screamDmg);
 
       if (newHP <= 0) {
         messages.push({ text: describeEnemyDefeated(target), type: 'loot' });
@@ -1257,11 +1295,34 @@ function handleScream(state, messages, globalItems = {}) {
           enemyHP: { ...newState.enemyHP, [enemyKey]: 0 },
         };
       } else {
-        messages.push({ text: `Your scream stuns ${formatEntityName(target.name)}! (${newHP} HP remaining)`, type: 'narrative' });
+        messages.push({ text: `🔊 Your sonic scream shatters ${formatEntityName(target.name)}'s ears! (${newHP} HP remaining)`, type: 'narrative' });
         newState = {
           ...newState,
           enemyHP: { ...newState.enemyHP, [enemyKey]: newHP },
         };
+      }
+
+      // Handle Fred Level 2/3 adjacent splash damage in Adventure Mode
+      if (state.activeCharacter === 'fred' && state.characterLevel >= 2) {
+        const splashDmg = state.characterLevel === 2 ? 1 : 3;
+        const adjacent = getAdjacentTiles(state);
+        
+        adjacent.forEach(adj => {
+          const adjEnemy = state.entities.find(e => e.x === adj.pos.x && e.y === adj.pos.y && !newState.stateFlags[`${e.id}_defeated`]);
+          if (adjEnemy) {
+            const enemyKey = adjEnemy.id;
+            const eHP = newState.enemyHP[enemyKey] ?? adjEnemy.hp;
+            const nextHP = Math.max(0, eHP - splashDmg);
+            newState.enemyHP = { ...newState.enemyHP, [enemyKey]: nextHP };
+            
+            messages.push({ text: `🔊 Resonance splash deals ${splashDmg} damage to adjacent ${formatEntityName(adjEnemy.name)}!`, type: 'danger' });
+            
+            if (nextHP <= 0) {
+              newState.stateFlags = { ...newState.stateFlags, [`${enemyKey}_defeated`]: true };
+              messages.push({ text: describeEnemyDefeated(adjEnemy), type: 'loot' });
+            }
+          }
+        });
       }
     }
   }
@@ -1363,6 +1424,150 @@ function handleScream(state, messages, globalItems = {}) {
   }
 
   return { state: newState, messages };
+}
+
+export function handleStare(state, direction, messages) {
+  if (state.activeCharacter !== 'freddista') {
+    messages.push({ text: "Only Freddista has the terrifying killing stare ability!", type: 'warning' });
+    return { state, messages };
+  }
+
+  if (!direction || !DIR_VECTORS[direction]) {
+    messages.push({ text: "Stare where? Choose a direction: north, south, east, or west (e.g. 'stare north').", type: 'system' });
+    return { state, messages };
+  }
+
+  messages.push({ text: `👁️ Freddista narrows her heavy boots' eyelets, unleashing a piercing, petrifying glare ${direction}!`, type: 'scream' });
+
+  let newState = { ...state };
+  if (!newState.enemyHP) newState.enemyHP = {};
+
+  const range = state.characterLevel || 1;
+  const dmg = 2 * range;
+  const { dx, dy } = DIR_VECTORS[direction];
+
+  let hitTarget = false;
+
+  for (let step = 1; step <= range; step++) {
+    const tx = state.playerPosition.x + dx * step;
+    const ty = state.playerPosition.y + dy * step;
+
+    // Check bounds
+    if (ty < 0 || ty >= state.room.grid.length || tx < 0 || tx >= state.room.grid[0].length) break;
+
+    const tileType = getTileAt(state.room, tx, ty);
+    if (tileType === 'wall') {
+      messages.push({ text: "Your stare hits a solid wall, leaving scorch marks on the plaster.", type: 'narrative' });
+      break;
+    }
+
+    // Check for enemy at (tx, ty)
+    const enemy = state.entities.find(e => e.x === tx && e.y === ty && !newState.stateFlags[`${e.id}_defeated`]);
+    if (enemy) {
+      const enemyKey = enemy.id;
+      const currentHP = newState.enemyHP[enemyKey] ?? enemy.hp;
+      const nextHP = Math.max(0, currentHP - dmg);
+      
+      newState.enemyHP = { ...newState.enemyHP, [enemyKey]: nextHP };
+      hitTarget = true;
+
+      messages.push({ text: `⚡ Direct hit! Your petrifying gaze strikes the ${formatEntityName(enemy.name)}, dealing ${dmg} damage!`, type: 'danger' });
+
+      if (nextHP <= 0) {
+        newState.stateFlags = { ...newState.stateFlags, [`${enemyKey}_defeated`]: true };
+        messages.push({ text: describeEnemyDefeated(enemy), type: 'loot' });
+      } else {
+        messages.push({ text: `The ${formatEntityName(enemy.name)} stands frozen in absolute terror, stunned!`, type: 'narrative' });
+      }
+      break; // Stare stops at the first enemy hit
+    }
+  }
+
+  if (!hitTarget) {
+    messages.push({ text: "Your gaze pierces the empty air, but nothing stands in its path.", type: 'narrative' });
+  }
+
+  return { state: newState, messages };
+}
+
+export function handleDeduce(state, messages) {
+  if (state.activeCharacter !== 'willy') {
+    messages.push({ text: "Only Willy the Waffle has the deductive intelligence of an expired detective!", type: 'warning' });
+    return { state, messages };
+  }
+
+  messages.push({ text: "🕵️‍♂️ Willy adjusts his spectacles, pulls out his trusty magnifying glass, and begins scanning the area for clues...", type: 'scream' });
+
+  const lvl = state.characterLevel || 1;
+  const adjacent = getAdjacentTiles(state);
+
+  messages.push({ text: "--- DEDUCTIVE ANALYSIS: SURROUNDINGS ---", type: 'system' });
+  let foundClues = false;
+
+  adjacent.forEach(adj => {
+    const tileType = adj.type;
+    const tileData = getTileData(state.room, tileType);
+    
+    // Check for chest/items
+    if (tileData?.item) {
+      messages.push({ text: `🔍 Clue: There is an unopened container containing a ${tileData.item.name} at coordinates (${adj.pos.x}, ${adj.pos.y}).`, type: 'loot' });
+      foundClues = true;
+    }
+    
+    // Check for exit
+    if (tileType.startsWith('exit_')) {
+      messages.push({ text: `🔍 Clue: A traversable exit winds towards the ${tileType.replace('exit_', '')} at (${adj.pos.x}, ${adj.pos.y}).`, type: 'narrative' });
+      foundClues = true;
+    }
+  });
+
+  // Check for adjacent enemies
+  state.entities.forEach(entity => {
+    const isDefeated = state.stateFlags[`${entity.id}_defeated`];
+    if (!isDefeated) {
+      const dist = Math.abs(entity.x - state.playerPosition.x) + Math.abs(entity.y - state.playerPosition.y);
+      if (dist === 1) {
+        messages.push({ text: `⚠️ Warning: A hostile ${formatEntityName(entity.name)} is patrolling adjacent at (${entity.x}, ${entity.y})!`, type: 'danger' });
+        foundClues = true;
+      }
+    }
+  });
+
+  if (!foundClues) {
+    messages.push({ text: "No immediate adjacent clues or hazards detected.", type: 'narrative' });
+  }
+
+  // Level 2: Reveal Enemy details
+  if (lvl >= 2) {
+    messages.push({ text: "--- DETECTIVE ANALYSIS: HOSTILE INTEL ---", type: 'system' });
+    let activeEnemies = state.entities.filter(e => !state.stateFlags[`${e.id}_defeated`]);
+    if (activeEnemies.length === 0) {
+      messages.push({ text: "Area secure. No hostiles detected in the room.", type: 'narrative' });
+    } else {
+      activeEnemies.forEach(enemy => {
+        const currentHP = state.enemyHP[enemy.id] ?? enemy.hp;
+        messages.push({ text: `👾 ${enemy.name}: HP: ${currentHP}/${enemy.maxHP} // Weakness: Vulnerable to physical whacks and starchy shockwaves.`, type: 'danger' });
+      });
+    }
+  }
+
+  // Level 3: Reveal Victory Room location
+  if (lvl >= 3) {
+    messages.push({ text: "--- ULTIMATE DEDUCTION: ESCAPE PATHWAY ---", type: 'system' });
+    if (state.generatedWorld) {
+      const vRoomKey = Object.keys(state.generatedWorld).find(key => {
+        const room = state.generatedWorld[key];
+        return room.grid.some(row => row.includes('victory_portal'));
+      });
+      
+      if (vRoomKey) {
+        const vRoom = state.generatedWorld[vRoomKey];
+        messages.push({ text: `🌟 ESP SENSORY: The cosmic escape portal is located in the room: "${vRoom.room_name}"!`, type: 'loot' });
+      }
+    }
+  }
+
+  return { state: state, messages };
 }
 
 function handleAttack(state, messages, globalItems = {}) {

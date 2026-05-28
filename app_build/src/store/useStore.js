@@ -4,6 +4,8 @@ import { worldData, getRoomAt } from '../data/worldData.js';
 import { fetchWorldRooms } from '../firebase/worldPersistence.js';
 import { fetchItemRegistry, loadRegistryFromLocal, migrateStaticItems } from '../firebase/registryPersistence.js';
 import { savePlayerSession, loadPlayerSession, clearPlayerSession, verifyAdminSecret } from '../firebase/sessionPersistence.js';
+import { getDefaultProfile, loadPlayerProfile, savePlayerProfile } from '../firebase/profilePersistence.js';
+import { generateAdventureWorld } from '../utils/proceduralWorldGenerator.js';
 import staticItems from '../data/items.json' assert { type: 'json' };
 import { 
   playSynthSFX, 
@@ -139,6 +141,13 @@ export const useStore = create((set, get) => ({
   itemRegistry: {},      // Cache for Item templates
   isSyncing: false,      // background sync status
   shopActive: null,      // active shop: { npcId, npcName, trades } or null
+  activeMode: 'story',   // 'story' | 'adventure'
+  storySession: null,
+  adventureSession: null,
+  playerProfile: null,
+  selectedAdventureCharacter: 'fred',
+  adventureEquippedItems: [],
+  lastRunSummary: null,
 
   // Audio Settings State
   audioSettings: (() => {
@@ -177,49 +186,94 @@ export const useStore = create((set, get) => ({
     console.log(`initGame called. forceNew: ${forceNew}`);
     // 1. Ensure Registry is loaded
     let registry = get().itemRegistry;
-    if (Object.keys(registry).length === 0) {
+    if (Object.keys(registry).length === 0 || !registry.item_potato_battery) {
       const localRegistry = await loadRegistryFromLocal();
       // Merge static items as base to ensure new items are available
-      registry = { ...staticItems, ...localRegistry };
+      registry = { 
+        ...staticItems, 
+        ...localRegistry,
+        // Register custom Adventure Mode consumable items
+        "item_potato_battery": {
+          "name": "Potato Battery",
+          "description": "A starchy battery that prevents half of an enemy or effect's damage for one turn.",
+          "type": "food",
+          "onUse": {
+            "action": "apply_effect",
+            "effect": {
+              "name": "Starchy Shield",
+              "type": "damage_reduction",
+              "duration": 1,
+              "value": 0.5
+            },
+            "consume": true,
+            "successMessage": "You consume the Potato Battery! A starchy energy field surrounds you, blocking half of incoming damage for one turn!"
+          }
+        }
+      };
       set({ itemRegistry: registry });
     }
 
-    // 2. Check for existing session
+    // 2. Load player profile
+    let profile = await loadPlayerProfile();
+    set({ playerProfile: profile });
+
+    // 3. Check for existing session
     let session = forceNew ? null : await loadPlayerSession();
     console.log(`Session found: ${!!session}`);
     
+    let activeMode = 'story';
+    let storySession = null;
+    let adventureSession = null;
     let startRoom;
-    let initialState;
+    let initialState = null;
+    let targetView = 'game';
 
     if (session) {
-      // Reconstitute room from session coordinates
-      const [sx, sy, sz] = session.roomCoordinates.replace(/[()]/g, '').split(',').map(s => parseInt(s.trim()));
-      startRoom = get().worldRooms[`${sx},${sy}`] || getRoomAt(sx, sy, sz || 0);
+      activeMode = session.activeMode || 'story';
+      storySession = session.storySession || null;
+      adventureSession = session.adventureSession || null;
 
-      if (!startRoom) {
-        console.warn(`Room at ${sx},${sy},${sz} not found! Resetting to Fred's house.`);
-        startRoom = getRoomAt(15, 15, 0) || worldData.freds_house;
+      if (activeMode === 'story') {
+        // Reconstitute room from session coordinates
+        const [sx, sy, sz] = session.roomCoordinates.replace(/[()]/g, '').split(',').map(s => parseInt(s.trim()));
+        startRoom = get().worldRooms[`${sx},${sy}`] || getRoomAt(sx, sy, sz || 0);
+
+        if (!startRoom) {
+          console.warn(`Room at ${sx},${sy},${sz} not found! Resetting to Fred's house.`);
+          startRoom = getRoomAt(15, 15, 0) || worldData.freds_house;
+        }
+
+        initialState = {
+          room: startRoom,
+          playerPosition: session.playerPosition,
+          playerHP: session.playerHP,
+          maxHP: session.maxHP,
+          inventory: session.inventory,
+          stateFlags: session.stateFlags,
+          npcStages: {}, 
+          enemyHP: {}, 
+          entities: (startRoom.entities || []).map(e => ({ ...e })),
+          turnCount: 0,
+          discoveredRooms: session.discoveredRooms || [startRoom.world_coord || "15,15,0"],
+          abilities: session.abilities || [],
+          activeEffects: session.activeEffects || [],
+        };
+        
+        get().addMessage('Welcome back, Fred! Your progress has been restored.', 'system');
+      } else {
+        // Hydrate active adventure session
+        if (adventureSession) {
+          initialState = adventureSession;
+          targetView = 'game';
+          get().addMessage('Adventure run restored!', 'system');
+        } else {
+          // No active adventure run, send to hub
+          initialState = null;
+          targetView = 'adventure_hub';
+        }
       }
-
-      initialState = {
-        room: startRoom,
-        playerPosition: session.playerPosition,
-        playerHP: session.playerHP,
-        maxHP: session.maxHP,
-        inventory: session.inventory,
-        stateFlags: session.stateFlags,
-        npcStages: {}, 
-        enemyHP: {}, 
-        entities: (startRoom.entities || []).map(e => ({ ...e })),
-        turnCount: 0,
-        discoveredRooms: session.discoveredRooms || [startRoom.world_coord || "15,15,0"],
-        abilities: session.abilities || [],
-        activeEffects: session.activeEffects || [],
-      };
-      
-      get().addMessage('Welcome back, Fred! Your progress has been restored.', 'system');
     } else {
-      // Start fresh
+      // Start fresh in Story Mode
       startRoom = getRoomAt(15, 15, 0) || worldData.freds_house;
       initialState = initGameState(startRoom);
       initialState.discoveredRooms = [startRoom.world_coord || "15,15,0"];
@@ -230,12 +284,17 @@ export const useStore = create((set, get) => ({
     }
 
     set({
+      activeMode,
+      storySession,
+      adventureSession,
       gameState: initialState,
       isGameStarted: true,
-      activeView: 'game',
+      activeView: targetView,
     });
 
-    get().handleRoomBgmTransition(initialState.room);
+    if (initialState && initialState.room) {
+      get().handleRoomBgmTransition(initialState.room);
+    }
     get().startIdleTimer();
   },
 
@@ -368,7 +427,7 @@ export const useStore = create((set, get) => ({
     playSynthSFX('loot', sfxVol);
 
     set({ gameState: newState });
-    savePlayerSession(newState);
+    savePlayerSession(get());
 
     // Refresh active shop trades dynamically
     const updatedTrades = trades.map(t => {
@@ -448,7 +507,7 @@ export const useStore = create((set, get) => ({
     });
 
     get().handleRoomBgmTransition(newState.room);
-    savePlayerSession(newState);
+    savePlayerSession(get());
     get().startIdleTimer();
   },
 
@@ -456,9 +515,23 @@ export const useStore = create((set, get) => ({
    * Teleport to a room by its world coordinates.
    */
   teleportToCoordinate: (x, y, z = 0) => {
-    const { worldRooms } = get();
+    const { worldRooms, activeMode, gameState } = get();
     const coordKey = `${x},${y}`;
     
+    if (activeMode === 'adventure' && gameState && gameState.generatedWorld) {
+      const fullKey = `${x},${y},${z}`;
+      const matchingRoomId = Object.keys(gameState.generatedWorld).find(roomId => {
+        return gameState.generatedWorld[roomId].world_coord === fullKey;
+      });
+      const room = matchingRoomId ? gameState.generatedWorld[matchingRoomId] : null;
+      if (room) {
+        get().teleportToRoom(room);
+      } else {
+        get().addMessage(`No room found at coordinate (${x}, ${y}, ${z}).`, 'warning');
+      }
+      return;
+    }
+
     // Check Firestore cache first, then static worldData
     const dynamicRoom = worldRooms[coordKey];
     const room = dynamicRoom || getRoomAt(x, y, z);
@@ -634,8 +707,15 @@ export const useStore = create((set, get) => ({
       // 2. Play audio corresponding to generated messages and the user's action
       playAudioForMessages(allGeneratedMessages, action, get());
 
-      savePlayerSession(updatedState);
+      savePlayerSession(get());
       get().startIdleTimer();
+
+      // Check for Adventure Mode run completion
+      if (updatedState.adventureCompleted) {
+        setTimeout(() => {
+          get().endAdventureRun(updatedState.adventureOutcome);
+        }, 100);
+      }
     }
   },
 
@@ -711,6 +791,374 @@ export const useStore = create((set, get) => ({
     set(state => ({
       gameLog: [...state.gameLog, { text, type, timestamp: Date.now() }],
     }));
+  },
+
+  /**
+   * Toggle between Story Mode and Adventure Mode, suspending state
+   */
+  toggleGameMode: async () => {
+    const { activeMode, gameState, storySession, adventureSession } = get();
+    const newMode = activeMode === 'story' ? 'adventure' : 'story';
+    console.log(`toggleGameMode called. Swapping from ${activeMode} to ${newMode}`);
+
+    if (activeMode === 'story') {
+      // Suspending Story Mode
+      const storySnapshot = gameState ? {
+        playerHP: gameState.playerHP,
+        maxHP: gameState.maxHP,
+        playerPosition: gameState.playerPosition,
+        roomCoordinates: gameState.room?.world_coord || "(15, 15, 0)",
+        inventory: gameState.inventory,
+        stateFlags: gameState.stateFlags,
+        discoveredRooms: gameState.discoveredRooms || [],
+        abilities: gameState.abilities || [],
+        activeEffects: gameState.activeEffects || [],
+      } : null;
+
+      // Hydrating Adventure Mode
+      const adventureActive = adventureSession !== null;
+      
+      set({
+        activeMode: 'adventure',
+        storySession: storySnapshot,
+        gameState: adventureActive ? adventureSession : null,
+        activeView: adventureActive ? 'game' : 'adventure_hub'
+      });
+
+      get().addMessage('Switched to Adventure Mode. Grinding EXP in solo side quests!', 'system');
+    } else {
+      // Suspending Adventure Mode
+      const adventureSnapshot = gameState ? {
+        ...gameState
+      } : null;
+
+      // Hydrating Story Mode
+      let restoredStoryState = null;
+      if (storySession) {
+        const [sx, sy, sz] = storySession.roomCoordinates.replace(/[()]/g, '').split(',').map(s => parseInt(s.trim()));
+        const room = get().worldRooms[`${sx},${sy}`] || getRoomAt(sx, sy, sz || 0) || worldData.freds_house;
+        restoredStoryState = {
+          room,
+          playerPosition: storySession.playerPosition,
+          playerHP: storySession.playerHP,
+          maxHP: storySession.maxHP,
+          inventory: storySession.inventory,
+          stateFlags: storySession.stateFlags,
+          npcStages: {},
+          enemyHP: {},
+          entities: (room.entities || []).map(e => ({ ...e })),
+          turnCount: 0,
+          discoveredRooms: storySession.discoveredRooms || [],
+          abilities: storySession.abilities || [],
+          activeEffects: storySession.activeEffects || [],
+        };
+      } else {
+        // Fallback start room
+        const startRoom = getRoomAt(15, 15, 0) || worldData.freds_house;
+        restoredStoryState = initGameState(startRoom);
+        restoredStoryState.discoveredRooms = [startRoom.world_coord || "15,15,0"];
+      }
+
+      set({
+        activeMode: 'story',
+        adventureSession: adventureSnapshot,
+        gameState: restoredStoryState,
+        activeView: 'game'
+      });
+
+      get().addMessage('Switched back to Story Mode. Fred resumes his starchy quest!', 'system');
+      get().handleRoomBgmTransition(restoredStoryState.room);
+    }
+
+    // Persist full Zustand state to Firestore
+    await savePlayerSession(get());
+  },
+
+  /**
+   * Character selection for adventure run
+   */
+  selectAdventureCharacter: (charId) => {
+    set({ selectedAdventureCharacter: charId });
+  },
+
+  /**
+   * Toggle equipping a starting item for the next run
+   */
+  toggleEquipStartingItem: (itemId) => {
+    const { playerProfile, adventureEquippedItems } = get();
+    if (!playerProfile) return;
+
+    const poolCount = playerProfile.startingItemsPool[itemId] || 0;
+    const currentlyEquippedCount = adventureEquippedItems.filter(id => id === itemId).length;
+
+    if (adventureEquippedItems.includes(itemId)) {
+      // Unequip one instance of this item
+      const idx = adventureEquippedItems.indexOf(itemId);
+      const updated = [...adventureEquippedItems];
+      updated.splice(idx, 1);
+      set({ adventureEquippedItems: updated });
+    } else {
+      // Equip one instance of this item
+      if (currentlyEquippedCount >= poolCount) {
+        get().addMessage(`Cannot equip: No more ${itemId.replace('item_', '').replace(/_/g, ' ')}s available in your pool!`, 'warning');
+        return;
+      }
+      if (adventureEquippedItems.length >= 2) {
+        get().addMessage(`Cannot equip: You can only pack a maximum of 2 starting items for a run!`, 'warning');
+        return;
+      }
+      set({ adventureEquippedItems: [...adventureEquippedItems, itemId] });
+    }
+  },
+
+  /**
+   * Spend EXP to buy a starting consumable item in the EXP Shop
+   */
+  buyStartingItem: async (itemId, price) => {
+    const { playerProfile } = get();
+    if (!playerProfile) return;
+
+    if (playerProfile.totalEXP < price) {
+      get().addMessage(`Not enough EXP! Required: ${price} XP, You have: ${playerProfile.totalEXP} XP`, 'warning');
+      return;
+    }
+
+    const updatedProfile = {
+      ...playerProfile,
+      totalEXP: playerProfile.totalEXP - price,
+      startingItemsPool: {
+        ...playerProfile.startingItemsPool,
+        [itemId]: (playerProfile.startingItemsPool[itemId] || 0) + 1
+      }
+    };
+
+    set({ playerProfile: updatedProfile });
+    await savePlayerProfile(updatedProfile);
+    get().addMessage(`🛒 Purchased 1x ${itemId.replace('item_', '').replace(/_/g, ' ')}!`, 'loot');
+    
+    // Play SFX
+    const { audioSettings } = get();
+    const sfxVol = (audioSettings.sfxVolume || 0.6) * (audioSettings.masterVolume || 0.7);
+    playSynthSFX('loot', sfxVol);
+  },
+
+  /**
+   * Spend EXP to level up an adventure character
+   */
+  levelUpCharacter: async (charId) => {
+    const { playerProfile } = get();
+    if (!playerProfile) return;
+
+    const char = playerProfile.characters[charId];
+    if (!char) return;
+
+    if (char.level >= 3) {
+      get().addMessage(`${charId.toUpperCase()} is already at max level (Level 3)!`, 'warning');
+      return;
+    }
+
+    const price = char.level === 1 ? 15 : 30;
+
+    if (playerProfile.totalEXP < price) {
+      get().addMessage(`Not enough EXP! Required: ${price} XP, You have: ${playerProfile.totalEXP} XP`, 'warning');
+      return;
+    }
+
+    const updatedProfile = {
+      ...playerProfile,
+      totalEXP: playerProfile.totalEXP - price,
+      characters: {
+        ...playerProfile.characters,
+        [charId]: {
+          ...char,
+          level: char.level + 1,
+          maxHP: charId === 'freddista' ? (char.level === 1 ? 16 : 20) : (char.level === 1 ? 12 : 15)
+        }
+      }
+    };
+
+    set({ playerProfile: updatedProfile });
+    await savePlayerProfile(updatedProfile);
+    get().addMessage(`🎉 ${charId.toUpperCase()} leveled up to Level ${char.level + 1}! Max HP increased!`, 'loot');
+
+    // Play SFX
+    const { audioSettings } = get();
+    const sfxVol = (audioSettings.sfxVolume || 0.6) * (audioSettings.masterVolume || 0.7);
+    playSynthSFX('victory', sfxVol);
+  },
+
+  /**
+   * Generate map and launch procedural Adventure run
+   */
+  startAdventureRun: async () => {
+    const { selectedAdventureCharacter, adventureEquippedItems, playerProfile, itemRegistry } = get();
+    if (!playerProfile) return;
+
+    const char = playerProfile.characters[selectedAdventureCharacter];
+    
+    // 1. Generate the procedural world
+    const { rooms, theme } = generateAdventureWorld(selectedAdventureCharacter, char.level);
+    
+    // 2. Build adventure active session state
+    const startRoom = rooms.gen_start;
+    const initialState = {
+      room: startRoom,
+      playerPosition: { ...startRoom.player_start },
+      playerHP: char.maxHP || 10,
+      maxHP: char.maxHP || 10,
+      inventory: [],
+      stateFlags: {},
+      npcStages: {},
+      enemyHP: {},
+      entities: (startRoom.entities || []).map(e => ({ ...e })),
+      turnCount: 0,
+      discoveredRooms: ["0,0,0"],
+      abilities: [],
+      activeEffects: [],
+      generatedWorld: rooms // Store so transitions look up correctly!
+    };
+
+    // 3. Inject selected equipped items into player's inventory
+    adventureEquippedItems.forEach(itemId => {
+      const template = itemRegistry[itemId];
+      if (template) {
+        initialState.inventory.push({
+          ...template,
+          itemId,
+          type: template.type || 'food'
+        });
+      }
+    });
+
+    // 4. Update player profile: deduct equipped items from starting items pool
+    const updatedPool = { ...playerProfile.startingItemsPool };
+    adventureEquippedItems.forEach(itemId => {
+      if (updatedPool[itemId] > 0) {
+        updatedPool[itemId] -= 1;
+      }
+    });
+
+    const updatedProfile = {
+      ...playerProfile,
+      startingItemsPool: updatedPool
+    };
+
+    // Keep a snapshot for refund logic and tracking Exp gained inside adventureSession
+    const adventureSessionData = {
+      ...initialState,
+      activeCharacter: selectedAdventureCharacter,
+      startingItemsSelected: [...adventureEquippedItems],
+      startingItemsRefundPool: [...adventureEquippedItems],
+      accumulatedExp: 0,
+      generatedWorld: rooms
+    };
+
+    set({
+      playerProfile: updatedProfile,
+      gameState: adventureSessionData,
+      adventureSession: adventureSessionData,
+      activeView: 'game'
+    });
+
+    get().addMessage(`🌲 Run Launched! Entering the procedural ${theme} as ${selectedAdventureCharacter.toUpperCase()}...`, 'system');
+    get().handleRoomBgmTransition(startRoom);
+    get().startIdleTimer();
+
+    // Persist full Zustand state + Profile to Firestore
+    await Promise.all([
+      savePlayerProfile(updatedProfile),
+      savePlayerSession(get())
+    ]);
+  },
+
+  /**
+   * Complete Adventure Mode run, payout XP, execute starting item refunds, and update history log.
+   */
+  endAdventureRun: async (outcome) => {
+    const { gameState, playerProfile } = get();
+    if (!gameState || !playerProfile) return;
+
+    console.log(`endAdventureRun called. Outcome: ${outcome}`);
+
+    // 1. Calculate Enemies Defeated
+    const enemiesDefeated = Object.keys(gameState.stateFlags).filter(key => {
+      return key.endsWith('_defeated') && gameState.stateFlags[key] === true;
+    }).length;
+
+    // 2. Refund Unused Packed Items & Count Looted Items
+    const refundPool = gameState.startingItemsRefundPool || [];
+    const currentInventory = [...gameState.inventory];
+    
+    const updatedStartingItemsPool = { ...playerProfile.startingItemsPool };
+    let refundedCount = 0;
+
+    // Process refunds
+    refundPool.forEach(itemId => {
+      // Find item in current inventory
+      const idx = currentInventory.findIndex(item => item.itemId === itemId);
+      if (idx > -1) {
+        // Item is unused, refund it!
+        updatedStartingItemsPool[itemId] = (updatedStartingItemsPool[itemId] || 0) + 1;
+        currentInventory.splice(idx, 1); // remove from temporary list to avoid double refunds
+        refundedCount++;
+      }
+    });
+
+    // All remaining items inside currentInventory are newly looted items!
+    const newLootCount = currentInventory.length;
+    const finalLootNames = currentInventory.map(item => item.name);
+
+    // 3. Calculate EXP
+    const baseXP = outcome === 'victory' ? 10 : 3;
+    const enemyXP = enemiesDefeated * (outcome === 'victory' ? 2 : 1);
+    const lootXP = outcome === 'victory' ? newLootCount * 1 : 0;
+    const totalXPGained = baseXP + enemyXP + lootXP;
+
+    // 4. Create Run Summary History Entry
+    const runSummary = {
+      runId: `run_${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      theme: gameState.room?.theme || "Shoebox Forest",
+      character: gameState.activeCharacter || "fred",
+      outcome,
+      expGained: totalXPGained,
+      enemiesDefeated,
+      turnsTaken: gameState.turnCount || 0,
+      finalHP: `${gameState.playerHP}/${gameState.maxHP}`,
+      finalInventory: finalLootNames,
+      seed: Math.floor(Math.random() * 1000000)
+    };
+
+    // 5. Update Profile
+    const updatedHistory = [runSummary, ...(playerProfile.runHistory || [])];
+    const updatedProfile = {
+      ...playerProfile,
+      totalEXP: playerProfile.totalEXP + totalXPGained,
+      startingItemsPool: updatedStartingItemsPool,
+      runHistory: updatedHistory.slice(0, 50) // Cap history list at 50 runs to prevent bloat
+    };
+
+    // 6. Transition View
+    set({
+      playerProfile: updatedProfile,
+      lastRunSummary: runSummary,
+      gameState: null,
+      adventureSession: null,
+      adventureEquippedItems: [], // Reset packing pool for next run
+      activeView: 'adventure_summary'
+    });
+
+    get().addMessage(`--- Run Ended (${outcome.toUpperCase()}) ---`, 'system');
+    get().addMessage(`⭐ Earned: ${totalXPGained} XP! (Base: ${baseXP}, Enemies: ${enemyXP}, Loot: ${lootXP})`, 'loot');
+    if (refundedCount > 0) {
+      get().addMessage(`📦 Refunded ${refundedCount} unused starting items back to your pool!`, 'system');
+    }
+
+    // Persist full state to Cloud Firestore
+    await Promise.all([
+      savePlayerProfile(updatedProfile),
+      savePlayerSession(get())
+    ]);
   },
 }));
 export const createStore = () => useStore;
