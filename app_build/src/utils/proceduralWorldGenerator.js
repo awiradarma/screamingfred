@@ -104,13 +104,13 @@ const THEME_BLUEPRINTS = {
  * Procedurally generate a 5-room adventure run.
  * Creates: Start (0,0), North (0,-1), South (0,1), East (1,0), West (-1,0)
  */
-export function generateAdventureWorld(characterId, characterLevel) {
+export function generateAdventureWorld(characterId, characterLevel, victories = 0) {
   // 1. Pick a random theme
   const themes = Object.keys(THEME_BLUEPRINTS);
   const themeName = themes[Math.floor(Math.random() * themes.length)];
   const bp = THEME_BLUEPRINTS[themeName];
 
-  console.log(`Generating Adventure World: Character: ${characterId}, Theme: ${themeName}`);
+  console.log(`Generating Adventure World: Character: ${characterId}, Theme: ${themeName}, Victories: ${victories}`);
 
   const rooms = {};
   const coords = {
@@ -183,19 +183,49 @@ export function generateAdventureWorld(characterId, characterLevel) {
     // Place special items/enemies
     if (isVictory) {
       grid[2][2] = 'victory_portal';
-      // 50% chance of a guarding enemy at (1,2)
-      if (Math.random() > 0.5) {
+      // Scale victory guarding enemy chance with victories
+      const victoryEnemyChance = Math.min(0.95, 0.5 + victories * 0.05);
+      if (Math.random() < victoryEnemyChance) {
         grid[1][2] = 'enemy_mob';
       }
     } else if (!isStart) {
       if (roomKey === guaranteedEnemyRoomKey) {
         grid[2][2] = 'enemy_mob';
       } else {
-        // 60% chance of enemy, 40% chance of chest
-        grid[2][2] = Math.random() > 0.4 ? 'enemy_mob' : 'item_chest';
+        // Scale other rooms enemy chance with victories
+        const enemyChance = Math.min(0.9, 0.6 + victories * 0.03);
+        grid[2][2] = Math.random() < enemyChance ? 'enemy_mob' : 'item_chest';
       }
-      if (Math.random() > 0.6) {
+
+      // Chest density scaling (decreases slightly as victory count scales)
+      const chestChance = Math.max(0.15, 0.4 - victories * 0.02);
+      if (Math.random() < chestChance) {
         grid[1][2] = 'item_chest';
+      }
+
+      // Extra enemy spawn at higher difficulties (victories >= 2)
+      if (victories >= 2 && grid[3][2] === 'floor') {
+        const extraEnemyChance = Math.min(0.6, (victories - 1) * 0.15);
+        if (Math.random() < extraEnemyChance) {
+          grid[3][2] = 'enemy_mob';
+        }
+      }
+    } else {
+      // It is the start room. At victories >= 3, add minor starting hazard enemies
+      if (victories >= 3) {
+        const hazardChance = Math.min(0.7, 0.2 + (victories - 3) * 0.05);
+        if (Math.random() < hazardChance) {
+          const targetCoords = [
+            { x: 1, y: 2 },
+            { x: 3, y: 2 },
+            { x: 2, y: 1 },
+            { x: 2, y: 3 }
+          ];
+          const choice = targetCoords[Math.floor(Math.random() * targetCoords.length)];
+          if (grid[choice.y][choice.x] === 'floor') {
+            grid[choice.y][choice.x] = 'enemy_mob';
+          }
+        }
       }
     }
 
@@ -278,27 +308,50 @@ export function generateAdventureWorld(characterId, characterLevel) {
     const enemySpec = bp.enemies[Math.floor(Math.random() * bp.enemies.length)];
     const isGuaranteedEnemyRoom = roomKey === guaranteedEnemyRoomKey;
 
+    // Calculate scaling metrics based on victories (Roguelike Ascension)
+    const diffMult = Math.min(3.0, 1.0 + victories * 0.15); // HP scales up to 3x (+15% per win)
+    const damageScale = Math.min(2.5, 1.0 + victories * 0.10); // Damage scales up to 2.5x (+10% per win)
+
     grid.forEach((row, ry) => {
       row.forEach((col, rx) => {
         if (col === 'enemy_mob') {
           // Replace on grid with floor
           grid[ry][rx] = 'floor';
           
-          // Scale enemy HP based on character level slightly to keep it fair
-          const scaledHP = enemySpec.hp + (characterLevel - 1) * 2;
+          // Scale enemy HP based on character level and ascension difficulty
+          const baseHP = enemySpec.hp + (characterLevel - 1) * 2;
+          const scaledHP = Math.round(baseHP * diffMult);
+          const scaledDamage = Math.max(enemySpec.damage, Math.round(enemySpec.damage * damageScale));
+
+          // Generate thematic naming prefixes for higher ascension tiers
+          let namePrefix = "";
+          if (victories >= 6) {
+            namePrefix = "Ascended ";
+          } else if (victories >= 4) {
+            namePrefix = "Dreaded ";
+          } else if (victories >= 2) {
+            namePrefix = "Elite ";
+          }
+
           const isGuaranteedEnemy = isGuaranteedEnemyRoom && entities.length === 0;
+          const finalName = isGuaranteedEnemy 
+            ? `${namePrefix}Keeper of the Key (${enemySpec.name})` 
+            : `${namePrefix}${enemySpec.name}`;
+
           entities.push({
             id: `${enemySpec.id}_${ry}_${rx}`,
-            name: isGuaranteedEnemy ? `Keeper of the Key (${enemySpec.name})` : enemySpec.name,
+            name: finalName,
             x: rx,
             y: ry,
             hp: scaledHP,
             maxHP: scaledHP,
-            damage: enemySpec.damage,
+            damage: scaledDamage,
             behavior: enemySpec.behavior,
             description: isGuaranteedEnemy 
-              ? `${enemySpec.description} It seems to be clutching a glowing golden Portal Key!`
-              : enemySpec.description,
+              ? `${enemySpec.description} It seems to be clutching a glowing golden Portal Key! It looks exceptionally dangerous at this Ascension level.`
+              : (victories > 0 
+                ? `${enemySpec.description} It looks enhanced and aggressive due to the local ambient temporal distortion.` 
+                : enemySpec.description),
             loot: isGuaranteedEnemy ? "item_portal_key" : undefined
           });
         }

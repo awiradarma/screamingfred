@@ -1001,8 +1001,13 @@ export const useStore = create((set, get) => ({
 
     const char = playerProfile.characters[selectedAdventureCharacter];
     
+    // Calculate victories to scale procedural difficulty (Roguelike Ascension)
+    const victories = playerProfile.runHistory 
+      ? playerProfile.runHistory.filter(r => r.outcome === 'victory').length 
+      : 0;
+
     // 1. Generate the procedural world
-    const { rooms, theme } = generateAdventureWorld(selectedAdventureCharacter, char.level);
+    const { rooms, theme } = generateAdventureWorld(selectedAdventureCharacter, char.level, victories);
     
     // 2. Build adventure active session state
     const startRoom = rooms.gen_start;
@@ -1065,7 +1070,8 @@ export const useStore = create((set, get) => ({
       activeView: 'game'
     });
 
-    get().addMessage(`🌲 Run Launched! Entering the procedural ${theme} as ${selectedAdventureCharacter.toUpperCase()}...`, 'system');
+    const rank = victories === 0 ? "Novice" : victories < 3 ? "Adept" : victories < 7 ? "Veteran" : "Grandmaster";
+    get().addMessage(`🌲 Run Launched! Entering the procedural ${theme} as ${selectedAdventureCharacter.toUpperCase()} (Difficulty: ${rank} - ${victories} Wins)...`, 'system');
     get().handleRoomBgmTransition(startRoom);
     get().startIdleTimer();
 

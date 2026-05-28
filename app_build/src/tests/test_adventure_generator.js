@@ -426,6 +426,35 @@ assert(hasPathwayClue, "Willy Lvl 3 deduction unlocks ULTIMATE DEDUCTION section
 assert(hasVictoryRoomName, "Willy Lvl 3 deduction successfully localizes Victory room ('Lace Clearing') in procedural coordinate tree!");
 console.log("");
 
+// --- TEST 6: ROGUELIKE ASCENSION DIFFICULTY SCALING ---
+console.log("--- Test 6: Roguelike Ascension Difficulty Scaling ---");
+
+const baselineWorld = generateAdventureWorld('fred', 1, 0);
+const ascendedWorld = generateAdventureWorld('fred', 1, 5);
+
+// Find an enemy in baseline
+const baseEnemy = Object.values(baselineWorld.rooms)
+  .flatMap(r => r.entities)
+  .find(e => e.id.includes("snake") || e.id.includes("syrup") || e.id.includes("barry") || e.id.includes("sentry"));
+
+// Find an enemy in ascended
+const ascendedEnemy = Object.values(ascendedWorld.rooms)
+  .flatMap(r => r.entities)
+  .find(e => e.id.includes("snake") || e.id.includes("syrup") || e.id.includes("barry") || e.id.includes("sentry"));
+
+if (baseEnemy && ascendedEnemy) {
+  assert(ascendedEnemy.hp > baseEnemy.hp, `Ascension scales enemy HP correctly (Baseline HP: ${baseEnemy.hp} -> Ascended HP: ${ascendedEnemy.hp})`);
+  assert(ascendedEnemy.damage > baseEnemy.damage, `Ascension scales enemy damage correctly (Baseline Damage: ${baseEnemy.damage} -> Ascended Damage: ${ascendedEnemy.damage})`);
+  assert(ascendedEnemy.name.startsWith("Dreaded ") || ascendedEnemy.name.startsWith("Keeper") || ascendedEnemy.name.includes("Keeper of the Key"), `Ascension applies name tier prefix to entities (Ascended name: "${ascendedEnemy.name}")`);
+} else {
+  console.log("[INFO] Skip specific enemy checks due to randomized seed spawns, but worlds generated successfully.");
+}
+
+// Verify high-ascension BFS solvability
+const highAscensionSolvable = isAdventureWorldSolvable(ascendedWorld.rooms, ascendedWorld.victoryRoomKey);
+assert(highAscensionSolvable === true, "High Ascension world remains 100% procedurally path-solvable from start to victory portal!");
+console.log("");
+
 // --- SUMMARY AND REPORT ---
 if (failedTestsCount === 0) {
   console.log("ALL ADVENTURE TESTS COMPLETED SUCCESSFULLY! 🎉");
