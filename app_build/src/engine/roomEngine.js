@@ -614,6 +614,7 @@ export function processCommand(state, rawInput, itemRegistry = {}) {
     if (scrapyardRoom) {
       newState.room = scrapyardRoom;
       newState.playerPosition = { x: 1, y: 2 };
+      newState.entities = (scrapyardRoom.entities || []).map(e => ({ ...e }));
       
       const coordKey = scrapyardRoom.world_coord;
       let newDiscovered = newState.discoveredRooms || [];
@@ -805,6 +806,14 @@ export function handleMove(state, direction, messages) {
     }
   }
 
+  if (state.room?.room_id === 'scary_scrapyard' && targetTile === 'exit_east' && !state.stateFlags.cutlery_monster_defeated) {
+    messages.push({
+      text: "⚠️ You cannot exit the scrapyard yet! The dangerous Cutlery Monster blocks the path. You must defeat it first!",
+      type: "warning"
+    });
+    return { state, messages };
+  }
+
   // Resolve visibility fallback for movement
   const isTargetVisible = isTileVisible(tileData, state, 'render');
   if (tileData && !isTargetVisible) {
@@ -958,6 +967,14 @@ export function handleMove(state, direction, messages) {
   }
 
   if (transitionRoom) {
+    if (state.room?.room_id === 'lava_chasms' && !state.stateFlags.willy_saved) {
+      messages.push({
+        text: "⚠️ You can't leave Willy behind! Save him from the fiery pit first.",
+        type: "warning"
+      });
+      return { state, messages };
+    }
+
     const coordKey = transitionRoom.world_coord;
     let newDiscovered = finalState.discoveredRooms || [];
     if (coordKey && !newDiscovered.includes(coordKey)) {

@@ -17,6 +17,16 @@
       "passable": true,
       "description": "A flat dirt path formed by spelling 'R-O-A-D' repeatedly."
     },
+    "typewriter_entrance": {
+      "passable": true,
+      "icon": "⌨️",
+      "description": "A metallic archway that looks like a giant, dangerous key labeled 'TYPEWRITER'. A warning sign says: 'DO NOT ENTER - CRITICAL INK AND SHOCK HAZARD!'",
+      "targetRoomId": "typewriter_keys",
+      "targetPosition": {
+        "x": 1,
+        "y": 4
+      }
+    },
     "exit_south": {
       "passable": true,
       "description": "The stone pass leading back south to the Mountains of Miserly.",
@@ -77,7 +87,7 @@
   "grid": [
     ["wall_text", "wall_text", "exit_north", "wall_text", "wall_text"],
     ["wall_text", "road_text", "road_text", "road_text", "wall_text"],
-    ["wall_text", "npc_sue_saul_cameo", "npc_apostrophe", "road_text", "wall_text"],
+    ["wall_text", "npc_sue_saul_cameo", "npc_apostrophe", "typewriter_entrance", "wall_text"],
     ["wall_text", "literal_dictionary", "road_text", "road_text", "wall_text"],
     ["wall_text", "wall_text", "exit_south", "wall_text", "wall_text"]
   ],

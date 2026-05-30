@@ -82,6 +82,10 @@ export function describeRoom(roomData, stateFlags = {}) {
 export function describeTile(tileType, tileData, state, roomTiles = {}, roomId = '') {
   if (!tileData) return 'Nothing unremarkable here.';
 
+  if (state?.activeCharacter === 'banana' && tileType === 'banana_bridge') {
+    return "🍌 You stand at the creek gap, looking down at the sticky mud below. You feel a powerful, cosmic urge to lay down right here and form a bridge!";
+  }
+
   const stateFlags = state?.stateFlags || {};
 
   // Check visibility condition

@@ -29,6 +29,10 @@
     "exit_south": {
       "passable": true,
       "description": "Back south to the text roads of Textlandia.",
+      "conditions": {
+        "requiredFlag": "willy_saved",
+        "failMessage": "You can't abandon Willy! Save him from the fiery pit before retreating!"
+      },
       "targetRoomId": "textlandia_road",
       "targetPosition": {
         "x": 2,

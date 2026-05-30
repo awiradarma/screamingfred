@@ -1,0 +1,54 @@
+{
+  "room_id": "typewriter_ribbon",
+  "room_name": "Typewriter - The Ink Ribbon",
+  "theme": "Textlandia",
+  "description": "A dark corridor dominated by two giant spools spinning a massive, black-and-red fabric ink ribbon. The fabric is dripping with thick, dark, chemical ink that pools in the valleys below.",
+  "player_start": {
+    "x": 1,
+    "y": 4
+  },
+  "tiles": {
+    "iron_wall": {
+      "passable": false,
+      "description": "Thick iron plating that forms the chassis of the typewriter. Impassable."
+    },
+    "ribbon_floor": {
+      "passable": true,
+      "description": "A steel walkway running alongside the giant ribbon."
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "A gap leading south back to the shock keys.",
+      "targetRoomId": "typewriter_keys",
+      "targetPosition": {
+        "x": 1,
+        "y": 0
+      }
+    },
+    "exit_north": {
+      "passable": true,
+      "description": "A narrow metal hatch leading north to the roller platen.",
+      "targetRoomId": "typewriter_deadend",
+      "targetPosition": {
+        "x": 1,
+        "y": 4
+      }
+    },
+    "ink_pit": {
+      "passable": true,
+      "effect": "damage",
+      "damageAmount": 1,
+      "effectMessage": "SPLASH! You step into a puddle of corrosive typewriter ink! Your laces burn!",
+      "description": "A deep puddle of bubbling, pungent black ink that has dripped from the ribbon."
+    }
+  },
+  "grid": [
+    ["iron_wall", "exit_north", "iron_wall"],
+    ["iron_wall", "ink_pit", "iron_wall"],
+    ["ink_pit", "ribbon_floor", "ink_pit"],
+    ["iron_wall", "ink_pit", "iron_wall"],
+    ["iron_wall", "exit_south", "iron_wall"]
+  ],
+  "entities": [],
+  "state_flags": {}
+}

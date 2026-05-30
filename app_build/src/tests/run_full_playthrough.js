@@ -199,7 +199,10 @@ const steps = [
   { cmd: 'south', expectRoom: 'noodle_factory' }, // to x:3, y:2 (exit_east) -> transitions to Noodle Factory!
 
   // --- ROOM 21: Noodle Factory (Barry Ambush) ---
-  { cmd: 'north', expectRoom: 'noodle_factory' }, // to x:1, y:1 (noodle_vats)
+  { cmd: 'east', expectRoom: 'noodle_factory' },  // to x:2, y:2 (assembly_belt)
+  { cmd: 'interact', expectRoom: 'noodle_factory' }, // collects Instant Ramen!
+  { cmd: 'north', expectRoom: 'noodle_factory' }, // to x:2, y:1 (metal_floor)
+  { cmd: 'west', expectRoom: 'noodle_factory' },  // to x:1, y:1 (noodle_vats)
   { cmd: 'interact', expectRoom: 'scary_scrapyard' }, // triggers Barry ambush, gets thrown to Scary Scrapyard!
 
   // --- ROOM 22: Scary Scrapyard ---
@@ -209,6 +212,7 @@ const steps = [
   { cmd: 'south', expectRoom: 'scary_scrapyard' }, // to x:1, y:3
   { cmd: 'east', expectRoom: 'scary_scrapyard' },  // to x:2, y:3
   { cmd: 'east', expectRoom: 'scary_scrapyard' },  // to x:3, y:3 (Cutlery Monster stands here!)
+  { cmd: 'north', expectRoom: 'scary_scrapyard' }, // TRY TO FLEE BEFORE DEFEATING MONSTER -> blocked!
   { cmd: 'scream', expectRoom: 'scary_scrapyard' }, // scream 1 (deals 2 damage, 4 HP remaining)
   { cmd: 'scream', expectRoom: 'scary_scrapyard' }, // scream 2 (deals 2 damage, 2 HP remaining)
   { cmd: 'scream', expectRoom: 'scary_scrapyard' }, // scream 3 (defeats Cutlery Monster!)
@@ -279,15 +283,42 @@ const steps = [
   { cmd: 'north', expectRoom: 'mountain_of_miserly' }, // moves north (to x:2, y:1)
   { cmd: 'north', expectRoom: 'textlandia_road' },     // transitions north to Textlandia Road (to x:2, y:3)
 
-  // --- Textlandia Road ---
+  // --- Textlandia Road & Typewriter Detour ---
   { cmd: 'north', expectRoom: 'textlandia_road' },     // moves north from entrance (to x:2, y:3)
   { cmd: 'west', expectRoom: 'textlandia_road' },      // moves west to literal dictionary (x:1, y:3)
   { cmd: 'interact', expectRoom: 'textlandia_road' },  // reads Fred's literal dictionary definition
   { cmd: 'east', expectRoom: 'textlandia_road' },      // back east to x:2, y:3
   { cmd: 'north', expectRoom: 'textlandia_road' },     // moves to x:2, y:2 (stands on Apostrophe)
   { cmd: 'talk', expectRoom: 'textlandia_road' },      // reads warning
+  { cmd: 'east', expectRoom: 'typewriter_keys' },      // enters typewriter detour!
+  { cmd: 'north', expectRoom: 'typewriter_keys' },     // stands on shock key (takes 1 HP damage)
+  { cmd: 'north', expectRoom: 'typewriter_keys' },     // stands on key floor
+  { cmd: 'north', expectRoom: 'typewriter_keys' },     // stands on shock key (takes 1 HP damage)
+  { cmd: 'north', expectRoom: 'typewriter_ribbon' },   // enters ink ribbon room!
+  { cmd: 'north', expectRoom: 'typewriter_ribbon' },   // stands on ink pit (takes 1 HP damage)
+  { cmd: 'north', expectRoom: 'typewriter_ribbon' },   // stands on ribbon floor
+  { cmd: 'north', expectRoom: 'typewriter_ribbon' },   // stands on ink pit (takes 1 HP damage)
+  { cmd: 'north', expectRoom: 'typewriter_deadend' },  // enters platen roller dead-end!
+  { cmd: 'north', expectRoom: 'typewriter_deadend' },  // deadend floor
+  { cmd: 'north', expectRoom: 'typewriter_deadend' },  // deadend floor
+  { cmd: 'north', expectRoom: 'typewriter_deadend' },  // stands on platen sign
+  { cmd: 'interact', expectRoom: 'typewriter_deadend' }, // reads sign warning
+  { cmd: 'use Instant Ramen', expectRoom: 'typewriter_deadend' }, // chews raw instant ramen (+4 HP!)
+  { cmd: 'south', expectRoom: 'typewriter_deadend' },  // back
+  { cmd: 'south', expectRoom: 'typewriter_deadend' },  // back
+  { cmd: 'south', expectRoom: 'typewriter_ribbon' },   // exits south to ink ribbon!
+  { cmd: 'south', expectRoom: 'typewriter_ribbon' },   // stands on ink pit (takes 1 HP damage)
+  { cmd: 'south', expectRoom: 'typewriter_ribbon' },   // stands on ribbon floor
+  { cmd: 'south', expectRoom: 'typewriter_ribbon' },   // stands on ink pit (takes 1 HP damage)
+  { cmd: 'south', expectRoom: 'typewriter_keys' },     // exits south to shock keys!
+  { cmd: 'south', expectRoom: 'typewriter_keys' },     // stands on shock key (takes 1 HP damage)
+  { cmd: 'south', expectRoom: 'typewriter_keys' },     // stands on key floor
+  { cmd: 'south', expectRoom: 'typewriter_keys' },     // stands on shock key (takes 1 HP damage)
+  { cmd: 'south', expectRoom: 'textlandia_road' },     // exits typewriter detour!
+  { cmd: 'west', expectRoom: 'textlandia_road' },      // back west to x:2, y:2 (stands on Apostrophe)
   { cmd: 'north', expectRoom: 'textlandia_road' },     // moves north (to x:2, y:1)
   { cmd: 'north', expectRoom: 'lava_chasms' },         // transitions north to Lava Chasms (to x:2, y:4)
+  { cmd: 'south', expectRoom: 'lava_chasms' },         // TRY TO RETREAT SOUTH WITHOUT RESCUING WILLY -> blocked!
 
   // --- Lava Chasms ---
   { cmd: 'lah', expectRoom: 'lava_chasms' },           // yells lah to solidify planks

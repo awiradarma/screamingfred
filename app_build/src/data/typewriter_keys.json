@@ -1,0 +1,54 @@
+{
+  "room_id": "typewriter_keys",
+  "room_name": "Typewriter - The Shock Keys",
+  "theme": "Textlandia",
+  "description": "You enter the inner mechanisms of a titanic mechanical typewriter. Gigantic metallic key rods extend upward like building columns, vibrating with dangerous high-voltage static charge. High-frequency crackles echo all around you.",
+  "player_start": {
+    "x": 1,
+    "y": 4
+  },
+  "tiles": {
+    "iron_wall": {
+      "passable": false,
+      "description": "Thick iron plating that forms the chassis of the typewriter. Impassable."
+    },
+    "key_floor": {
+      "passable": true,
+      "description": "Solid steel plating between the key mechanisms."
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "The heavy metal key leading back south to Textlandia Road.",
+      "targetRoomId": "textlandia_road",
+      "targetPosition": {
+        "x": 3,
+        "y": 2
+      }
+    },
+    "exit_north": {
+      "passable": true,
+      "description": "A dark, oily gap leading north to the ink ribbons.",
+      "targetRoomId": "typewriter_ribbon",
+      "targetPosition": {
+        "x": 1,
+        "y": 4
+      }
+    },
+    "shock_key": {
+      "passable": true,
+      "effect": "damage",
+      "damageAmount": 1,
+      "effectMessage": "ZAP! The typewriter key discharges a static shock directly into your sole!",
+      "description": "A massive circular typewriter key cap. It hums with blue static electricity and looks highly volatile."
+    }
+  },
+  "grid": [
+    ["iron_wall", "exit_north", "iron_wall"],
+    ["iron_wall", "shock_key", "iron_wall"],
+    ["shock_key", "key_floor", "shock_key"],
+    ["iron_wall", "shock_key", "iron_wall"],
+    ["iron_wall", "exit_south", "iron_wall"]
+  ],
+  "entities": [],
+  "state_flags": {}
+}

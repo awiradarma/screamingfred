@@ -101,7 +101,12 @@
     },
     "assembly_belt": {
       "passable": true,
-      "description": "A grand staircase spiraling upward to the upper floors, with a large golden railing embedded with noodles. Shelves of pasta packets line the stairs."
+      "description": "A grand staircase spiraling upward to the upper floors, with a large golden railing embedded with noodles. Shelves of pasta packets line the stairs.",
+      "interactionVerb": "SEARCH",
+      "item": {
+        "itemId": "food_ramen",
+        "opened_description": "You've taken the Instant Ramen packets from this shelf. Just empty wrappers remain."
+      }
     },
     "jammed_valve": {
       "passable": false,

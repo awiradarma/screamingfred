@@ -1,0 +1,48 @@
+{
+  "room_id": "typewriter_deadend",
+  "room_name": "Typewriter - The Roller Deadend",
+  "theme": "Textlandia",
+  "description": "You enter a tight chamber directly beneath the paper feed. A colossal, black rubber cylindrical platen roller rises up, forming a massive, insurmountable barrier blocking any further progress.",
+  "player_start": {
+    "x": 1,
+    "y": 4
+  },
+  "tiles": {
+    "iron_wall": {
+      "passable": false,
+      "description": "Thick iron plating that forms the chassis of the typewriter. Impassable."
+    },
+    "deadend_floor": {
+      "passable": true,
+      "description": "A dusty steel platform ending abruptly at the roller wall."
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "The metal hatch leading south back to the ink ribbon.",
+      "targetRoomId": "typewriter_ribbon",
+      "targetPosition": {
+        "x": 1,
+        "y": 0
+      }
+    },
+    "platen_wall": {
+      "passable": false,
+      "description": "A colossal rubber cylindrical platen roller that stretches infinitely to the left and right. There is absolutely no way around it."
+    },
+    "platen_sign": {
+      "passable": true,
+      "icon": "🪧",
+      "description": "A rusty metal sign hanging from the platen roller structure.",
+      "onInteract": "You read the rusty sign:\n'Apostrophe warning was 100% correct. This is a complete deadend. Do not enter typewriter! Now turn back and take the main road.'\nWilly mutters: 'We got shocked and inked just to read a sign telling us we shouldn't have come. Typical.'"
+    }
+  },
+  "grid": [
+    ["iron_wall", "platen_wall", "iron_wall"],
+    ["iron_wall", "platen_sign", "iron_wall"],
+    ["iron_wall", "deadend_floor", "iron_wall"],
+    ["iron_wall", "deadend_floor", "iron_wall"],
+    ["iron_wall", "exit_south", "iron_wall"]
+  ],
+  "entities": [],
+  "state_flags": {}
+}

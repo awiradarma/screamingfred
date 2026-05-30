@@ -38,6 +38,9 @@ import mountain_of_miserly from './mountain_of_miserly.json' assert { type: 'jso
 import textlandia_road from './textlandia_road.json' assert { type: 'json' };
 import lava_chasms from './lava_chasms.json' assert { type: 'json' };
 import land_of_creativity from './land_of_creativity.json' assert { type: 'json' };
+import typewriter_keys from './typewriter_keys.json' assert { type: 'json' };
+import typewriter_ribbon from './typewriter_ribbon.json' assert { type: 'json' };
+import typewriter_deadend from './typewriter_deadend.json' assert { type: 'json' };
 
 export const WORLD_SIZE = 30;
 export const COORD_MIN = 0;
@@ -137,6 +140,9 @@ export const worldData = {
   textlandia_road,
   lava_chasms,
   land_of_creativity,
+  typewriter_keys,
+  typewriter_ribbon,
+  typewriter_deadend,
 };
 
 /**

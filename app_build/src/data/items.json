@@ -260,6 +260,17 @@
       "successMessage": "You devour the Syrup Waffle. The sweet starchy goodness restores your vitality! +8 HP!"
     }
   },
+  "food_ramen": {
+    "name": "Instant Ramen",
+    "description": "A packet of instant ramen from the noodle factory. Crunchy, salty, and wonderfully starchy. Restores 4 HP.",
+    "type": "food",
+    "onUse": {
+      "action": "heal",
+      "value": 4,
+      "consume": true,
+      "successMessage": "CRUNCH! You eat the raw instant ramen blocks, sprinkling the seasoning packet directly into your mouth. Salty perfection! +4 HP!"
+    }
+  },
   "slipper_key": {
     "name": "Slipper Key",
     "description": "The legendary key to open the gates of Shoeboxlandia, gifted by Derf.",
