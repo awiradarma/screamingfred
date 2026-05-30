@@ -75,7 +75,7 @@
       "description": "A heavy metal security gate that creaks open just enough to pass.",
       "targetRoomId": "apple_swamp",
       "targetPosition": {
-        "x": 1,
+        "x": 0,
         "y": 2
       },
       "conditions": {

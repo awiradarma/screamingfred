@@ -26,7 +26,7 @@
       "description": "A dark crawlspace in the west wall leading back to the Hidden Hideout.",
       "targetRoomId": "hidden_hideout",
       "targetPosition": {
-        "x": 3,
+        "x": 4,
         "y": 2
       }
     },

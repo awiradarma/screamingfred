@@ -5,15 +5,15 @@
   "theme": "Underground",
   "description": "A dust-choked chamber hidden beneath the base of the mountains. Laces hang from the stone ceiling like cobwebs. A dim light filters down from a hole in the ceiling above. Willy warned you not to enter, but here you are — you accidentally fell down the hole!",
   "grid": [
-    ["stone_wall", "stone_wall", "stone_wall", "stone_wall", "stone_wall"],
-    ["broken_generator", "sewing_machine_sue", "saw_saul", "stone_floor", "stone_wall"],
-    ["stone_wall", "spiderweb_cellar", "exit_up", "exit_east", "stone_wall"],
-    ["stone_wall", "stone_floor", "stone_floor", "stone_floor", "stone_wall"],
-    ["stone_wall", "stone_wall", "stone_wall", "stone_wall", "stone_wall"]
+    ["stone_wall",       "stone_wall",        "exit_up",    "stone_wall",  "stone_wall"],
+    ["stone_wall",       "sewing_machine_sue", "saw_saul",  "stone_floor", "stone_wall"],
+    ["stone_wall",       "spiderweb_cellar",  "stone_floor", "stone_floor", "exit_east"],
+    ["broken_generator", "stone_floor",       "stone_floor", "stone_floor", "stone_wall"],
+    ["stone_wall",       "stone_wall",        "stone_wall",  "stone_wall",  "stone_wall"]
   ],
   "player_start": {
     "x": 2,
-    "y": 2
+    "y": 1
   },
   "tiles": {
     "stone_wall": {
@@ -90,7 +90,7 @@
     },
     "exit_east": {
       "passable": true,
-      "description": "A low-hanging crawlspace leading further East into the mountain roots.",
+      "description": "A low-hanging crawlspace in the east wall leading further into the mountain roots.",
       "targetRoomId": "noodle_factory",
       "targetPosition": {
         "x": 1,

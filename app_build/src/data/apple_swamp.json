@@ -5,29 +5,33 @@
   "theme": "Swamp",
   "description": "A murky, bubbling pool of expired apple juice and marsh weed. The air smells strongly of fermentation and vinegar. A giant banana stands near the bank.",
   "grid": [
-    ["swamp_wall", "swamp_wall", "swamp_wall", "swamp_wall", "swamp_wall"],
-    ["swamp_wall", "swamp_pool", "future_banana", "swamp_pool", "swamp_wall"],
-    ["swamp_wall", "exit_west", "banana_bridge", "exit_east", "swamp_wall"],
-    ["swamp_wall", "swamp_pool", "swamp_hollow", "swamp_pool", "swamp_wall"],
-    ["swamp_wall", "swamp_wall", "swamp_wall", "swamp_wall", "swamp_wall"]
+    ["swamp_wall",  "swamp_wall",   "swamp_wall",    "swamp_wall",  "swamp_wall"],
+    ["swamp_bank",  "swamp_hollow", "future_banana",  "swamp_pool",  "swamp_bank"],
+    ["exit_west",   "swamp_pool",   "banana_bridge",  "banana_bridge", "exit_east"],
+    ["swamp_bank",  "swamp_pool",   "swamp_hollow",   "swamp_pool",  "swamp_bank"],
+    ["swamp_wall",  "swamp_wall",   "swamp_wall",     "swamp_wall",  "swamp_wall"]
   ],
   "player_start": {
-    "x": 1,
+    "x": 0,
     "y": 2
   },
   "tiles": {
     "exit_west": {
       "passable": true,
-      "description": "A gate opening back to the Scary Scrapyard.",
+      "description": "A gate on the west bank opening back to the Scary Scrapyard.",
       "targetRoomId": "scary_scrapyard",
       "targetPosition": {
-        "x": 3,
+        "x": 4,
         "y": 2
       }
     },
     "swamp_wall": {
       "passable": false,
       "description": "Dense, tangled walls of swamp bramble and petrified apple branches."
+    },
+    "swamp_bank": {
+      "passable": true,
+      "description": "A muddy earthen bank at the edge of the apple juice swamp. It's sticky underfoot."
     },
     "floor": {
       "passable": true,
@@ -61,7 +65,11 @@
     },
     "banana_bridge": {
       "passable": true,
-      "description": "The back of a giant banana. It's surprisingly stable but squishy."
+      "description": "The back of a giant banana lying across the swamp. It's surprisingly stable but squishy.",
+      "conditions": {
+        "requiredFlag": "banana_bridge",
+        "failMessage": "The giant banana is still standing — there's no bridge yet! Talk to the Future Banana first."
+      }
     },
     "swamp_hollow": {
       "passable": true,
@@ -69,10 +77,10 @@
     },
     "exit_east": {
       "passable": true,
-      "description": "A small mud trail leading out of the swamp towards a cultivated field.",
+      "description": "A small mud trail on the east bank leading out of the swamp towards a cultivated field.",
       "targetRoomId": "great_farm",
       "targetPosition": {
-        "x": 1,
+        "x": 0,
         "y": 2
       },
       "conditions": {

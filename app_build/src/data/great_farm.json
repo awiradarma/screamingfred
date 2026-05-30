@@ -5,23 +5,23 @@
   "theme": "Agricultural",
   "description": "A subterranean farm under artificial sunlamps. Orderly rows of glowing root vegetables stretch out into the shadows.",
   "grid": [
-    ["farm_fence", "farm_fence", "farm_fence", "farm_fence", "farm_fence"],
-    ["farm_fence", "rotten_produce", "tilled_soil", "suitable_potato", "farm_fence"],
-    ["farm_fence", "exit_west", "rotten_produce", "exit_east", "farm_fence"],
-    ["farm_fence", "tilled_soil", "golden_potato", "tilled_soil", "farm_fence"],
-    ["farm_fence", "farm_fence", "farm_fence", "farm_fence", "farm_fence"]
+    ["farm_fence", "farm_fence",     "farm_fence",     "farm_fence",      "farm_fence"],
+    ["farm_fence", "rotten_produce", "tilled_soil",    "suitable_potato", "farm_fence"],
+    ["exit_west",  "tilled_soil",    "rotten_produce", "tilled_soil",     "exit_east"],
+    ["farm_fence", "tilled_soil",    "golden_potato",  "tilled_soil",     "farm_fence"],
+    ["farm_fence", "farm_fence",     "farm_fence",     "farm_fence",      "farm_fence"]
   ],
   "player_start": {
-    "x": 1,
+    "x": 0,
     "y": 2
   },
   "tiles": {
     "exit_west": {
       "passable": true,
-      "description": "A small mud trail leading back to the Apple Swamp.",
+      "description": "A small mud trail on the west fence leading back to the Apple Swamp.",
       "targetRoomId": "apple_swamp",
       "targetPosition": {
-        "x": 3,
+        "x": 4,
         "y": 2
       }
     },
@@ -66,7 +66,7 @@
     },
     "exit_east": {
       "passable": true,
-      "description": "A tunnel exit that leads back up towards the surface bridge.",
+      "description": "A tunnel exit on the east fence that leads back up towards the surface bridge.",
       "targetRoomId": "bridge_of_blah",
       "targetPosition": {
         "x": 0,

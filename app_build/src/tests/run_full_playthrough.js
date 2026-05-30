@@ -187,8 +187,8 @@ const steps = [
   { cmd: 'south', expectRoom: 'hidden_hideout' }, // jumps down hole to Hidden Hideout!
 
   // --- ROOM 20: Hidden Hideout ---
-  { cmd: 'west', expectRoom: 'hidden_hideout' },  // to x:1, y:2
-  { cmd: 'north', expectRoom: 'hidden_hideout' }, // to x:1, y:1 (sewing_machine_sue)
+  // lands at x:2,y:1 (saw_saul)
+  { cmd: 'west', expectRoom: 'hidden_hideout' },  // to x:1, y:1 (sewing_machine_sue)
   { cmd: 'talk', expectRoom: 'hidden_hideout' },  // Stage 0
   { cmd: 'talk', expectRoom: 'hidden_hideout' },  // Stage 1
   { cmd: 'talk', expectRoom: 'hidden_hideout' },  // Stage 2
@@ -196,7 +196,8 @@ const steps = [
   { cmd: 'talk', expectRoom: 'hidden_hideout' },  // Stage 4 (flashback!)
   { cmd: 'east', expectRoom: 'hidden_hideout' },  // to x:2, y:1 (saw_saul)
   { cmd: 'east', expectRoom: 'hidden_hideout' },  // to x:3, y:1 (stone_floor)
-  { cmd: 'south', expectRoom: 'noodle_factory' }, // to x:3, y:2 (exit_east) -> transitions to Noodle Factory, lands at x:1, y:2
+  { cmd: 'south', expectRoom: 'hidden_hideout' }, // to x:3, y:2 (stone_floor)
+  { cmd: 'east', expectRoom: 'noodle_factory' }, // to x:4, y:2 (exit_east) -> Noodle Factory, lands at x:1, y:2
 
   // --- ROOM 21: Noodle Factory (Barry Ambush) ---
   { cmd: 'north', expectRoom: 'noodle_factory' }, // to x:1, y:1 (noodle_vats)
@@ -216,20 +217,28 @@ const steps = [
   { cmd: 'east', expectRoom: 'apple_swamp' },     // to x:4, y:2 (exit_east) -> transitions to Apple Swamp!
 
   // --- ROOM 23: Apple Swamp ---
-  { cmd: 'east', expectRoom: 'apple_swamp' },  // to x:2, y:2
-  { cmd: 'north', expectRoom: 'apple_swamp' }, // to x:2, y:1 (future_banana)
+  // enters at x:0,y:2 (exit_west tile)
+  { cmd: 'north', expectRoom: 'apple_swamp' }, // to x:0, y:1 (swamp_bank)
+  { cmd: 'east', expectRoom: 'apple_swamp' },  // to x:1, y:1 (swamp_hollow)
+  { cmd: 'east', expectRoom: 'apple_swamp' },  // to x:2, y:1 (future_banana)
   { cmd: 'talk', expectRoom: 'apple_swamp' },  // Stage 0
   { cmd: 'talk', expectRoom: 'apple_swamp' },  // Stage 1 (lays down, sets bridge flag!)
-  { cmd: 'south', expectRoom: 'apple_swamp' }, // to x:2, y:2
-  { cmd: 'east', expectRoom: 'great_farm' }, // exits east to Great Farm!
+  { cmd: 'south', expectRoom: 'apple_swamp' }, // to x:2, y:2 (banana_bridge - now passable!)
+  { cmd: 'east', expectRoom: 'apple_swamp' },  // to x:3, y:2 (banana_bridge)
+  { cmd: 'east', expectRoom: 'great_farm' },   // to x:4, y:2 (exit_east) -> Great Farm, lands at x:0, y:2
 
   // --- ROOM 24: Great Farm ---
-  { cmd: 'south', expectRoom: 'great_farm' }, // to x:1, y:3
-  { cmd: 'east', expectRoom: 'great_farm' },  // to x:2, y:3 (golden_potato)
+  // enters at x:0, y:2 (exit_west tile)
+  { cmd: 'north', expectRoom: 'great_farm' },  // to x:0, y:1
+  { cmd: 'east', expectRoom: 'great_farm' },   // to x:1, y:1 (rotten_produce)
+  { cmd: 'east', expectRoom: 'great_farm' },   // to x:2, y:1 (tilled_soil)
+  { cmd: 'south', expectRoom: 'great_farm' },  // to x:2, y:2 (rotten_produce)
+  { cmd: 'south', expectRoom: 'great_farm' },  // to x:2, y:3 (golden_potato)
   { cmd: 'interact', expectRoom: 'great_farm' }, // harvests the Ultra Golden Potato!
-  { cmd: 'use Ultra Golden Potato', expectRoom: 'great_farm' }, // consumes it to boost HP to 50!
-  { cmd: 'north', expectRoom: 'great_farm' }, // to x:2, y:2 (rotten_produce)
-  { cmd: 'east', expectRoom: 'bridge_of_blah' }, // exits east to Bridge of Blah!
+  { cmd: 'use Ultra Golden Potato', expectRoom: 'great_farm' }, // consumes it!
+  { cmd: 'north', expectRoom: 'great_farm' },  // to x:2, y:2 (rotten_produce)
+  { cmd: 'east', expectRoom: 'great_farm' },   // to x:3, y:2 (tilled_soil)
+  { cmd: 'east', expectRoom: 'bridge_of_blah' }, // to x:4, y:2 (exit_east) -> Bridge of Blah, lands at x:0, y:2
   { cmd: 'east', expectRoom: 'bridge_of_blah' },  // to x:1, y:2 (brittle wood)
   { cmd: 'east', expectRoom: 'bridge_of_blah' },  // to x:2, y:2 (Barry tile)
   { cmd: 'talk', expectRoom: 'bridge_of_blah' },  // Talk 1 -> Stage 0 (Barry drops Magnifying Glass into chasm)
@@ -332,13 +341,16 @@ const steps = [
   { cmd: 'talk', expectRoom: 'apple_swamp' },          // Derf curses and teleports you back to Apple Swamp as a banana!
 
   // --- Apple Swamp (Banana Bridge loop) ---
-  { cmd: 'south', expectRoom: 'apple_swamp' },         // moves to creek gap (x:2, y:2) in banana form
-  { cmd: 'bridge', expectRoom: 'apple_swamp' },        // lays down, friends cross, snaps back as shoe at x:3, y:2!
-
-  // --- Walking all the way back to Creativity ---
-  { cmd: 'east', expectRoom: 'great_farm' },           // exits east to Great Farm (x:1, y:2)
-  { cmd: 'east', expectRoom: 'great_farm' },           // to x:2, y:2
-  { cmd: 'east', expectRoom: 'bridge_of_blah' },       // exits east to Bridge of Blah (x:0, y:2)
+  // Derf teleports player as banana to apple_swamp (at x:2,y:1 = future_banana tile)
+  { cmd: 'south', expectRoom: 'apple_swamp' },         // to x:2, y:2 (creek gap - required position for bridge)
+  { cmd: 'bridge', expectRoom: 'apple_swamp' },        // lays down as banana bridge, snaps back as shoe at x:2,y:2!
+  // banana_bridge flag is now true, player is at x:2,y:2
+  { cmd: 'east', expectRoom: 'apple_swamp' },          // to x:3, y:2 (banana_bridge)
+  { cmd: 'east', expectRoom: 'great_farm' },           // to x:4, y:2 (exit_east) -> Great Farm, lands at x:0, y:2
+  { cmd: 'east', expectRoom: 'great_farm' },           // to x:1, y:2 (tilled_soil)
+  { cmd: 'east', expectRoom: 'great_farm' },           // to x:2, y:2 (rotten_produce)
+  { cmd: 'east', expectRoom: 'great_farm' },           // to x:3, y:2 (tilled_soil)
+  { cmd: 'east', expectRoom: 'bridge_of_blah' },       // to x:4, y:2 (exit_east) -> Bridge of Blah, lands at x:0, y:2
   { cmd: 'east', expectRoom: 'bridge_of_blah' },       // moves east onto brittle wood (x:1, y:2)
   { cmd: 'east', expectRoom: 'bridge_of_blah' },       // moves east onto Barry tile (x:2, y:2) to align with portal
   { cmd: 'south', expectRoom: 'land_of_jumping' },     // transitions south to Land of Jumping (x:2, y:1)

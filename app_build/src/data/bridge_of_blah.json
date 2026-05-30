@@ -14,7 +14,7 @@
       "description": "A stone archway leading back down to the Great Farm.",
       "targetRoomId": "great_farm",
       "targetPosition": {
-        "x": 3,
+        "x": 4,
         "y": 2
       }
     },
