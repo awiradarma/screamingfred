@@ -12,7 +12,7 @@
   "grid": [
     ["steel_wall", "steel_wall", "steel_wall", "steel_wall", "steel_wall"],
     ["steel_wall", "noodle_vats", "metal_floor", "chef_tortellini", "steel_wall"],
-    ["steel_wall", "exit_west", "assembly_belt", "metal_floor", "steel_wall"],
+    ["exit_west", "metal_floor", "assembly_belt", "metal_floor", "exit_east"],
     ["steel_wall", "jammed_valve", "metal_floor", "jammed_valve", "steel_wall"],
     ["steel_wall", "steel_wall", "steel_wall", "steel_wall", "steel_wall"]
   ],
@@ -23,10 +23,19 @@
   "tiles": {
     "exit_west": {
       "passable": true,
-      "description": "A dark crawlspace leading back to the Hidden Hideout.",
+      "description": "A dark crawlspace in the west wall leading back to the Hidden Hideout.",
       "targetRoomId": "hidden_hideout",
       "targetPosition": {
         "x": 3,
+        "y": 2
+      }
+    },
+    "exit_east": {
+      "passable": true,
+      "description": "A heavy reinforced door in the east wall, leading deeper into the industrial compound — the Scary Scrapyard.",
+      "targetRoomId": "scary_scrapyard",
+      "targetPosition": {
+        "x": 1,
         "y": 2
       }
     },

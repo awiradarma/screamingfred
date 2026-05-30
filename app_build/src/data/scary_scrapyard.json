@@ -21,12 +21,8 @@
       "description": "A heavy metal door leading back to the Noodle Factory.",
       "targetRoomId": "noodle_factory",
       "targetPosition": {
-        "x": 3,
+        "x": 4,
         "y": 2
-      },
-      "conditions": {
-        "requiredItem": "tool_magnifying_glass",
-        "failMessage": "The heavy metal door is jammed shut by fallen scrap from the Barry crash! You need to find Willy's Magnifying Glass in the crevice before you can force it open!"
       }
     },
     "scrap_wall": {
@@ -84,7 +80,7 @@
       },
       "conditions": {
         "requiredItem": "tool_magnifying_glass",
-        "failMessage": "You can't leave yet! You need to find Willy's Magnifying Glass in the crevice before escaping this dangerous scrapyard!"
+        "failMessage": "The eastern gate is magnetically sealed! You need Willy's Magnifying Glass — check the glinting crevice in the northwest corner of the scrapyard!"
       }
     }
   },
