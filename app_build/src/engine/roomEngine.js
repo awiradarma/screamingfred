@@ -1041,7 +1041,7 @@ export function handleMove(state, direction, messages) {
     }
 
     // Inject Shadow Stalker 2 if active and not defeated
-    if (updatedFlags.shadow_stalker_following_2 && !updatedFlags.shadow_stalker_defeated_2) {
+    if (updatedFlags.shadow_stalker_following_2 && !updatedFlags.shadow_stalker_2_defeated) {
       const exists = finalEntities.some(e => e.id === 'shadow_stalker_2');
       if (!exists) {
         finalEntities.push({
