@@ -194,16 +194,13 @@ const steps = [
   { cmd: 'talk', expectRoom: 'hidden_hideout' },  // Stage 2
   { cmd: 'talk', expectRoom: 'hidden_hideout' },  // Stage 3
   { cmd: 'talk', expectRoom: 'hidden_hideout' },  // Stage 4 (flashback!)
-  { cmd: 'east', expectRoom: 'hidden_hideout' },  // to x:2, y:1
-  { cmd: 'east', expectRoom: 'hidden_hideout' },  // to x:3, y:1
-  { cmd: 'south', expectRoom: 'noodle_factory' }, // to x:3, y:2 (exit_east) -> transitions to Noodle Factory!
+  { cmd: 'east', expectRoom: 'hidden_hideout' },  // to x:2, y:1 (saw_saul)
+  { cmd: 'east', expectRoom: 'hidden_hideout' },  // to x:3, y:1 (stone_floor)
+  { cmd: 'south', expectRoom: 'noodle_factory' }, // to x:3, y:2 (exit_east) -> transitions to Noodle Factory, lands at x:1, y:2
 
   // --- ROOM 21: Noodle Factory (Barry Ambush) ---
-  { cmd: 'east', expectRoom: 'noodle_factory' },  // to x:2, y:2 (assembly_belt)
-  { cmd: 'interact', expectRoom: 'noodle_factory' }, // collects Instant Ramen!
-  { cmd: 'north', expectRoom: 'noodle_factory' }, // to x:2, y:1 (metal_floor)
-  { cmd: 'west', expectRoom: 'noodle_factory' },  // to x:1, y:1 (noodle_vats)
-  { cmd: 'interact', expectRoom: 'scary_scrapyard' }, // triggers Barry ambush, gets thrown to Scary Scrapyard!
+  { cmd: 'north', expectRoom: 'noodle_factory' }, // to x:1, y:1 (noodle_vats)
+  { cmd: 'interact', expectRoom: 'scary_scrapyard' }, // triggers Barry ambush -> thrown to Scary Scrapyard! lands at x:1, y:2
 
   // --- ROOM 22: Scary Scrapyard ---
   { cmd: 'north', expectRoom: 'scary_scrapyard' }, // to x:1, y:1 (crevice)
@@ -216,7 +213,7 @@ const steps = [
   { cmd: 'scream', expectRoom: 'scary_scrapyard' }, // scream 1 (deals 2 damage, 4 HP remaining)
   { cmd: 'scream', expectRoom: 'scary_scrapyard' }, // scream 2 (deals 2 damage, 2 HP remaining)
   { cmd: 'scream', expectRoom: 'scary_scrapyard' }, // scream 3 (defeats Cutlery Monster!)
-  { cmd: 'north', expectRoom: 'apple_swamp' },     // to x:3, y:2 (exit_east) -> transitions to Apple Swamp!
+  { cmd: 'east', expectRoom: 'apple_swamp' },     // to x:4, y:2 (exit_east) -> transitions to Apple Swamp!
 
   // --- ROOM 23: Apple Swamp ---
   { cmd: 'east', expectRoom: 'apple_swamp' },  // to x:2, y:2

@@ -7,8 +7,8 @@
   "grid": [
     ["scrap_wall", "scrap_wall", "scrap_wall", "scrap_wall", "rubber_scrap"],
     ["scrap_wall", "crevice_magnifying_glass", "scrap_wall", "scrap_magnet", "scrap_wall"],
-    ["scrap_wall", "exit_west", "compact_crusher", "exit_east", "scrap_wall"],
-    ["scrap_wall", "scrapyard_floor", "broken_boiler", "scrapyard_floor", "scrap_wall"],
+    ["exit_west", "scrapyard_floor", "compact_crusher", "scrapyard_floor", "exit_east"],
+    ["scrap_wall", "broken_boiler", "scrapyard_floor", "scrap_magnet", "scrap_wall"],
     ["scrap_wall", "scrap_wall", "scrap_wall", "scrap_wall", "scrap_wall"]
   ],
   "player_start": {
