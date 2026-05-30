@@ -6,9 +6,9 @@
   "description": "A murky, bubbling pool of expired apple juice and marsh weed. The air smells strongly of fermentation and vinegar. A giant banana stands near the bank.",
   "grid": [
     ["swamp_wall",  "swamp_wall",   "swamp_wall",    "swamp_wall",  "swamp_wall"],
-    ["swamp_bank",  "swamp_hollow", "future_banana",  "swamp_pool",  "swamp_bank"],
+    ["swamp_bank",  "swamp_hollow", "future_banana",  "swamp_pool",  "swamp_wall"],
     ["exit_west",   "swamp_pool",   "banana_bridge",  "banana_bridge", "exit_east"],
-    ["swamp_bank",  "swamp_pool",   "swamp_hollow",   "swamp_pool",  "swamp_bank"],
+    ["swamp_bank",  "swamp_pool",   "swamp_hollow",   "swamp_pool",  "swamp_wall"],
     ["swamp_wall",  "swamp_wall",   "swamp_wall",     "swamp_wall",  "swamp_wall"]
   ],
   "player_start": {
