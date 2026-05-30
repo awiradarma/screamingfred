@@ -6,7 +6,7 @@
   "description": "A dust-choked chamber hidden beneath the base of the mountains. Laces hang from the stone ceiling like cobwebs. A dim light filters down from a hole in the ceiling above. Willy warned you not to enter, but here you are — you accidentally fell down the hole!",
   "grid": [
     ["stone_wall", "stone_wall", "stone_wall", "stone_wall", "stone_wall"],
-    ["stone_wall", "sewing_machine_sue", "saw_saul", "stone_floor", "stone_wall"],
+    ["broken_generator", "sewing_machine_sue", "saw_saul", "stone_floor", "stone_wall"],
     ["stone_wall", "spiderweb_cellar", "exit_up", "exit_east", "stone_wall"],
     ["stone_wall", "stone_floor", "stone_floor", "stone_floor", "stone_wall"],
     ["stone_wall", "stone_wall", "stone_wall", "stone_wall", "stone_wall"]
@@ -19,6 +19,11 @@
     "stone_wall": {
       "passable": false,
       "description": "Raw, jagged stone walls that sweat cold mountain moisture."
+    },
+    "broken_generator": {
+      "passable": true,
+      "description": "A rusty brass steam generator. Its copper coils are snapped, and several gears are misaligned. It requires a Master Tinkerer to rewire.",
+      "interactionVerb": "REWIRE"
     },
     "stone_floor": {
       "passable": true,

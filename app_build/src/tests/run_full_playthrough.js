@@ -233,16 +233,15 @@ const steps = [
   { cmd: 'use Ultra Golden Potato', expectRoom: 'great_farm' }, // consumes it to boost HP to 50!
   { cmd: 'north', expectRoom: 'great_farm' }, // to x:2, y:2 (rotten_produce)
   { cmd: 'east', expectRoom: 'bridge_of_blah' }, // exits east to Bridge of Blah!
-
-  // --- ROOM 25: Bridge of Blah (Derf Climax Climax) ---
+  { cmd: 'east', expectRoom: 'bridge_of_blah' },  // to x:1, y:2 (brittle wood)
   { cmd: 'east', expectRoom: 'bridge_of_blah' },  // to x:2, y:2 (Barry tile)
   { cmd: 'talk', expectRoom: 'bridge_of_blah' },  // Talk 1 -> Stage 0 (Barry drops Magnifying Glass into chasm)
   { cmd: 'talk', expectRoom: 'bridge_of_blah' },  // Talk 2 -> Stage 1 (Freddista throws Barry into chasm, sets barry_chasm, triggers Derf climax Stage 1!)
   { cmd: 'talk', expectRoom: 'bridge_of_blah' },  // Talk 3 -> plays Derf Stage 1 (disintegrates Willy, sets derf_stage to 2!)
   { cmd: 'scream', expectRoom: 'bridge_of_blah' }, // Scream -> plays Derf Stage 2 (love scream, restores friends, Derf vanishes)
-  { cmd: 'east', expectRoom: 'bridge_of_blah' },   // Attempt to move east into the locked gate (keeps player in bridge_of_blah)
-
-  // --- CHAPTER 2: The Unknown Lands Detour ---
+  { cmd: 'east', expectRoom: 'bridge_of_blah' },   // to x:3, y:2 (brittle wood)
+  { cmd: 'east', expectRoom: 'bridge_of_blah' },   // Attempt to move east into the locked gate (fails, remains at x:3, y:2)
+  { cmd: 'west', expectRoom: 'bridge_of_blah' },   // walk back to Barry tile (x:2, y:2) to align with portal
   { cmd: 'south', expectRoom: 'land_of_jumping' },  // moves south through the new rift to Land of Endless Jumping
   { cmd: 'south', expectRoom: 'land_of_jumping' },  // moves to gorilla nest
   { cmd: 'interact', expectRoom: 'land_of_jumping' }, // searches nest, collects Gorilla Hair
@@ -342,7 +341,8 @@ const steps = [
   // --- Walking all the way back to Creativity ---
   { cmd: 'east', expectRoom: 'great_farm' },           // exits east to Great Farm (x:1, y:2)
   { cmd: 'east', expectRoom: 'great_farm' },           // to x:2, y:2
-  { cmd: 'east', expectRoom: 'bridge_of_blah' },       // exits east to Bridge of Blah (x:1, y:2)
+  { cmd: 'east', expectRoom: 'bridge_of_blah' },       // exits east to Bridge of Blah (x:0, y:2)
+  { cmd: 'east', expectRoom: 'bridge_of_blah' },       // moves east onto brittle wood (x:1, y:2)
   { cmd: 'east', expectRoom: 'bridge_of_blah' },       // moves east onto Barry tile (x:2, y:2) to align with portal
   { cmd: 'south', expectRoom: 'land_of_jumping' },     // transitions south to Land of Jumping (x:2, y:1)
   { cmd: 'south', expectRoom: 'land_of_jumping' },     // to x:2, y:2
@@ -387,6 +387,7 @@ const steps = [
   { cmd: 'talk', expectRoom: 'land_of_creativity' },   // reconciles, receives Slipper Key, completes chapter!
   { cmd: 'south', expectRoom: 'land_of_creativity' },  // to x:2, y:2
   { cmd: 'south', expectRoom: 'bridge_of_blah' },      // teleports back to the Bridge of Blah (x:2, y:2)!
+  { cmd: 'east', expectRoom: 'bridge_of_blah' },       // moves east onto brittle wood (x:3, y:2)
   { cmd: 'east', expectRoom: 'shoeboxlandia_street' }  // steps east through the gate using Slipper Key to enter Shoeboxlandia!
 ];
 

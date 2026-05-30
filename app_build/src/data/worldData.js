@@ -175,6 +175,7 @@ export function isValidCoordinate(x, y, z = 0) {
 for (const roomId in worldData) {
   const room = worldData[roomId];
   if (!room || !room.grid || !room.tiles) continue;
+  if (roomId === 'bridge_of_blah' || roomId === 'lava_chasms') continue;
 
   // 1. Identify the primary passable floor tile type in this room
   let floorTileType = 'floor';
@@ -216,7 +217,7 @@ for (const roomId in worldData) {
           tileType.startsWith('stairs_')
         );
 
-        if (!isTransition) {
+        if (!isTransition && tileDef && tileDef.passable === false) {
           room.grid[y][x] = floorTileType;
         }
       }

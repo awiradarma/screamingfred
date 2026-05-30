@@ -34,7 +34,7 @@
       "cereal_box_wall"
     ],
     [
-      "cereal_box_wall",
+      "jammed_toaster_console",
       "item_potato",
       "pancake_path",
       "pancake_path",
@@ -56,6 +56,11 @@
     "cereal_box_wall": {
       "passable": false,
       "description": "A massive wall made entirely out of brightly colored, sugary cereal boxes."
+    },
+    "jammed_toaster_console": {
+      "passable": true,
+      "description": "A grand, high-voltage console that controls the heavy gateway slot. The display screen is scrambled with error codes. It requires a Master Tinkerer to rewire.",
+      "interactionVerb": "REWIRE"
     },
     "pancake_path": {
       "passable": true,

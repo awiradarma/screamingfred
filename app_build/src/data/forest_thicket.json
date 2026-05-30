@@ -22,7 +22,7 @@
     [
       "exit_west",
       "ground",
-      "item_berries",
+      "ground",
       "ground",
       "exit_east"
     ],
@@ -31,7 +31,7 @@
       "ground",
       "ground",
       "ground",
-      "wall"
+      "item_berries"
     ],
     [
       "wall",

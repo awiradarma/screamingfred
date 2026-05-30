@@ -6,11 +6,11 @@
   "description": "The interior of Fred's humble shoebox. It is sparsely furnished with a discarded cotton ball for a bed and a plastic lace-tip for a table. The walls are made of cardboard. It is very quiet here—too quiet.",
   "grid": [
     [
+      "cardboard_crease",
       "wall",
       "wall",
       "wall",
-      "wall",
-      "wall"
+      "discarded_staple"
     ],
     [
       "wall",
@@ -34,11 +34,11 @@
       "wall"
     ],
     [
-      "wall",
+      "dirty_laundry",
       "wall",
       "exit_south",
       "wall",
-      "wall"
+      "dust_bunny"
     ]
   ],
   "player_start": {
@@ -113,6 +113,22 @@
         "x": 4,
         "y": 2
       }
+    },
+    "cardboard_crease": {
+      "passable": true,
+      "description": "A massive vertical crease in the cardboard wall. It runs from floor to ceiling, letting in a tiny ray of outside light."
+    },
+    "discarded_staple": {
+      "passable": true,
+      "description": "A giant rusted metal staple from when the shoebox was originally packaged. It's too heavy to move, but Fred likes to tap it for a resonant CLANG."
+    },
+    "dirty_laundry": {
+      "passable": true,
+      "description": "A small pile of Fred's dirty laundry, mostly composed of damp starchy lint and a tattered shoelace."
+    },
+    "dust_bunny": {
+      "passable": true,
+      "description": "A friendly-looking roll of gray dust. It doesn't seem to mind you standing on it."
     }
   },
   "entities": [],

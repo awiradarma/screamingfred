@@ -271,6 +271,31 @@
       "successMessage": "CRUNCH! You eat the raw instant ramen blocks, sprinkling the seasoning packet directly into your mouth. Salty perfection! +4 HP!"
     }
   },
+  "item_shiny_lint": {
+    "name": "Shiny Lint Ball",
+    "description": "A compact, glittering sphere of cotton and silver threads found in hidden household corners.",
+    "type": "quest"
+  },
+  "item_rusted_bolt": {
+    "name": "Rusted Bolt",
+    "description": "A heavy, oxidized metal bolt scavenged from industrial machinery and scrap piles.",
+    "type": "quest"
+  },
+  "item_ancient_sock": {
+    "name": "Ancient Sock",
+    "description": "A crusty, historical woolen sock from Shoeboxlandia's founding era. It smells faintly of ancient starch.",
+    "type": "quest"
+  },
+  "item_power_core": {
+    "name": "Power Core",
+    "description": "A heavy battery core humming with raw, compressed electric current. Extremely tradeable.",
+    "type": "quest"
+  },
+  "item_fossil_waffle": {
+    "name": "Fossilized Waffle",
+    "description": "A rock-solid, petrified waffle from the ancient Breakfastopian dynasties. Indestructible and heavy.",
+    "type": "quest"
+  },
   "slipper_key": {
     "name": "Slipper Key",
     "description": "The legendary key to open the gates of Shoeboxlandia, gifted by Derf.",

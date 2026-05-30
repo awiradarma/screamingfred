@@ -5,7 +5,7 @@
   "theme": "Industrial",
   "description": "A dark yard piled high with discarded metal, old boots, and rusted cans. Sparks occasionally fly from exposed wires. A dangerous Cutlery Monster stalker is lurking here!",
   "grid": [
-    ["scrap_wall", "scrap_wall", "scrap_wall", "scrap_wall", "scrap_wall"],
+    ["scrap_wall", "scrap_wall", "scrap_wall", "scrap_wall", "rubber_scrap"],
     ["scrap_wall", "crevice_magnifying_glass", "scrap_wall", "scrap_magnet", "scrap_wall"],
     ["scrap_wall", "exit_west", "compact_crusher", "exit_east", "scrap_wall"],
     ["scrap_wall", "scrapyard_floor", "broken_boiler", "scrapyard_floor", "scrap_wall"],
@@ -37,6 +37,18 @@
       "passable": true,
       "description": "Oil-stained ground littered with sharp metal shavings."
     },
+    "rubber_scrap": {
+      "passable": true,
+      "description": "A pile of discarded gaskets, hoses, and shredded tires. It's spongy underfoot.",
+      "interactionVerb": "SEARCH",
+      "item": {
+        "itemId": "item_rubber",
+        "name": "Rubber Piece",
+        "type": "quest",
+        "opened_description": "A pile of discarded gaskets and shredded tires. Nothing useful remains.",
+        "onCollect": "You sift through the rubber debris and salvage a high-grade Rubber Piece!"
+      }
+    },
     "crevice_magnifying_glass": {
       "passable": true,
       "description": "A narrow fissure in a pile of compressed engines. Something brass and glass glints deep inside.",
@@ -51,7 +63,8 @@
     },
     "scrap_magnet": {
       "passable": true,
-      "description": "A massive industrial electromagnet hanging from a rusted crane structure. The control panel is dead and filled with cut wires. Interacting with it might let a Master Tinkerer rewire it!"
+      "description": "A massive industrial electromagnet hanging from a rusted crane structure. The control panel is dead and filled with cut wires. Interacting with it might let a Master Tinkerer rewire it!",
+      "interactionVerb": "REWIRE"
     },
     "compact_crusher": {
       "passable": false,

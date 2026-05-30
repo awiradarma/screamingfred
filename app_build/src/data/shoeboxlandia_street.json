@@ -61,7 +61,7 @@
       },
       "targetRoomId": "bridge_of_blah",
       "targetPosition": {
-        "x": 3,
+        "x": 4,
         "y": 2
       }
     },
@@ -173,9 +173,37 @@
             "description": "Trade 1 Ultra Golden Potato for 1 Magical Pasta (automatically revives you once when you die)."
           },
           {
-            "id": "sal_crystal_to_iron_sole",
-            "name": "Trade for Iron Sole",
-            "give": { "itemId": "item_energy_crystal", "count": 1, "name": "Energy Crystal" },
+            "id": "sal_lint_to_drink",
+            "name": "Shiny Lint for Energy Drink",
+            "give": { "itemId": "item_shiny_lint", "count": 1, "name": "Shiny Lint Ball" },
+            "receive": { "type": "item", "itemId": "consumable_energy_drink", "name": "Sparking Energy Drink", "count": 1 },
+            "description": "Trade 1 Shiny Lint Ball for a Sparking Energy Drink (+3 HP and cleanses negative status effects)."
+          },
+          {
+            "id": "sal_pollen_to_bread",
+            "name": "Pollen for Breadroll",
+            "give": { "itemId": "item_pollen", "count": 1, "name": "Yellow Pollen" },
+            "receive": { "type": "item", "itemId": "food_breadroll", "name": "Stale Breadroll", "count": 1 },
+            "description": "Trade 1 Yellow Pollen for 1 Stale Breadroll (+3 HP)."
+          },
+          {
+            "id": "sal_berries_to_pepper",
+            "name": "Rubber Berries for Spicy Pepper",
+            "give": { "itemId": "item_berries", "count": 1, "name": "Rubber Berries" },
+            "receive": { "type": "item", "itemId": "consumable_double_damage", "name": "Spicy Pepper", "count": 1 },
+            "description": "Trade 1 Rubber Berries for a Spicy Pepper (Double Damage for 3 turns)."
+          },
+          {
+            "id": "sal_eyelet_to_pasta",
+            "name": "Silver Eyelet for Magical Pasta",
+            "give": { "itemId": "item_silver_eyelet", "count": 1, "name": "Silver Eyelet" },
+            "receive": { "type": "item", "itemId": "magical_pasta", "name": "Magical Pasta", "count": 1 },
+            "description": "Trade 1 Silver Eyelet for 1 Magical Pasta (auto-revives once)."
+          },
+          {
+            "id": "sal_sock_to_iron_sole",
+            "name": "Ancient Sock for Iron Sole",
+            "give": { "itemId": "item_ancient_sock", "count": 1, "name": "Ancient Sock" },
             "receive": { 
               "type": "ability", 
               "ability": { 
@@ -186,7 +214,24 @@
                 "icon": "🛡️" 
               } 
             },
-            "description": "Trade 1 Energy Crystal to learn the passive 'Iron Sole' ability (reduces incoming damage by 1).",
+            "description": "Trade 1 Ancient Sock to learn the passive 'Iron Sole' ability (reduces incoming damage by 1).",
+            "maxTrades": 1
+          },
+          {
+            "id": "sal_core_to_zap_immunity",
+            "name": "Power Core for Zap Immunity",
+            "give": { "itemId": "item_power_core", "count": 1, "name": "Power Core" },
+            "receive": {
+              "type": "ability",
+              "ability": {
+                "id": "zap_immunity",
+                "name": "Zap Immunity",
+                "description": "Specialized grounding protects you entirely from electrical shocks.",
+                "type": "passive",
+                "icon": "⚡"
+              }
+            },
+            "description": "Trade 1 Power Core to learn the passive 'Zap Immunity' ability (ignores all electric shocks).",
             "maxTrades": 1
           }
         ],

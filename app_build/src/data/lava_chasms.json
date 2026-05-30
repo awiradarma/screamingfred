@@ -122,12 +122,23 @@
   },
   "grid": [
     ["lava_pool", "lava_pool", "exit_north", "lava_pool", "lava_pool"],
-    ["lava_pool", "bridge_of_lah", "bridge_of_lah", "bridge_of_lah", "lava_pool"],
-    ["lava_pool", "obsidian_rubble", "lah_climax", "bridge_of_lah", "lava_pool"],
-    ["lava_pool", "bridge_sign", "bridge_of_lah", "bridge_of_lah", "lava_pool"],
+    ["lava_pool", "lava_pool", "bridge_of_lah", "lava_pool", "lava_pool"],
+    ["lava_pool", "obsidian_rubble", "lah_climax", "lava_pool", "lava_pool"],
+    ["lava_pool", "bridge_sign", "bridge_of_lah", "lava_pool", "lava_pool"],
     ["lava_pool", "lava_pool", "exit_south", "lava_pool", "lava_pool"]
   ],
-  "entities": [],
+  "entities": [
+    {
+      "id": "lava_serpent",
+      "name": "🐍 Lava Serpent",
+      "behavior": "idle",
+      "detectionRange": 0,
+      "damage": 1,
+      "hp": 4,
+      "x": 3,
+      "y": 2
+    }
+  ],
   "state_flags": {
     "willy_saved": false
   }

@@ -14,9 +14,9 @@
     ],
     [
       "exit_west",
+      "grimy_mirror",
       "floor",
-      "floor",
-      "floor",
+      "lint_pile",
       "wall"
     ],
     [
@@ -28,9 +28,9 @@
     ],
     [
       "wall",
+      "dark_corner",
       "floor",
       "npc_neighbor",
-      "floor",
       "wall"
     ],
     [
@@ -100,6 +100,39 @@
             "text": "\"If you're looking for your lunch, I saw a suspicious shadow heading toward the south gates. Now bugger off!\""
           }
         ]
+      }
+    },
+    "grimy_mirror": {
+      "passable": true,
+      "description": "A cracked plastic mirror on the wall. You look... remarkably like a shoe."
+    },
+    "lint_pile": {
+      "passable": true,
+      "description": "A huge pile of gray cardboard dust and lint balls. Deep inside, something sparkles!",
+      "interactionVerb": "SEARCH",
+      "item": {
+        "itemId": "item_shiny_lint",
+        "name": "Shiny Lint Ball",
+        "type": "quest",
+        "opened_description": "A huge pile of gray cardboard dust and lint balls. It is empty.",
+        "onCollect": "You search the lint pile and find a Shiny Lint Ball! It gleams beautifully."
+      }
+    },
+    "dark_corner": {
+      "passable": true,
+      "unlitDescription": "A pitch black corner of the room. Shadows pool here, hiding whatever lies within.",
+      "description": "The corner is illuminated. Under the dust, you spot a strange artifact!",
+      "conditions": {
+        "requiredFlag": "corner_illuminated",
+        "failMessage": "It's pitch black. You'll stumble if you try to step in there without a light source."
+      },
+      "interactionVerb": "SEARCH",
+      "item": {
+        "itemId": "item_ancient_sock",
+        "name": "Ancient Sock",
+        "type": "quest",
+        "opened_description": "The corner is empty.",
+        "onCollect": "You reach into the illuminated alcove and pull out a tattered, ancient sock! It hums with historical starchy resonance!"
       }
     }
   },

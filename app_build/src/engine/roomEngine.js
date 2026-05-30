@@ -1017,12 +1017,56 @@ export function handleMove(state, direction, messages) {
       }
     }
 
+    let finalEntities = (transitionRoom.entities || []).map(e => ({ ...e }));
+    
+    // Inject Shadow Stalker 1 if active and not defeated
+    if (updatedFlags.shadow_stalker_following && !updatedFlags.shadow_stalker_defeated) {
+      const exists = finalEntities.some(e => e.id === 'shadow_stalker');
+      if (!exists) {
+        finalEntities.push({
+          id: "shadow_stalker",
+          name: "👻 Shadow Stalker",
+          behavior: "stalk",
+          detectionRange: 15,
+          damage: 1,
+          hp: 8,
+          x: transitionPos ? (transitionPos.x === 0 ? 4 : (transitionPos.x === 4 ? 0 : 2)) : 0,
+          y: transitionPos ? (transitionPos.y === 0 ? 4 : (transitionPos.y === 4 ? 0 : 2)) : 0
+        });
+        messages.push({
+          text: "👤 A cold dread creeps up your laces... The Shadow Stalker has followed you into this room!",
+          type: "danger"
+        });
+      }
+    }
+
+    // Inject Shadow Stalker 2 if active and not defeated
+    if (updatedFlags.shadow_stalker_following_2 && !updatedFlags.shadow_stalker_defeated_2) {
+      const exists = finalEntities.some(e => e.id === 'shadow_stalker_2');
+      if (!exists) {
+        finalEntities.push({
+          id: "shadow_stalker_2",
+          name: "👻 Shadow Stalker",
+          behavior: "stalk",
+          detectionRange: 15,
+          damage: 1,
+          hp: 8,
+          x: transitionPos ? (transitionPos.x === 0 ? 3 : (transitionPos.x === 4 ? 1 : 2)) : 4,
+          y: transitionPos ? (transitionPos.y === 0 ? 3 : (transitionPos.y === 4 ? 1 : 2)) : 0
+        });
+        messages.push({
+          text: "👤 Shadows pool and shift... A second Shadow Stalker has pursued you into this room!",
+          type: "danger"
+        });
+      }
+    }
+
     return {
       state: {
         ...finalState,
         room: transitionRoom,
         playerPosition: transitionPos || { ...transitionRoom.player_start },
-        entities: (transitionRoom.entities || []).map(e => ({ ...e })),
+        entities: finalEntities,
         discoveredRooms: newDiscovered,
         inventory: updatedInventory,
         stateFlags: updatedFlags
@@ -1227,6 +1271,130 @@ function handleInteract(state, target, messages, globalItems = {}) {
   const tileType = getCurrentTile(state);
   const tileData = getTileData(state.room, tileType);
 
+  if (tileType === 'creepy_shrine') {
+    let newState = { ...state };
+    if (state.stateFlags.shadow_stalker_following) {
+      messages.push({
+        text: "The stone altar is completely cold and silent now.",
+        type: "narrative"
+      });
+      return { state, messages };
+    }
+    
+    newState.stateFlags = {
+      ...newState.stateFlags,
+      shadow_stalker_following: true
+    };
+    // Spawn Shadow Stalker 1 in current room immediately (opposite bottom-right corner)
+    newState.entities = [
+      ...newState.entities,
+      {
+        id: "shadow_stalker",
+        name: "👻 Shadow Stalker",
+        behavior: "stalk",
+        detectionRange: 15,
+        damage: 1,
+        hp: 8,
+        x: 4,
+        y: 4
+      }
+    ];
+    messages.push({
+      text: "👻 You brush away the cobwebs. Suddenly, a cold wind sweeps through the cave! A terrifying shadowy tennis shoe with burning red eyes rises from the altar: The SHADOW STALKER! 'YOU CANNOT ESCAPE ME!' it shrieks.",
+      type: "danger"
+    });
+    return { state: newState, messages };
+  }
+ 
+  if (tileType === 'forgotten_shrine') {
+    let newState = { ...state };
+    if (state.stateFlags.shadow_stalker_following_2) {
+      messages.push({
+        text: "The ancient altar is completely cold and silent now.",
+        type: "narrative"
+      });
+      return { state, messages };
+    }
+    
+    newState.stateFlags = {
+      ...newState.stateFlags,
+      shadow_stalker_following_2: true
+    };
+    // Spawn Shadow Stalker 2 in current room immediately (opposite bottom-left corner)
+    newState.entities = [
+      ...newState.entities,
+      {
+        id: "shadow_stalker_2",
+        name: "👻 Shadow Stalker",
+        behavior: "stalk",
+        detectionRange: 15,
+        damage: 1,
+        hp: 8,
+        x: 0,
+        y: 4
+      }
+    ];
+    messages.push({
+      text: "👻 You brush away the dry leaves. The silver trees groan as a dark mist erupts from the roots! A second SHADOW STALKER rises from the fog: 'I HAVE FOUND YOU, SHIELDED ONE!' it howls.",
+      type: "danger"
+    });
+    return { state: newState, messages };
+  }
+
+  if (tileType === 'broken_generator') {
+    let newState = { ...state };
+    const hasTinkerer = state.abilities?.some(a => a.id === 'master_tinkerer');
+    if (hasTinkerer) {
+      if (state.stateFlags.generator_fixed) {
+        messages.push({ text: "The steam generator hums peacefully, emitting warm steam.", type: "narrative" });
+        return { state, messages };
+      }
+      newState.stateFlags = {
+        ...newState.stateFlags,
+        generator_fixed: true
+      };
+      const coreItem = globalItems.item_power_core || { itemId: "item_power_core", name: "Power Core", type: "quest", description: "A heavy battery core humming with raw, compressed electric current." };
+      newState.inventory.push(coreItem);
+      messages.push({
+        text: "🔧 CLANK! Sparking gears align under your master tinkering skill! The steam generator coughs, sputters, and starts humming with raw steam pressure. It ejects a glowing Power Core from its side! You collect it!",
+        type: "loot"
+      });
+    } else {
+      messages.push({
+        text: "⚠️ A rusty brass steam generator. Its copper coils are snapped, and several gears are misaligned. It requires a Master Tinkerer to rewire and align the components.",
+        type: "warning"
+      });
+    }
+    return { state: newState, messages };
+  }
+
+  if (tileType === 'jammed_toaster_console') {
+    let newState = { ...state };
+    const hasTinkerer = state.abilities?.some(a => a.id === 'master_tinkerer');
+    if (hasTinkerer) {
+      if (state.stateFlags.toaster_fixed) {
+        messages.push({ text: "The toaster console's lights pulse green. The slot is open.", type: "narrative" });
+        return { state, messages };
+      }
+      newState.stateFlags = {
+        ...newState.stateFlags,
+        toaster_fixed: true
+      };
+      const waffleItem = globalItems.item_fossil_waffle || { itemId: "item_fossil_waffle", name: "Fossilized Waffle", type: "quest", description: "A rock-solid, petrified waffle from the ancient Breakfastopian dynasties." };
+      newState.inventory.push(waffleItem);
+      messages.push({
+        text: "🔧 BZZZ! Using your tinkering knowledge, you rewire the console's burnt fuse lines. A satisfying *DING!* rings out. The massive toaster pops open its heavy steel slot, revealing a rock-solid, Fossilized Waffle! You harvest it!",
+        type: "loot"
+      });
+    } else {
+      messages.push({
+        text: "⚠️ A grand, high-voltage console that controls the heavy gateway slot. The display screen is scrambled with error codes. The circuits look too complex for non-tinkerers to resolve.",
+        type: "warning"
+      });
+    }
+    return { state: newState, messages };
+  }
+
   if (state.room?.room_id === "land_of_creativity" && tileType === "trapped_objects") {
     let newState = { ...state };
     if (state.stateFlags.derf_creativity_stage === 2) {
@@ -1275,7 +1443,21 @@ function handleInteract(state, target, messages, globalItems = {}) {
         text: "🔊 CLANG! WHIRRRRRR! The giant electromagnet surges to life with a deafening electric hum! A massive magnetic force field ripples across the yard. The Cutlery Monster is instantly ripped off its feet and dragged screaming across the junk piles, pinned flat against the magnet where it sparks and twitches helplessly! The scrapyard is safe!",
         type: "narrative"
       });
+      
+      if (!newState.stateFlags.magnet_rusted_bolt_given) {
+        newState.stateFlags.magnet_rusted_bolt_given = true;
+        const boltItem = globalItems.item_rusted_bolt || { itemId: "item_rusted_bolt", name: "Rusted Bolt", type: "quest", description: "A heavy, oxidized metal bolt scavenged from industrial machinery." };
+        newState.inventory.push(boltItem);
+        messages.push({ text: "🧲 CLANG! The activated magnet pulls a heavy Rusted Bolt out of the scrap heaps and snaps it right onto its surface! You collect it!", type: "loot" });
+      }
     } else {
+      const hasZapImmunity = state.abilities?.some(a => a.id === 'zap_immunity');
+      if (hasZapImmunity) {
+        messages.push({ text: "⚡ You poke the cut copper wires of the magnet control panel. Sparking blue electricity discharges harmlessly against your Rubber Boots!", type: "narrative" });
+      } else {
+        modifyPlayerHP(newState, -1, messages);
+        messages.push({ text: "⚡ ZAP! You poke the cut copper wires of the magnet control panel and receive a nasty electric shock! (-1 HP)", type: "danger" });
+      }
       messages.push({
         text: "⚠️ You inspect the massive scrap electromagnet. The cables are cut and the internal coils are a tangled mess. You don't have the tinkering skills to repair it. You'll have to lure the monster away manually!",
         type: "warning"

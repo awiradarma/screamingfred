@@ -74,10 +74,27 @@
           }
         ]
       }
+    },
+    "forgotten_shrine": {
+      "passable": true,
+      "description": "A dark, ancient stone pedestal wrapped in memory moss. An ominous aura surrounds it.",
+      "interactionVerb": "SEARCH"
+    },
+    "pulsing_vine_clutter": {
+      "passable": true,
+      "description": "A thick, green memory vine that seems to twitch slightly when touched. It has strong structural properties.",
+      "interactionVerb": "HARVEST",
+      "item": {
+        "itemId": "item_vine",
+        "name": "Pulsing Vine",
+        "type": "quest",
+        "opened_description": "A thick, green memory vine that has been harvested.",
+        "onCollect": "You harvest a Pulsing Vine! It twitches slightly in your hand."
+      }
     }
   },
   "grid": [
-    ["forest_wall", "forest_wall", "forest_wall", "forest_wall", "forest_wall"],
+    ["pulsing_vine_clutter", "forest_wall", "forest_wall", "forest_wall", "forgotten_shrine"],
     ["forest_wall", "forest_floor", "forest_floor", "forest_floor", "forest_wall"],
     ["exit_west", "forest_floor", "forgotten_clearing", "forest_floor", "exit_east"],
     ["forest_wall", "forest_floor", "forest_floor", "forest_floor", "forest_wall"],

@@ -89,6 +89,41 @@
             },
             "description": "Trade 1 Sparking Energy Drink to learn the passive 'Stable Footing' ability (prevents jelly launching).",
             "maxTrades": 1
+          },
+          {
+            "id": "chef_bolt_to_ramen",
+            "name": "Rusted Bolt for Ramen",
+            "give": { "itemId": "item_rusted_bolt", "count": 1, "name": "Rusted Bolt" },
+            "receive": { "type": "item", "itemId": "food_ramen", "name": "Instant Ramen", "count": 1 },
+            "description": "Trade 1 Rusted Bolt for 1 Instant Ramen (+4 HP)."
+          },
+          {
+            "id": "chef_mushrooms_to_ramen",
+            "name": "Glowing Mushrooms for Ramen",
+            "give": { "itemId": "item_mushrooms", "count": 1, "name": "Glowing Mushrooms" },
+            "receive": { "type": "item", "itemId": "food_ramen", "name": "Instant Ramen", "count": 1 },
+            "description": "Trade 1 Glowing Mushrooms for 1 Instant Ramen (+4 HP)."
+          },
+          {
+            "id": "chef_vine_to_ramen",
+            "name": "Pulsing Vine for Ramen",
+            "give": { "itemId": "item_vine", "count": 1, "name": "Pulsing Vine" },
+            "receive": { "type": "item", "itemId": "food_ramen", "name": "Instant Ramen", "count": 1 },
+            "description": "Trade 1 Pulsing Vine for 1 Instant Ramen (+4 HP)."
+          },
+          {
+            "id": "chef_rubber_to_drink",
+            "name": "Rubber Piece for Energy Drink",
+            "give": { "itemId": "item_rubber", "count": 1, "name": "Rubber Piece" },
+            "receive": { "type": "item", "itemId": "consumable_energy_drink", "name": "Sparking Energy Drink", "count": 1 },
+            "description": "Trade 1 Rubber Piece for a Sparking Energy Drink (+3 HP and cleanses debuffs)."
+          },
+          {
+            "id": "chef_waffle_to_waffle",
+            "name": "Fossilized Waffle for Syrup Waffle",
+            "give": { "itemId": "item_fossil_waffle", "count": 1, "name": "Fossilized Waffle" },
+            "receive": { "type": "item", "itemId": "food_syrup_waffle", "name": "Syrup Waffle", "count": 1 },
+            "description": "Trade 1 Fossilized Waffle for a Syrup Waffle (+8 HP)."
           }
         ],
         "dialogue": [

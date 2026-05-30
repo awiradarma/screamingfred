@@ -13,11 +13,11 @@
       "wall"
     ],
     [
-      "wall",
+      "lint_moss_pollen",
       "lint_moss",
       "lint_moss",
       "lint_moss",
-      "wall"
+      "lint_moss"
     ],
     [
       "wall",
@@ -54,7 +54,18 @@
       "passable": true,
       "description": "A soft, springy layer of lint moss."
     },
-
+    "lint_moss_pollen": {
+      "passable": true,
+      "description": "A dense patch of yellow moss shimmering with sweet pollen.",
+      "interactionVerb": "SEARCH",
+      "item": {
+        "itemId": "item_pollen",
+        "name": "Yellow Pollen",
+        "type": "quest",
+        "opened_description": "A patch of yellow moss. The pollen has been harvested.",
+        "onCollect": "You sweep up the Yellow Pollen into your pockets! It smells sweet like honey."
+      }
+    },
     "exit_north_street": {
       "passable": true,
       "description": "The main road leads back to Shoeboxlandia Street.",
@@ -104,6 +115,17 @@
       }
     }
   },
-  "entities": [],
+  "entities": [
+    {
+      "id": "forest_serpent_hidden",
+      "name": "Hidden Shoelace Snake",
+      "behavior": "idle",
+      "detectionRange": 0,
+      "damage": 1,
+      "hp": 3,
+      "x": 4,
+      "y": 1
+    }
+  ],
   "state_flags": {}
 }

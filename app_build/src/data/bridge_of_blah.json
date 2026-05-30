@@ -5,7 +5,7 @@
   "theme": "Underground",
   "description": "A 52-mile long bridge of brittle wood. You feel an overwhelming urge to say 'blah' every five minutes.",
   "player_start": {
-    "x": 1,
+    "x": 0,
     "y": 2
   },
   "tiles": {
@@ -100,11 +100,11 @@
       "chasm_of_chaos"
     ],
     [
-      "chasm_of_chaos",
       "exit_west",
+      "brittle_wood",
       "barry",
-      "locked_gate",
-      "chasm_of_chaos"
+      "brittle_wood",
+      "locked_gate"
     ],
     [
       "chasm_of_chaos",
