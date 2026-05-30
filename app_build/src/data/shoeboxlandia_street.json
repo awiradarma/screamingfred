@@ -51,8 +51,13 @@
       "icon": "🚪",
       "description": "A heavy iron gate blocks the way back to the bridge. It is locked tight.",
       "conditions": {
-        "requiredFlag": "chapter_2_unlocked",
-        "failMessage": "The gate is locked. Better come back later."
+        "requiredItem": "slipper_key",
+        "requiredFlag": "chapter_2_completed",
+        "failMessage": "The gate is locked tight. It requires the legendary Slipper Key from Creativity to open.",
+        "onSuccess": {
+          "setFlag": "chapter_2_unlocked",
+          "msg": "You insert the Slipper Key into the lock. It turns with a heavy, satisfying CLACK! The gate to Shoeboxlandia swings wide open!"
+        }
       },
       "targetRoomId": "bridge_of_blah",
       "targetPosition": {

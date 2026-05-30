@@ -233,5 +233,36 @@
     "name": "Magical Pasta",
     "description": "A glowing, legendary dish made of cosmic starch. If you take fatal damage while carrying this, it will automatically consume itself to revive you and restore your HP to max!",
     "type": "quest"
+  },
+  "item_gorilla_hair": {
+    "name": "Gorilla Hair",
+    "description": "A thick, magical hair from a giant gorilla imagined in the Land of Endless Jumping.",
+    "type": "quest"
+  },
+  "item_stethoscope_bell": {
+    "name": "Stethoscope Bell",
+    "description": "A shiny metallic bell gifted by the Stethoscope.",
+    "type": "quest"
+  },
+  "item_obsidian_shard": {
+    "name": "Obsidian Shard",
+    "description": "A shiny glass shard from the Bridge of Lah.",
+    "type": "quest"
+  },
+  "food_syrup_waffle": {
+    "name": "Syrup Waffle",
+    "description": "A delicious syrup-soaked waffle. Restores 8 HP.",
+    "type": "food",
+    "onUse": {
+      "action": "heal",
+      "value": 8,
+      "consume": true,
+      "successMessage": "You devour the Syrup Waffle. The sweet starchy goodness restores your vitality! +8 HP!"
+    }
+  },
+  "slipper_key": {
+    "name": "Slipper Key",
+    "description": "The legendary key to open the gates of Shoeboxlandia, gifted by Derf.",
+    "type": "quest"
   }
 }

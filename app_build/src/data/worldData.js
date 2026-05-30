@@ -30,6 +30,14 @@ import bridge_of_blah from './bridge_of_blah.json' assert { type: 'json' };
 import mountain_pass from './mountain_pass.json' assert { type: 'json' };
 import mountain_peak from './mountain_peak.json' assert { type: 'json' };
 import textlandia_entrance from './textlandia_entrance.json' assert { type: 'json' };
+import land_of_jumping from './land_of_jumping.json' assert { type: 'json' };
+import scream_collector from './scream_collector.json' assert { type: 'json' };
+import forgotten_forest from './forgotten_forest.json' assert { type: 'json' };
+import perception_ocean from './perception_ocean.json' assert { type: 'json' };
+import mountain_of_miserly from './mountain_of_miserly.json' assert { type: 'json' };
+import textlandia_road from './textlandia_road.json' assert { type: 'json' };
+import lava_chasms from './lava_chasms.json' assert { type: 'json' };
+import land_of_creativity from './land_of_creativity.json' assert { type: 'json' };
 
 export const WORLD_SIZE = 30;
 export const COORD_MIN = 0;
@@ -76,6 +84,16 @@ export const worldCoordinateRegistry = {
   "24,16,-1": "apple_swamp",
   "25,16,-1": "great_farm",
   "26,16,-1": "bridge_of_blah",
+  
+  // Chapter 2 - Unknown Lands & Textlandia & Creativity
+  "26,17,-1": "land_of_jumping",
+  "26,18,-1": "scream_collector",
+  "25,18,-1": "forgotten_forest",
+  "24,18,-1": "perception_ocean",
+  "24,17,-1": "mountain_of_miserly",
+  "23,16,-1": "textlandia_road",
+  "23,15,-1": "lava_chasms",
+  "23,15,0": "land_of_creativity",
 };
 
 export const worldData = {
@@ -111,6 +129,14 @@ export const worldData = {
   mountain_pass,
   mountain_peak,
   textlandia_entrance,
+  land_of_jumping,
+  scream_collector,
+  forgotten_forest,
+  perception_ocean,
+  mountain_of_miserly,
+  textlandia_road,
+  lava_chasms,
+  land_of_creativity,
 };
 
 /**

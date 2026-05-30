@@ -1,0 +1,60 @@
+{
+  "room_id": "perception_ocean",
+  "room_name": "Perception & The Ocean Dock",
+  "world_coord": "24,18,-1",
+  "theme": "Underground",
+  "description": "You step onto a shifting floor. A huge glass sign reads: 'Every step is different.' Ahead, you can hear the sound of lapping waves.",
+  "player_start": {
+    "x": 4,
+    "y": 2
+  },
+  "tiles": {
+    "void_wall": {
+      "passable": false,
+      "description": "A shimmering wall of pure static that hurts to look at."
+    },
+    "stone_floor": {
+      "passable": true,
+      "description": "A rubbery floor that bends perception."
+    },
+    "exit_east": {
+      "passable": true,
+      "description": "Back east to the Forgotten Forest.",
+      "targetRoomId": "forgotten_forest",
+      "targetPosition": {
+        "x": 0,
+        "y": 2
+      }
+    },
+    "exit_west": {
+      "passable": true,
+      "description": "A wooden fishing dock with multiple boats. A particular wooden boat has the names 'Fred, Freddista & Willy' freshly carved into its side. Leap on to board!",
+      "targetRoomId": "mountain_of_miserly",
+      "targetPosition": {
+        "x": 2,
+        "y": 4
+      }
+    },
+    "shift_tile_arcade": {
+      "passable": true,
+      "description": "👾 ZIP! The entire area changes! The trees turn into retro 8-bit sprites, and the sky becomes a dark arcade cabinet screen with neon high-score indicators!"
+    },
+    "shift_tile_metal": {
+      "passable": true,
+      "description": "⚙️ CLANK! The environment shifts again! The pixelated trees turn into giant rotating steel gears, and the ground changes into heavy metallic plates."
+    },
+    "shift_tile_acid": {
+      "passable": true,
+      "description": "🧪 WARP! The ground under your sole turns into a glowing green pool of bubbling acid! (If you have Expectant Float, you float safely above the corrosion!)"
+    }
+  },
+  "grid": [
+    ["void_wall", "void_wall", "void_wall", "void_wall", "void_wall"],
+    ["void_wall", "stone_floor", "stone_floor", "stone_floor", "void_wall"],
+    ["exit_west", "shift_tile_acid", "shift_tile_metal", "shift_tile_arcade", "exit_east"],
+    ["void_wall", "stone_floor", "stone_floor", "stone_floor", "void_wall"],
+    ["void_wall", "void_wall", "void_wall", "void_wall", "void_wall"]
+  ],
+  "entities": [],
+  "state_flags": {}
+}

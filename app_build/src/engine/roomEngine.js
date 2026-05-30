@@ -192,6 +192,33 @@ export function processCommand(state, rawInput, itemRegistry = {}) {
     return { state, messages };
   }
 
+  // --- ENDLESS JUMPING LOOP INTERCEPTION ---
+  if (state.room?.room_id === "land_of_jumping" && state.stateFlags?.is_jumping) {
+    if (command.action === "scream" || command.action === "talk") {
+      let finalState = { ...state };
+      finalState.stateFlags = { ...finalState.stateFlags, is_jumping: false };
+      const localMessages = [
+        {
+          text: "🦍 Fred channels all his starchy imagination! He visualizes his lost pasta flying back home and morphing into a giant, friendly gorilla that cushions his fall!",
+          type: "scream"
+        },
+        {
+          text: "The sheer absurdity of the expectation shatters the bouncy loop! Fred plummets down and lands safely on the rubbery floor.",
+          type: "narrative"
+        }
+      ];
+      return { state: finalState, messages: localMessages };
+    } else if (command.action === "move" || command.action === "interact") {
+      const localMessages = [
+        {
+          text: "🍮 BOING! You are bouncing 50 meters in the air! You cannot move or search! You must expect the unexpectable to break the loop! (Hint: Stand in place and execute the 'scream' or 'talk' command!)",
+          type: "warning"
+        }
+      ];
+      return { state, messages: localMessages };
+    }
+  }
+
   // --- DERF CLIMAX INTERCEPTIONS ---
   if (state.room?.room_id === "bridge_of_blah") {
     if (state.stateFlags.derf_stage === 1) {
@@ -815,18 +842,34 @@ function applyTileEffects(state, x, y, messages, direction) {
         immuneMsg = newState.abilities?.some(a => a.id === 'bio_synthesizer') 
           ? "Your Bio-Synthesizer patch grounds the electricity, protecting you!" 
           : "Your Zap Immunity absorbs the electric shock!";
-      } else if (newState.abilities?.some(a => a.id === 'float') && (tileType.includes('water') || tileType.includes('lake') || tileType.includes('syrup'))) {
+      } else if (newState.abilities?.some(a => a.id === 'expectant_float' || a.id === 'float') && (tileType.includes('water') || tileType.includes('lake') || tileType.includes('syrup') || tileType.includes('lava') || tileType.includes('acid') || tileType.includes('pit'))) {
         isImmune = true;
-        immuneMsg = "You effortlessly float over the hazard!";
+        immuneMsg = newState.abilities?.some(a => a.id === 'expectant_float')
+          ? "Your Expectant Float ability lets you glide safely above the hazard!"
+          : "You effortlessly float over the hazard!";
       }
 
       if (isImmune) {
         messages.push({ text: `✨ ${immuneMsg}`, type: 'narrative' });
       } else {
-        const damage = tileData.damageAmount || 1;
-        modifyPlayerHP(newState, -damage, messages);
-        const msg = tileData.effectMessage || (tileType.includes('lava') ? "Sizzle! The lava burns!" : "Gurgle! The water is deep and cold.");
-        messages.push({ text: `⚠️ ${msg} (-${damage} HP)`, type: 'danger' });
+        let damage = tileData.damageAmount || 1;
+        if (tileType.includes('lava') || tileType.includes('acid') || tileType.includes('toxic')) {
+          if (newState.abilities?.some(a => a.id === 'iron_sole')) {
+            damage = Math.max(0, damage - 1);
+            messages.push({ text: "🛡️ Your Iron Sole plating absorbs some of the heat/corrosion!", type: "narrative" });
+          } else if (newState.abilities?.some(a => a.id === 'bio_synthesizer')) {
+            damage = Math.max(0, damage - 1);
+            messages.push({ text: "🌱 Your Bio-Synthesizer starchy skin resists the hazard!", type: "narrative" });
+          }
+        }
+        
+        if (damage > 0) {
+          modifyPlayerHP(newState, -damage, messages);
+          const msg = tileData.effectMessage || (tileType.includes('lava') ? "Sizzle! The lava burns!" : "Gurgle! The water is deep and cold.");
+          messages.push({ text: `⚠️ ${msg} (-${damage} HP)`, type: 'danger' });
+        } else {
+          messages.push({ text: "✨ You took no damage thanks to your passive defenses!", type: "narrative" });
+        }
       }
     }
 
@@ -892,34 +935,40 @@ function applyTileEffects(state, x, y, messages, direction) {
       }
     }
 
-    // 4. Jelly Effects (Launch)
+    // 4. Jelly Effects (Launch / Endless Jumping)
     if (tileData.effect === 'launch' || tileType === 'jelly' || tileType.includes('jelly')) {
       const hasStableFooting = newState.stateFlags?.stable_footing || newState.abilities?.some(a => a.id === 'stable_footing');
       if (!hasStableFooting) {
-        messages.push({ text: "🍮 AAAAAAH! The jelly surface launches you into the air!", type: 'warning' });
-        const { dx, dy } = DIR_VECTORS[direction] || { dx: 0, dy: 0 };
-        
-        if (dx !== 0 || dy !== 0) {
-          let finalX = currentX;
-          let finalY = currentY;
+        if (newState.room?.room_id === 'land_of_jumping') {
+          newState.stateFlags = { ...newState.stateFlags, is_jumping: true };
+          messages.push({ text: "🍮 AAAAAAH! The jelly surface launches you 50 meters into the air! You are bouncing helplessly in a loop of endless jumping! You must expect the unexpectable to land safely!", type: 'warning' });
+          break;
+        } else {
+          messages.push({ text: "🍮 AAAAAAH! The jelly surface launches you into the air!", type: 'warning' });
+          const { dx, dy } = DIR_VECTORS[direction] || { dx: 0, dy: 0 };
           
-          for (let i = 1; i <= 3; i++) {
-            const tx = currentX + (dx * i);
-            const ty = currentY + (dy * i);
-            const tType = getTileAt(newState.room, tx, ty);
-            const tData = tType ? getTileData(newState.room, tType) : null;
+          if (dx !== 0 || dy !== 0) {
+            let finalX = currentX;
+            let finalY = currentY;
             
-            if (!tType || !tData || !tData.passable) break;
-            finalX = tx;
-            finalY = ty;
-          }
-          
-          if (finalX !== currentX || finalY !== currentY) {
-            currentX = finalX;
-            currentY = finalY;
-            newState.playerPosition = { x: currentX, y: currentY };
-            moved = true;
-            continue;
+            for (let i = 1; i <= 3; i++) {
+              const tx = currentX + (dx * i);
+              const ty = currentY + (dy * i);
+              const tType = getTileAt(newState.room, tx, ty);
+              const tData = tType ? getTileData(newState.room, tType) : null;
+              
+              if (!tType || !tData || !tData.passable) break;
+              finalX = tx;
+              finalY = ty;
+            }
+            
+            if (finalX !== currentX || finalY !== currentY) {
+              currentX = finalX;
+              currentY = finalY;
+              newState.playerPosition = { x: currentX, y: currentY };
+              moved = true;
+              continue;
+            }
           }
         }
       } else {

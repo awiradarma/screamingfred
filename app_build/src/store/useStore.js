@@ -124,6 +124,14 @@ export const CONQUEST_REWARDS = [
     requiredItemNames: ["Magnifying Lens", "Shiny Reflector"],
     rewardMessage: "Between the magnifying lens and the shiny reflector, your vision is enhanced beyond normal shoe capabilities! You learned Thermal Sight! (Passive)",
     ability: { id: "thermal_sight", name: "Thermal Sight", description: "Advanced infrared vision. Reveals life forms (NPCs/Enemies) and machinery through darkness and fog.", type: "passive", icon: "👁️" }
+  },
+  {
+    id: "expectation_resonance",
+    name: "Expectant Grace",
+    requiredItems: ["item_gorilla_hair", "item_stethoscope_bell", "item_obsidian_shard"],
+    requiredItemNames: ["Gorilla Hair", "Stethoscope Bell", "Obsidian Shard"],
+    rewardMessage: "You combine the Gorilla Hair, the Stethoscope Bell, and the Obsidian Shard. The starchy resonance hums around your sole! You learned Expectant Float! (Prevents falling/sliding in chasms)",
+    ability: { id: "expectant_float", name: "Expectant Float", description: "Float gracefully over hazards. Immune to sliding, falling, or acid pits.", type: "passive", icon: "🎈" }
   }
 ];
 

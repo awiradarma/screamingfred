@@ -1,0 +1,80 @@
+{
+  "room_id": "textlandia_road",
+  "room_name": "Textlandia Road",
+  "world_coord": "23,16,-1",
+  "theme": "Textlandia",
+  "description": "The entire realm is constructed of literal words. A wooden sign labeled 'sign' points down a road made of the letters 'r-o-a-d'. Mountains labeled 'steep mountain' line the distance.",
+  "player_start": {
+    "x": 2,
+    "y": 3
+  },
+  "tiles": {
+    "wall_text": {
+      "passable": false,
+      "description": "Shifting block walls spelling out the word 'W-A-L-L'."
+    },
+    "road_text": {
+      "passable": true,
+      "description": "A flat dirt path formed by spelling 'R-O-A-D' repeatedly."
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "The stone pass leading back south to the Mountains of Miserly.",
+      "targetRoomId": "mountain_of_miserly",
+      "targetPosition": {
+        "x": 2,
+        "y": 1
+      }
+    },
+    "exit_north": {
+      "passable": true,
+      "description": "A steaming, fiery gate heading north toward a molten landscape.",
+      "targetRoomId": "lava_chasms",
+      "targetPosition": {
+        "x": 2,
+        "y": 4
+      }
+    },
+    "npc_apostrophe": {
+      "passable": true,
+      "icon": "'",
+      "description": "A floating, friendly Apostrophe.",
+      "npc": {
+        "name": "Punctuation Mark",
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "An apostrophe greets you, spelling out: \"Welcome to Textlandia. We recommend you turn back. You are approaching creativity. Do not enter the typewriter, you will get lost.\""
+          },
+          {
+            "stage": 1,
+            "text": "You remark: \"It doesn't look that large.\" Willy, Freddista, and the Apostrophe all shout in unison: \"NO! NO! NO!!\" You sigh: \"Okay, no.\""
+          }
+        ]
+      }
+    },
+    "npc_sue_saul_cameo": {
+      "passable": true,
+      "icon": "🧵",
+      "description": "Sue and Saul standing near a copy-pasted Hidden Hideout entrance.",
+      "npc": {
+        "name": "Fainting Duo",
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "Sue and Saul greet you. Willy says: \"We are heading toward creativity!\" Upon hearing that, Sue and Saul both faint instantly from concern! Saul grunts from the floor: \"*Faint... grrrr!*\""
+          }
+        ]
+      }
+    }
+  },
+  "grid": [
+    ["wall_text", "wall_text", "exit_north", "wall_text", "wall_text"],
+    ["wall_text", "road_text", "road_text", "road_text", "wall_text"],
+    ["wall_text", "npc_sue_saul_cameo", "npc_apostrophe", "road_text", "wall_text"],
+    ["wall_text", "road_text", "road_text", "road_text", "wall_text"],
+    ["wall_text", "wall_text", "exit_south", "wall_text", "wall_text"]
+  ],
+  "entities": [],
+  "state_flags": {}
+}

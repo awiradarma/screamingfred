@@ -1,0 +1,105 @@
+{
+  "room_id": "scream_collector",
+  "room_name": "The Scream Collector",
+  "world_coord": "26,18,-1",
+  "theme": "Unknown_Lands",
+  "description": "Inside this strange structure, a heavy cacophony of bangs, clashes, explosions, and laughter echoes from rows of metal cabinets. A giant stethoscope stands near the center, clutching three large empty jars.",
+  "player_start": {
+    "x": 2,
+    "y": 1
+  },
+  "tiles": {
+    "stone_wall": {
+      "passable": false,
+      "description": "Walls lined with high cabinets containing locked, murmuring sound jars."
+    },
+    "stone_floor": {
+      "passable": true,
+      "description": "A stable floor paved with dark marble slabs."
+    },
+    "exit_north": {
+      "passable": true,
+      "description": "Back north to the Land of Endless Jumping.",
+      "targetRoomId": "land_of_jumping",
+      "targetPosition": {
+        "x": 2,
+        "y": 4
+      }
+    },
+    "exit_west": {
+      "passable": true,
+      "description": "A dark, overgrown archway leading west into the Forgotten Forest.",
+      "conditions": {
+        "requiredFlag": "reward_stethoscope_stage1_item_stethoscope_bell",
+        "failMessage": "The stethoscope blocks the archway! 'NO ONE LEAVES WITHOUT CONTRIBUTING A SCREAM!' he shouts."
+      },
+      "targetRoomId": "forgotten_forest",
+      "targetPosition": {
+        "x": 4,
+        "y": 2
+      }
+    },
+    "stethoscope": {
+      "passable": true,
+      "icon": "🩺",
+      "description": "The Scream Collector himself, pacing eagerly.",
+      "npc": {
+        "name": "Dr. Stethoscope",
+        "trades": [
+          {
+            "id": "stethoscope_obsidian_to_waffle",
+            "name": "Obsidian Shard for Syrup Waffle",
+            "give": { "itemId": "item_obsidian_shard", "count": 1, "name": "Obsidian Shard" },
+            "receive": { "type": "item", "itemId": "food_syrup_waffle", "name": "Syrup Waffle", "count": 1 },
+            "description": "Trade 1 Obsidian Shard for a sweet Syrup Waffle (+8 HP)."
+          },
+          {
+            "id": "stethoscope_gorilla_to_pasta",
+            "name": "Gorilla Hair for Magical Pasta",
+            "give": { "itemId": "item_gorilla_hair", "count": 1, "name": "Gorilla Hair" },
+            "receive": { "type": "item", "itemId": "magical_pasta", "name": "Magical Pasta", "count": 1 },
+            "description": "Trade 1 Gorilla Hair for 1 Magical Pasta (Extra Life / Auto-Revive)."
+          },
+          {
+            "id": "stethoscope_potato_to_drink",
+            "name": "Wild Potato for Energy Drink",
+            "give": { "itemId": "food_potato", "count": 1, "name": "Wild Potato" },
+            "receive": { "type": "item", "itemId": "consumable_energy_drink", "name": "Sparking Energy Drink", "count": 1 },
+            "description": "Trade 1 Wild Potato for a fizzing Sparking Energy Drink."
+          }
+        ],
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "\"BEHOLD THE SCREAM COLLECTOR!\" bellows Dr. Stethoscope. \"SCREAM INTO THIS JAR!\" (Hint: Stand here and execute the 'scream' command!)",
+            "requiresScream": true
+          },
+          {
+            "stage": 1,
+            "text": "\"BEAUTIFUL SCREAM! I WILL USE THIS WELL!\" yells the stethoscope, screwing the jar lid tight. \"Here, take this shiny Stethoscope Bell from my cabinet. Now you may pass west!\"",
+            "onComplete": {
+              "action": "give_item",
+              "itemId": "item_stethoscope_bell",
+              "flagSet": "scream_collected"
+            }
+          },
+          {
+            "stage": 2,
+            "text": "\"I'm always collecting soundwaves and rare starch! Check out my TRADING POST if you have any cool shards or hair!\""
+          }
+        ]
+      }
+    }
+  },
+  "grid": [
+    ["stone_wall", "stone_wall", "exit_north", "stone_wall", "stone_wall"],
+    ["stone_wall", "stone_floor", "stone_floor", "stone_floor", "stone_wall"],
+    ["exit_west", "stone_floor", "stethoscope", "stone_floor", "stone_wall"],
+    ["stone_wall", "stone_floor", "stone_floor", "stone_floor", "stone_wall"],
+    ["stone_wall", "stone_wall", "stone_wall", "stone_wall", "stone_wall"]
+  ],
+  "entities": [],
+  "state_flags": {
+    "scream_collected": false
+  }
+}

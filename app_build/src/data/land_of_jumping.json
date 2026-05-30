@@ -1,0 +1,88 @@
+{
+  "room_id": "land_of_jumping",
+  "room_name": "Land of Endless Jumping",
+  "world_coord": "26,17,-1",
+  "theme": "Unknown_Lands",
+  "description": "A flat, elastic plain that seems to be made of a jelly-like material. Countless objects are stuck in a loop of endless jumping here. Willy warns: 'Expect the unexpectable to stay grounded!'",
+  "player_start": {
+    "x": 2,
+    "y": 1
+  },
+  "tiles": {
+    "stone_wall": {
+      "passable": false,
+      "description": "Warped cliffs made of squishy clay."
+    },
+    "stone_floor": {
+      "passable": true,
+      "description": "A slightly stable, rubbery pathway."
+    },
+    "jelly": {
+      "passable": true,
+      "effect": "launch",
+      "description": "🍮 A wiggly purple jelly trampoline. Walking on it launches you into the air!"
+    },
+    "exit_north": {
+      "passable": true,
+      "description": "The rift swirling back to the Bridge of Blah.",
+      "targetRoomId": "bridge_of_blah",
+      "targetPosition": {
+        "x": 3,
+        "y": 3
+      }
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "A pathway heading south to a dark structure labeled 'Scream Collector'.",
+      "targetRoomId": "scream_collector",
+      "targetPosition": {
+        "x": 2,
+        "y": 0
+      }
+    },
+    "gorilla_nest": {
+      "passable": true,
+      "icon": "🦍",
+      "description": "A nest made of giant banana peels and fuzzy fibers. A sign says: 'Gorilla Expectation Spot'.",
+      "interactionVerb": "SEARCH",
+      "item": {
+        "contains": {
+          "itemId": "item_gorilla_hair",
+          "name": "Gorilla Hair",
+          "type": "quest"
+        },
+        "onCollect": "You search the nest and find a thick, magical Gorilla Hair! It hums with strong gravity expectative powers."
+      }
+    },
+    "npc_jumping_friends": {
+      "passable": true,
+      "description": "A friendly Spring and Fidget Spinner are sitting on a binder clip, bouncing slightly.",
+      "npc": {
+        "name": "The Bouncy Companions",
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "\"Oh, travelers!\" squeaks the Spring. \"Welcome to the Land of Endless Jumping! If you don't watch out, you'll jump 50 meters high!\""
+          },
+          {
+            "stage": 1,
+            "text": "The Fidget Spinner spins: \"Your jumping is fueled by expectation. If you want to stay grounded, you must expect the unexpectable! Like giant gorillas, or fish-eating trees!\""
+          },
+          {
+            "stage": 2,
+            "text": "\"Whatever you do, don't go to Creativity,\" warns the Binder Clip. \"It's not creative there in spite of the name!\""
+          }
+        ]
+      }
+    }
+  },
+  "grid": [
+    ["stone_wall", "stone_wall", "exit_north", "stone_wall", "stone_wall"],
+    ["stone_wall", "stone_floor", "stone_floor", "stone_floor", "stone_wall"],
+    ["stone_wall", "jelly", "gorilla_nest", "npc_jumping_friends", "stone_wall"],
+    ["stone_wall", "stone_floor", "jelly", "stone_floor", "stone_wall"],
+    ["stone_wall", "stone_wall", "exit_south", "stone_wall", "stone_wall"]
+  ],
+  "entities": [],
+  "state_flags": {}
+}

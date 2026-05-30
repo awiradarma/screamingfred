@@ -1,0 +1,96 @@
+{
+  "room_id": "lava_chasms",
+  "room_name": "Lava Chasms & Bridge of Lah",
+  "world_coord": "23,15,-1",
+  "theme": "Underground",
+  "description": "A cacophony of molten mountains and lava lakes. Willy is melting from the heat, and Freddista's sweat pours down her laces. A narrow obsidian bridge crosses the boiling chasm.",
+  "player_start": {
+    "x": 2,
+    "y": 3
+  },
+  "tiles": {
+    "lava_pool": {
+      "passable": false,
+      "effect": "damage",
+      "damageAmount": 2,
+      "effectMessage": "The bubbling lava sizzles!"
+    },
+    "bridge_of_lah": {
+      "passable": true,
+      "description": "Obsidian planks stretching across the heat. A sign says: 'Bridge of LAAAAAAah: Say lah every 2 minutes!'"
+    },
+    "exit_south": {
+      "passable": true,
+      "description": "Back south to the text roads of Textlandia.",
+      "targetRoomId": "textlandia_road",
+      "targetPosition": {
+        "x": 2,
+        "y": 1
+      }
+    },
+    "exit_north": {
+      "passable": true,
+      "description": "The giant iron doors of Creativity floating on ash clouds.",
+      "conditions": {
+        "requiredFlag": "willy_saved",
+        "failMessage": "You can't leave Willy behind! Save him from the fiery pit first."
+      },
+      "targetRoomId": "land_of_creativity",
+      "targetPosition": {
+        "x": 2,
+        "y": 2
+      }
+    },
+    "obsidian_rubble": {
+      "passable": true,
+      "icon": "💎",
+      "description": "A pile of obsidian rubble on the bridge planks.",
+      "interactionVerb": "SEARCH",
+      "item": {
+        "contains": {
+          "itemId": "item_obsidian_shard",
+          "name": "Obsidian Shard",
+          "type": "quest"
+        },
+        "onCollect": "You pry loose a razor-sharp, shiny Obsidian Shard from the bridge structural supports!"
+      }
+    },
+    "lah_climax": {
+      "passable": true,
+      "description": "The center of the obsidian bridge.",
+      "npc": {
+        "name": "Fiery Chasm",
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "Willy trips on a loose obsidian plank and plunges headfirst toward the lava lake! \"HELP ME EVAPORATE SAFER!\" he screeches. (Hint: Stand here and execute the 'scream' command to save him!)",
+            "requiresScream": true
+          },
+          {
+            "stage": 1,
+            "text": "Fred lets out a burning starchy scream! The intense sonic energy cushions Willy, raising him safely back to the obsidian planks! \"My sole is saved!\" Willy gasps. Fred's vocal cords burn.",
+            "onComplete": {
+              "action": "set_flag",
+              "flagSet": "willy_saved"
+            }
+          },
+          {
+            "stage": 2,
+            "text": "Willy adjusts his starch. \"That was too close. Let's head north into Creativity immediately!\""
+          }
+        ]
+      }
+    }
+  },
+  "grid": [
+    ["lava_pool", "lava_pool", "exit_north", "lava_pool", "lava_pool"],
+    ["lava_pool", "bridge_of_lah", "bridge_of_lah", "bridge_of_lah", "lava_pool"],
+    ["lava_pool", "obsidian_rubble", "lah_climax", "bridge_of_lah", "lava_pool"],
+    ["lava_pool", "bridge_of_lah", "bridge_of_lah", "bridge_of_lah", "lava_pool"],
+    ["lava_pool", "lava_pool", "exit_south", "lava_pool", "lava_pool"]
+  ],
+  "entities": [],
+  "state_flags": {
+    "willy_saved": false
+  }
+}

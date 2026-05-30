@@ -56,15 +56,32 @@
     },
     "locked_gate": {
       "passable": true,
-      "description": "A heavy iron gate blocks the way back to Shoeboxlandia. It requires Chapter 2 to open.",
+      "description": "A heavy iron gate blocks the way back to Shoeboxlandia. It requires the Slipper Key to open.",
       "conditions": {
-        "requiredFlag": "chapter_2_unlocked",
-        "failMessage": "The gate is locked tight. The path to Shoeboxlandia will open in Chapter 2."
+        "requiredItem": "slipper_key",
+        "requiredFlag": "chapter_2_completed",
+        "failMessage": "The gate is locked tight. It requires the legendary Slipper Key from Creativity to open.",
+        "onSuccess": {
+          "setFlag": "chapter_2_unlocked",
+          "msg": "You insert the Slipper Key into the lock. It turns with a heavy, satisfying CLACK! The gate to Shoeboxlandia swings wide open!"
+        }
       },
       "targetRoomId": "shoeboxlandia_street",
       "targetPosition": {
         "x": 0,
         "y": 3
+      }
+    },
+    "rift_to_unknown": {
+      "passable": true,
+      "icon": "🌀",
+      "description": "A swirling portal of endless expectation and floating dust. Willy points to it: 'That's the rift into the Unknown Lands!'",
+      "visibleIf": "chapter_1_completed",
+      "hiddenTileType": "chasm_of_chaos",
+      "targetRoomId": "land_of_jumping",
+      "targetPosition": {
+        "x": 2,
+        "y": 1
       }
     }
   },
@@ -93,7 +110,7 @@
     [
       "chasm_of_chaos",
       "chasm_of_chaos",
-      "chasm_of_chaos",
+      "rift_to_unknown",
       "chasm_of_chaos",
       "chasm_of_chaos"
     ],

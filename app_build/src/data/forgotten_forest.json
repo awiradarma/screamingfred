@@ -1,0 +1,80 @@
+{
+  "room_id": "forgotten_forest",
+  "room_name": "The Forgotten Forest",
+  "world_coord": "25,18,-1",
+  "theme": "Shoebox_Forest",
+  "description": "A dense canopy of silver-eyelet trees that cast long, confusing shadows. A huge metal sign reads: 'This forest makes you forget things but makes you remember the things you want to forget.' A dense memory fog pools around your laces.",
+  "player_start": {
+    "x": 4,
+    "y": 2
+  },
+  "tiles": {
+    "forest_wall": {
+      "passable": false,
+      "description": "Thick, tangled brambles of faded laces and memory vines."
+    },
+    "forest_floor": {
+      "passable": true,
+      "description": "Damp dirt covered in silver pine needles."
+    },
+    "exit_east": {
+      "passable": true,
+      "description": "Back east to the Scream Collector structure.",
+      "targetRoomId": "scream_collector",
+      "targetPosition": {
+        "x": 0,
+        "y": 2
+      }
+    },
+    "exit_west": {
+      "passable": true,
+      "description": "A pathway heading west toward the scent of salt and sea.",
+      "conditions": {
+        "requiredFlag": "forest_cleared",
+        "failMessage": "You are too confused and blind to find the way west! You must save your friends first."
+      },
+      "targetRoomId": "perception_ocean",
+      "targetPosition": {
+        "x": 4,
+        "y": 2
+      }
+    },
+    "forgotten_clearing": {
+      "passable": true,
+      "description": "The center of the forest where the fog is thickest. Willy and Freddista stand here look dazed.",
+      "npc": {
+        "name": "Memory Fog",
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "\"Willy, who is this shoe next to me?\" you ask. Willy screams: \"I forgot how to walk!\" Freddista collapses: \"I... I forgot how to breathe!\" You panic: \"She stared at me, I've gone blind!\" (If you have Thermal Sight, your advanced infrared vision pierces the fog, allowing you to clearly see their outlines!) (Hint: Scream to save Freddista and Willy!)",
+            "requiresScream": true
+          },
+          {
+            "stage": 1,
+            "text": "Fred screams, filling the forest with starchy hope. Freddista gasps and starts breathing again! Willy re-learns how to walk! Willy yells: \"Fred, she doesn't kill shoes!\" Your memories rush back and your sight returns! The path west is now open!",
+            "onComplete": {
+              "action": "set_flag",
+              "flagSet": "forest_cleared"
+            }
+          },
+          {
+            "stage": 2,
+            "text": "The silver-eyelet trees hum peacefully now. Willy sighs: \"Let's get out of this creepy forest before I forget how to eat waffles again.\""
+          }
+        ]
+      }
+    }
+  },
+  "grid": [
+    ["forest_wall", "forest_wall", "forest_wall", "forest_wall", "forest_wall"],
+    ["forest_wall", "forest_floor", "forest_floor", "forest_floor", "forest_wall"],
+    ["exit_west", "forest_floor", "forgotten_clearing", "forest_floor", "exit_east"],
+    ["forest_wall", "forest_floor", "forest_floor", "forest_floor", "forest_wall"],
+    ["forest_wall", "forest_wall", "forest_wall", "forest_wall", "forest_wall"]
+  ],
+  "entities": [],
+  "state_flags": {
+    "forest_cleared": false
+  }
+}

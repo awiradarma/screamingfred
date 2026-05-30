@@ -1,0 +1,79 @@
+{
+  "room_id": "land_of_creativity",
+  "room_name": "Land of Creativity",
+  "world_coord": "23,15,0",
+  "theme": "Land_of_Creativity",
+  "description": "A massive black box floating on ash clouds. Inside, rows of clear glass boxes hold trapped objects with metal helmets on their heads, crackling with creative-extracting electricity.",
+  "player_start": {
+    "x": 2,
+    "y": 3
+  },
+  "tiles": {
+    "metal_wall": {
+      "passable": false,
+      "description": "Thick walls of dark steel, humming with magnetic coils."
+    },
+    "metal_floor": {
+      "passable": true,
+      "description": "Polished steel grating with blue electrical lines running underneath."
+    },
+    "exit_gate": {
+      "passable": true,
+      "description": "Derf's swirling teleportation portal. It will return you to the Shoeboxlandia Gate.",
+      "conditions": {
+        "requiredFlag": "chapter_2_completed",
+        "failMessage": "The portal is inactive. Talk to Derf first."
+      },
+      "targetRoomId": "shoeboxlandia_street",
+      "targetPosition": {
+        "x": 1,
+        "y": 3
+      }
+    },
+    "trapped_objects": {
+      "passable": true,
+      "icon": "📦",
+      "description": "Rows of glass boxes with metal helmets trapping Screaming Kettles and Dancer Brushes.",
+      "onInteract": "The trapped items look at you with pleading eyes. If only you could shatter the glass cages!"
+    },
+    "npc_derf": {
+      "passable": true,
+      "icon": "👿",
+      "description": "Your brother Derf, hovering in a crimson cape with burning red eyes.",
+      "npc": {
+        "name": "Derf",
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "\"Welcome to creativity!\" Derf sneers. Willy: \"Not as happy as I expected.\" Derf points his tattered cape at you: \"Fred! I will curse you to become a banana and travel to the past!\" You look Derf in the eye and say: \"I will always love you brother.\" (Hint: Talk to Derf to reconcile!)"
+          },
+          {
+            "stage": 1,
+            "text": "Derf's burning red eyes slowly close. A soft smile spreads across his heel. \"I... I will always love you too brother,\" he replies. He hands you the legendary Slipper Key! \"Go, return to Shoeboxlandia. The objects are freed!\" Derf waves his arm, opening the teleportation portal south!",
+            "onComplete": {
+              "action": "give_item",
+              "itemId": "slipper_key",
+              "flagSet": "chapter_2_completed"
+            },
+            "setFlag": "chapter_2_completed"
+          },
+          {
+            "stage": 2,
+            "text": "\"I will always love you too brother. The portal is open south! return home.\""
+          }
+        ]
+      }
+    }
+  },
+  "grid": [
+    ["metal_wall", "metal_wall", "metal_wall", "metal_wall", "metal_wall"],
+    ["metal_wall", "trapped_objects", "npc_derf", "trapped_objects", "metal_wall"],
+    ["metal_wall", "metal_floor", "metal_floor", "metal_floor", "metal_wall"],
+    ["metal_wall", "metal_floor", "exit_gate", "metal_floor", "metal_wall"],
+    ["metal_wall", "metal_wall", "metal_wall", "metal_wall", "metal_wall"]
+  ],
+  "entities": [],
+  "state_flags": {
+    "chapter_2_completed": false
+  }
+}

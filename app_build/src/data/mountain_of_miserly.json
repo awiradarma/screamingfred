@@ -1,0 +1,86 @@
+{
+  "room_id": "mountain_of_miserly",
+  "room_name": "The Mountains of Miserly",
+  "world_coord": "24,17,-1",
+  "theme": "Mountains_of_Misery",
+  "description": "ENDLESS CLIFFS AND VALLEYS. A warped wooden sign reads: 'The Mountains of Miserly'. The mountain itself seems to have a face carved into its side, watching your every step.",
+  "player_start": {
+    "x": 2,
+    "y": 3
+  },
+  "tiles": {
+    "cliff_wall": {
+      "passable": false,
+      "description": "Jagged rocky cliffs that plunge into the ocean below."
+    },
+    "mountain_path": {
+      "passable": true,
+      "description": "A narrow gravel path winding up the mountain peaks."
+    },
+    "exit_south_boat": {
+      "passable": true,
+      "description": "Your wooden boat docked at the mountain base. Ready to sail back to the Dock.",
+      "targetRoomId": "perception_ocean",
+      "targetPosition": {
+        "x": 0,
+        "y": 2
+      }
+    },
+    "exit_north": {
+      "passable": true,
+      "description": "A stone pass leading north into a flat, syntax-filled land.",
+      "conditions": {
+        "requiredFlag": "lace_returned",
+        "failMessage": "You cannot leave without your shoelace! You'll trip over your own sole. Talk to the Mountain to get it back."
+      },
+      "targetRoomId": "textlandia_road",
+      "targetPosition": {
+        "x": 2,
+        "y": 4
+      }
+    },
+    "dered_shrine": {
+      "passable": true,
+      "icon": "⛩️",
+      "description": "A ruined stone structure labeled 'The Dered Shrine'.",
+      "onInteract": "You step closer to the Dered Shrine. The stone blocks shift, briefly forming the shape of a tennis shoe in a tattered cape with burning red eyes. On its heel, scrawled in black sharpie, is the name: DERF. A spike of fear hits your sole."
+    },
+    "stingy_mountain_core": {
+      "passable": true,
+      "description": "The face of the Stingy Mountain itself.",
+      "npc": {
+        "name": "Miserly Mountain",
+        "dialogue": [
+          {
+            "stage": 0,
+            "text": "\"NO VISITING FOR FREE!\" the mountain booms stingily. \"I have taken one of your shoelaces, white tennis shoe! If you want it back, you must give me something of equal value — a beautiful scream!\" (Hint: Stand here and execute the 'scream' command!)",
+            "requiresScream": true
+          },
+          {
+            "stage": 1,
+            "text": "\"AHHH, YES! STARCHY VIBRATIONS!\" the mountain rumbles contentedly. Your lace magically flies back and re-threads your eyelets! \"You may pass north now, travelers!\"",
+            "onComplete": {
+              "action": "set_flag",
+              "flagSet": "lace_returned"
+            }
+          },
+          {
+            "stage": 2,
+            "text": "\"Keep moving, travelers. I've got enough sounds to hoard for a century!\""
+          }
+        ]
+      }
+    }
+  },
+  "grid": [
+    ["cliff_wall", "cliff_wall", "exit_north", "cliff_wall", "cliff_wall"],
+    ["cliff_wall", "mountain_path", "mountain_path", "mountain_path", "cliff_wall"],
+    ["cliff_wall", "mountain_path", "stingy_mountain_core", "dered_shrine", "cliff_wall"],
+    ["cliff_wall", "mountain_path", "mountain_path", "mountain_path", "cliff_wall"],
+    ["cliff_wall", "cliff_wall", "exit_south_boat", "cliff_wall", "cliff_wall"]
+  ],
+  "entities": [],
+  "state_flags": {
+    "lace_returned": false
+  }
+}

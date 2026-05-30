@@ -54,6 +54,13 @@
       "passable": true,
       "description": "Fred's refrigerator, made of a folded playing card.",
       "interactionVerb": "SEARCH",
+      "onInteract": "It's completely empty! The pasta and potatoes you saved for lunch are gone! There are muddy footprints leading outside...",
+      "alt_onInteract": [
+        {
+          "requiredFlag": "chapter_2_completed",
+          "text": "🎉 VICTORY! Fred stares with glee at the refrigerator. Inside, he finds his glorious starchy treasures returned! \n\nFred gobbles up his cosmic pasta and potatoes, screaming with raw delight. He needed all these carbs after Freddista's shed renovation, and he needs the fuel for when he next visits his brother, Derf! \n\nAfter he eats, he walks out, stares at the beautiful sky of Sentientworldia, and prepares for another adventure alongside Willy and Freddista!\n\nTHE END (of Chapter 2) - Thank you for playing Timothy Wiradarma's legendary 'Fred's Adventure'! 🎉"
+        }
+      ],
       "item": {
         "name": "Empty Fridge",
         "description": "It's completely empty! The pasta and potatoes you saved for lunch are gone! There are muddy footprints leading outside...",
