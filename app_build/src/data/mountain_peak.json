@@ -3,7 +3,7 @@
   "world_coord": "22,16,0",
   "room_name": "Peak of Misery",
   "theme": "Mountains_of_Misery",
-  "description": "You've reached the highest point. Below, the world of Screaming Fred looks like a messy bedroom. To the east, you see a strange distortion in the air. Down below, you notice a dark hole — the entrance to the Hidden Hideout! Willy warns you: 'Do not enter the hideout, or you will be lost!'",
+  "description": "You've reached the highest point. Below, the world of Screaming Fred looks like a messy bedroom. To the east, a strange spatial distortion crackles with ancient energy — a gateway to something old and lettered. Down below, you notice a dark hole — the entrance to the Hidden Hideout! Willy warns you: 'Do not enter the hideout, or you will be lost!'",
   "grid": [
     [
       "wall",
@@ -82,8 +82,13 @@
       }
     },
     "exit_east": {
-      "passable": false,
-      "description": "An unstable spatial distortion that crackles with wild energy. Willy warns: 'The portal has completely collapsed! We have to find another way. Look, that dark hole in the peak floor seems to be the only path forward!'"
+      "passable": true,
+      "description": "A crackling spatial distortion that hums with ancient alphabetic energy. Something lies beyond — a gateway of letters.",
+      "targetRoomId": "textlandia_entrance",
+      "targetPosition": {
+        "x": 1,
+        "y": 2
+      }
     }
   },
   "entities": [],

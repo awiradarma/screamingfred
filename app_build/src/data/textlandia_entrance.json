@@ -3,7 +3,7 @@
   "room_name": "Gateway of Textlandia",
   "world_coord": "23,16,0",
   "theme": "Textlandia",
-  "description": "A quiet sanctuary where the letters of the world are forged. The hum of ancient syntax fills the air. A massive lexicon sphere floats in the center.",
+  "description": "A quiet sanctuary suspended between the physical and written worlds. The air vibrates with the hum of ancient syntax. Floating letter-blocks orbit a central sphere of pure language. A portal shimmers to the west, back toward the Peak of Misery. Willy squints: 'This is where language itself was first solidified into matter. Careful — don't sneeze, or you might accidentally conjugate something.'",
   "player_start": {
     "x": 1,
     "y": 2
@@ -11,32 +11,49 @@
   "tiles": {
     "wall": {
       "passable": false,
-      "description": "Shifting walls constructed of massive, unreadable blocks of letters."
+      "description": "Shifting walls constructed of massive, slowly rotating letter-blocks that spell out words you almost recognise."
     },
     "floor": {
       "passable": true,
-      "description": "A stable floor paved with soft, parchment-like tiles."
+      "description": "A stable floor paved with soft parchment-like tiles. Each step leaves a faint ink impression of your footprint."
     },
     "portal_of_misery": {
       "passable": true,
-      "description": "A swirling distortion in the air leading back to the Peak of Misery.",
+      "icon": "🌀",
+      "description": "A swirling distortion leading back west to the Peak of Misery. The cold mountain air seeps through it.",
       "targetRoomId": "mountain_peak",
       "targetPosition": {
         "x": 3,
         "y": 2
       }
     },
-    "portal_core": {
+    "lexicon_sphere": {
       "passable": true,
-      "description": "A glowing sphere constructed of pure alphabetic characters. It hums with the rules of spelling and grammar."
+      "icon": "🔮",
+      "description": "A glowing sphere constructed entirely of pure alphabetic characters orbiting in complex grammatical patterns. It pulses warmly when you approach.",
+      "interactionVerb": "READ",
+      "onInteract": "You press your hand against the Lexicon Sphere. Letters swarm around your fingers like warm fireflies. A deep, resonant voice speaks directly into your mind:\n\n'In the beginning was the Word. Then came the Shoe. Then came the Scream. These three forces shaped all of Screaming Fred's world — language to name things, objects to hold them, and sound to shake them loose when they got stuck.'\n\nWilly leans in, visibly moved: 'That's... actually remarkably coherent for a floating sphere.' Freddista gives it a thumbs up.\n\nThe sphere grants you a moment of deep Textlandian clarity — you feel strangely certain you are exactly where you are supposed to be.",
+      "item": {
+        "itemId": "quest_lexicon_shard",
+        "name": "Lexicon Shard",
+        "type": "quest",
+        "description": "A warm crystallised fragment of the Lexicon Sphere. It pulses faintly and smells faintly of old books and fresh ink.",
+        "opened_description": "The Lexicon Sphere hums contentedly, having shared its wisdom.",
+        "onCollect": "A small shard of the sphere breaks off and floats into your hand. It feels warm and hums softly. Willy says: 'Keep it. It may prove useful for something linguistic later.'"
+      }
+    },
+    "floating_letters": {
+      "passable": true,
+      "icon": "🔤",
+      "description": "A cluster of large floating letter-blocks slowly orbiting the sphere. You can make out fragments of words — 'SCRE', 'AMFL', 'OOR' — that almost form something meaningful."
     }
   },
   "grid": [
-    ["wall", "wall", "wall", "wall", "wall"],
-    ["wall", "floor", "floor", "floor", "wall"],
-    ["portal_of_misery", "floor", "portal_core", "floor", "wall"],
-    ["wall", "floor", "floor", "floor", "wall"],
-    ["wall", "wall", "wall", "wall", "wall"]
+    ["wall",             "wall",            "wall",          "wall", "wall"],
+    ["wall",             "floating_letters", "floating_letters", "floating_letters", "wall"],
+    ["portal_of_misery", "floor",           "lexicon_sphere", "floor", "wall"],
+    ["wall",             "floating_letters", "floating_letters", "floating_letters", "wall"],
+    ["wall",             "wall",            "wall",          "wall", "wall"]
   ],
   "entities": [],
   "state_flags": {}
