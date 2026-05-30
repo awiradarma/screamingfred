@@ -116,18 +116,30 @@
     },
     "cardboard_crease": {
       "passable": true,
+      "icon": "👁️",
+      "interactionVerb": "PEEK",
+      "onInteract": "You peek through the crease. Outside, Shoeboxlandia Street is quiet. The shadows loom, but the fresh air smells nice.",
       "description": "A massive vertical crease in the cardboard wall. It runs from floor to ceiling, letting in a tiny ray of outside light."
     },
     "discarded_staple": {
       "passable": true,
+      "icon": "📎",
+      "interactionVerb": "TAP",
+      "onInteract": "CLANG! You tap the giant metal staple. A loud, metallic ring echoes through your shoebox, satisfying your starchy soul.",
       "description": "A giant rusted metal staple from when the shoebox was originally packaged. It's too heavy to move, but Fred likes to tap it for a resonant CLANG."
     },
     "dirty_laundry": {
       "passable": true,
+      "icon": "🧺",
+      "interactionVerb": "SEARCH",
+      "onInteract": "You sift through the dirty laundry. It is mostly composed of damp starchy lint and a tattered shoelace. Smells like home, but there's nothing useful here.",
       "description": "A small pile of Fred's dirty laundry, mostly composed of damp starchy lint and a tattered shoelace."
     },
     "dust_bunny": {
       "passable": true,
+      "icon": "☁️",
+      "interactionVerb": "PET",
+      "onInteract": "You gently pet the dust bunny. It rolls slightly under your laces, releasing a tiny, silent puff of gray dust. It feels very cozy.",
       "description": "A friendly-looking roll of gray dust. It doesn't seem to mind you standing on it."
     }
   },
