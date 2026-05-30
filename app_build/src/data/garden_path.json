@@ -13,11 +13,11 @@
       "wall"
     ],
     [
-      "wall",
+      "swaying_clover",
       "grass",
       "grass",
       "grass",
-      "wall"
+      "sprouted_dandelion"
     ],
     [
       "exit_west",
@@ -30,7 +30,7 @@
       "wall",
       "grass",
       "grass",
-      "grass",
+      "overgrown_patch",
       "wall"
     ],
     [
@@ -53,6 +53,33 @@
     "grass": {
       "passable": true,
       "description": "Soft, green grass that feels like velvet under your sole."
+    },
+    "swaying_clover": {
+      "passable": true,
+      "icon": "🍀",
+      "interactionVerb": "EXAMINE",
+      "onInteract": "You examine the giant four-leaf clover. It's incredibly lucky! You feel a sudden surge of starchy confidence.",
+      "description": "A massive, lucky four-leaf clover swaying gently in the breeze."
+    },
+    "sprouted_dandelion": {
+      "passable": true,
+      "icon": "🌼",
+      "interactionVerb": "EXAMINE",
+      "onInteract": "You tickle the dandelion puff. A cloud of golden seeds floats into the air, dancing in the light. It's beautiful.",
+      "description": "A brilliant yellow dandelion sprouted between the cardboard cracks."
+    },
+    "overgrown_patch": {
+      "passable": true,
+      "icon": "🌱",
+      "interactionVerb": "SEARCH",
+      "item": {
+        "itemId": "food_potato",
+        "name": "Wild Potato",
+        "type": "food",
+        "opened_description": "A dense tangle of dandelions. The soil is empty.",
+        "onCollect": "You dig through the clover and harvest a plump, fresh Wild Potato!"
+      },
+      "description": "A dense tangle of overgrown dandelions and clover. Something round and starchy is buried in the soil!"
     },
     "exit_north": {
       "passable": true,

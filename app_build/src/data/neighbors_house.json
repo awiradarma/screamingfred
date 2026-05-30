@@ -27,8 +27,8 @@
       "exit_east"
     ],
     [
-      "wall",
       "dark_corner",
+      "floor",
       "floor",
       "npc_neighbor",
       "wall"
@@ -104,6 +104,9 @@
     },
     "grimy_mirror": {
       "passable": true,
+      "icon": "🪞",
+      "interactionVerb": "LOOK",
+      "onInteract": "You stare into the dusty, cracked mirror. A slightly handsome, slightly creased sneaker stares back. Yes, you are definitely a shoe.",
       "description": "A cracked plastic mirror on the wall. You look... remarkably like a shoe."
     },
     "lint_pile": {
