@@ -1,159 +1,306 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useStore } from '../store/useStore';
-import { COORD_MIN, COORD_MAX, getRoomAt } from '../data/worldData';
-import { setRegionTheme } from '../firebase/worldPersistence';
+import { getRoomData, getRoomAt, worldCoordinateRegistry } from '../data/worldData';
 import './WorldMap.css';
 
+const REGIONS = {
+  'Shoeboxlandia Town': [
+    'freds_house', 'attic_bedroom', 'attic_corner', 'shoe_rack', 
+    'window_sill', 'neighbors_house', 'garden_path', 'shoeboxlandia_street',
+    'path_to_breakfastopia', 'breakfastopia_gates'
+  ],
+  'Shoelace Forest & Caves': [
+    'forest_entrance', 'secret_cave', 'forest_thicket', 'forest_deep',
+    'forest_clearing', 'forest_creek', 'forest_exit', 'forest_marsh',
+    'snake_path', 'freddista_shack'
+  ],
+  'Unknown Lands & Peaks': [
+    'electric_desert_entrance', 'microphone_stage', 'mountain_base',
+    'mountain_pass', 'mountain_peak', 'textlandia_entrance'
+  ],
+  'The Underground Roots': [
+    'hidden_hideout', 'noodle_factory', 'scary_scrapyard', 'apple_swamp', 'great_farm'
+  ],
+  'Chapter 2 Wilderness': [
+    'land_of_jumping', 'scream_collector', 'forgotten_forest',
+    'perception_ocean', 'mountain_of_miserly', 'textlandia_road'
+  ],
+  'Typewriter Detour Gauntlet ⌨️': [
+    'typewriter_keys', 'typewriter_ribbon', 'typewriter_deadend'
+  ],
+  'Lava Lake & Creativity': [
+    'bridge_of_blah', 'lava_chasms', 'land_of_creativity'
+  ]
+};
+
+const THEME_ICONS = {
+  'Forest': '🌲',
+  'Shoebox_Forest': '🌲',
+  'Meadow': '🌻',
+  'Dungeon': '💀',
+  'Castle': '🏰',
+  'Cave': '🪨',
+  'House': '🏠',
+  'Village': '🏠',
+  'Path': '🛣️',
+  'Street': '🛣️',
+  'Desert': '🌵',
+  'Mountain': '⛰️',
+  'Attic': '📦',
+  'Swamp': '🐊',
+  'Industrial': '🏭',
+  'Textlandia': '⌨️',
+  'Underground': '🌋',
+  'Land_of_Creativity': '🎨',
+  'Unknown_Lands': '❓'
+};
+
 const WorldMap = () => {
-  const { gameState, setView, teleportToCoordinate, isAdmin, addMessage } = useStore();
-  const worldRooms = useStore(state => state.worldRooms);
-  
-  const [selectedTheme, setSelectedTheme] = useState(null);
-  const [isMapping, setIsMapping] = useState(false);
-  const [currentZ, setCurrentZ] = useState(0);
+  const { gameState, setView, teleportToCoordinate } = useStore();
+  const cardRefs = useRef({});
 
   const currentRoom = gameState?.room;
-  const currentCoords = currentRoom?.world_coord?.split(',').map(Number) || [15, 15, 0];
-  const [currentX, currentY, roomZ] = currentCoords;
+  const currentRoomId = currentRoom?.room_id;
 
-  const THEMES = [
-    { id: 'Shoebox_Forest', name: 'Forest', icon: '🌲' },
-    { id: 'Meadow', name: 'Meadow', icon: '🌻' },
-    { id: 'Dungeon', name: 'Dungeon', icon: '💀' },
-    { id: 'Castle', name: 'Castle', icon: '🏰' },
-  ];
+  // Resolve discovered room IDs
+  const discoveredRoomIds = new Set(
+    (gameState?.discoveredRooms || ['15,15,0'])
+      .map(coord => worldCoordinateRegistry[coord])
+      .filter(Boolean)
+  );
 
-  const THEME_ICONS = {
-    'Forest': '🌲',
-    'Shoebox_Forest': '🌲',
-    'Meadow': '🌻',
-    'Dungeon': '💀',
-    'Castle': '🏰',
-    'Cave': '🪨',
-    'House': '🏠',
-    'Village': '🏠',
-    'Path': '🛣️',
-    'Street': '🛣️',
-    'Desert': '🌵',
-    'Mountain': '⛰️',
-    'Attic': '📦'
+  // Auto-scroll to the current room card on mount
+  useEffect(() => {
+    if (currentRoomId && cardRefs.current[currentRoomId]) {
+      setTimeout(() => {
+        cardRefs.current[currentRoomId].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        cardRefs.current[currentRoomId].classList.add('highlight-pulse');
+        setTimeout(() => {
+          cardRefs.current[currentRoomId]?.classList.remove('highlight-pulse');
+        }, 3000);
+      }, 300);
+    }
+  }, [currentRoomId]);
+
+  // Navigate to and highlight another card
+  const handleLinkClick = (targetRoomId) => {
+    if (cardRefs.current[targetRoomId]) {
+      cardRefs.current[targetRoomId].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      cardRefs.current[targetRoomId].classList.add('highlight-pulse');
+      setTimeout(() => {
+        cardRefs.current[targetRoomId]?.classList.remove('highlight-pulse');
+      }, 2000);
+    }
   };
 
-  const handleCellClick = async (x, y) => {
-    if (isMapping && selectedTheme) {
-      try {
-        await setRegionTheme(x, y, selectedTheme);
-        addMessage(`Region (${x}, ${y}) assigned to theme: ${selectedTheme}`, 'success');
-      } catch (e) {
-        addMessage('Theme assignment failed.', 'danger');
-      }
-    } else {
-      teleportToCoordinate(x, y, currentZ);
+  // Helper to resolve exits and boundaries for a room
+  const getRoomConnections = (room) => {
+    const connections = [];
+    const coords = room.world_coord?.split(',').map(Number);
+    
+    // 1. Scan explicit transition tiles
+    if (room.tiles) {
+      Object.entries(room.tiles).forEach(([tileType, tile]) => {
+        if (tile.targetRoomId) {
+          const dir = tileType.replace(/^exit_/, '').toUpperCase().replace(/_/g, ' ');
+          connections.push({
+            type: 'explicit',
+            direction: dir,
+            targetRoomId: tile.targetRoomId,
+            conditions: tile.conditions,
+            tileType
+          });
+        }
+      });
+    }
+    
+    // 2. Scan off-grid boundary adjacent coordinates
+    if (coords && coords.length >= 2) {
+      const [cx, cy, cz = 0] = coords;
+      const DIR_VECTORS = {
+        'NORTH': { dx: 0, dy: -1 },
+        'SOUTH': { dx: 0, dy: 1 },
+        'EAST':  { dx: 1, dy: 0 },
+        'WEST':  { dx: -1, dy: 0 },
+      };
+      Object.entries(DIR_VECTORS).forEach(([dir, { dx, dy }]) => {
+        const nx = cx + dx;
+        const ny = cy + dy;
+        const neighborRoom = getRoomAt(nx, ny, cz);
+        if (neighborRoom) {
+          // Prevent duplicates if already handled by explicit tiles
+          const exists = connections.some(c => c.targetRoomId === neighborRoom.room_id);
+          if (!exists) {
+            connections.push({
+              type: 'boundary',
+              direction: dir,
+              targetRoomId: neighborRoom.room_id
+            });
+          }
+        }
+      });
+    }
+    
+    return connections;
+  };
+
+  // Helper to check lock conditions on a tile/exit
+  const isExitLocked = (conditions) => {
+    if (!conditions) return false;
+    const { requiredItem, requiredFlag } = conditions;
+    const hasItem = requiredItem ? gameState.inventory.some(i => i.itemId === requiredItem || i.name === requiredItem) : true;
+    const hasFlag = requiredFlag ? gameState.stateFlags[requiredFlag] : true;
+    return !hasItem || !hasFlag;
+  };
+
+  const handleFastTravel = (room) => {
+    const coords = room.world_coord?.split(',').map(Number);
+    if (coords && coords.length >= 2) {
+      const [x, y, z = 0] = coords;
+      teleportToCoordinate(x, y, z);
       setView('game');
     }
   };
 
-  const renderGrid = () => {
-    const cells = [];
-    for (let y = COORD_MIN; y <= COORD_MAX; y++) {
-      for (let x = COORD_MIN; x <= COORD_MAX; x++) {
-        const coordKey = `${x},${y},${currentZ}`;
-        
-        // Priority: Static Registry Data -> Firestore Cache -> Fallback
-        const staticRoom = getRoomAt(x, y, currentZ);
-        const dynamicRoom = worldRooms[coordKey] || (currentZ === 0 ? worldRooms[`${x},${y}`] : null);
-        const room = staticRoom || dynamicRoom;
-        
-        const roomName = room?.room_name || `(${x}, ${y})`;
-        const hasRoom = !!room;
-        const isCurrent = x === currentX && y === currentY && currentZ === roomZ;
-        const isDiscovered = gameState?.discoveredRooms?.includes(coordKey);
-        
-        // Render fog if not discovered (and not admin)
-        const showFog = !isDiscovered && !isAdmin;
-        // The emoji for the room
-        const roomEmoji = hasRoom ? (THEME_ICONS[room.theme] || '❓') : null;
-
-        cells.push(
-          <div 
-            key={`${x},${y}`}
-            className={`map-cell ${(hasRoom && !showFog) ? 'has-room' : 'empty'} ${isCurrent ? 'is-current' : ''}`}
-            onClick={() => handleCellClick(x, y)}
-            title={(hasRoom && !showFog) ? `${roomName} (${x}, ${y}, Z:${currentZ})` : `Unknown Region (${x}, ${y}, Z:${currentZ})`}
-          >
-            {isCurrent && <div className="player-indicator" />}
-            {showFog && <div className="orange-fog" />}
-            {!showFog && hasRoom && <div className="room-emoji">{roomEmoji}</div>}
+  const renderRoomCard = (roomId) => {
+    const isDiscovered = discoveredRoomIds.has(roomId);
+    if (!isDiscovered) {
+      return (
+        <div key={roomId} className="room-card locked">
+          <div className="card-header">
+            <h4>??? Undiscovered Region</h4>
           </div>
-        );
-      }
+          <p className="locked-placeholder">Explore more of Sentientworldia to unlock this node.</p>
+        </div>
+      );
     }
-    return cells;
-  };
 
-  const Z_LEVELS = [
-    { id: 1, name: 'Upstairs', icon: '☁️' },
-    { id: 0, name: 'Surface', icon: '🌍' },
-    { id: -1, name: 'Underground', icon: '🌋' },
-  ];
+    const room = getRoomData(roomId);
+    if (!room) return null;
 
-  return (
-    <div className="world-map-container">
-      <header className="world-map-header">
-        <div className="header-left-tools">
-          <div className="title-section">
-            <h2>World Map (30x30)</h2>
-            <div className="z-level-toggle">
-              {Z_LEVELS.map(level => (
-                <button
-                  key={level.id}
-                  className={`z-btn ${currentZ === level.id ? 'active' : ''}`}
-                  onClick={() => setCurrentZ(level.id)}
-                >
-                  {level.icon} {level.name}
-                </button>
-              ))}
-            </div>
+    const isCurrent = roomId === currentRoomId;
+    const connections = getRoomConnections(room);
+    const coords = room.world_coord?.split(',').map(Number) || [0, 0, 0];
+    const [x, y, z] = coords;
+
+    const zBadge = z === 1 ? '☁️ Upstairs' : z === -1 ? '🌋 Underground' : '🌍 Surface';
+    const roomEmoji = THEME_ICONS[room.theme] || '❓';
+
+    return (
+      <div 
+        key={roomId} 
+        ref={el => cardRefs.current[roomId] = el}
+        className={`room-card discovered ${isCurrent ? 'current' : ''}`}
+      >
+        <div className="card-header">
+          <div className="title-area">
+            <h4>{room.room_name}</h4>
+            <span className="coord-badge">({x}, {y})</span>
           </div>
-          {isAdmin && (
-            <div className="admin-toolbar">
-              <button 
-                className={`admin-tool-btn ${isMapping ? 'active' : ''}`}
-                onClick={() => setIsMapping(!isMapping)}
-              >
-                {isMapping ? 'Stop Mapping' : 'Theme Mapper'}
-              </button>
-              {isMapping && (
-                <div className="theme-palette">
-                  {THEMES.map(t => (
-                    <button 
-                      key={t.id}
-                      className={`theme-tool ${selectedTheme === t.id ? 'active' : ''}`}
-                      onClick={() => setSelectedTheme(t.id)}
-                      title={t.name}
-                    >
-                      {t.icon}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+          <div className="badge-area">
+            <span className="badge theme">{roomEmoji} {room.theme?.replace(/_/g, ' ')}</span>
+            <span className="badge elevation">{zBadge}</span>
+          </div>
+        </div>
+
+        <p className="room-summary-desc">{room.description}</p>
+
+        <div className="card-connections-section">
+          <h5>Exits & Paths</h5>
+          <div className="connections-grid">
+            {connections.length === 0 ? (
+              <span className="no-connections-text">No exits available.</span>
+            ) : (
+              connections.map((conn, idx) => {
+                const isTargetDiscovered = discoveredRoomIds.has(conn.targetRoomId);
+                const targetRoom = getRoomData(conn.targetRoomId);
+                const isLocked = isExitLocked(conn.conditions);
+
+                return (
+                  <div 
+                    key={idx} 
+                    className={`connection-pill ${isLocked ? 'locked' : isTargetDiscovered ? 'discovered' : 'undiscovered'}`}
+                    title={isLocked ? `Locked: ${conn.conditions.failMessage}` : ''}
+                  >
+                    <span className="direction-arrow">{conn.direction}</span>
+                    {isLocked ? (
+                      <span className="pill-target locked" title={conn.conditions.failMessage}>
+                        🔒 {targetRoom?.room_name || '???'} (Locked)
+                      </span>
+                    ) : isTargetDiscovered ? (
+                      <button 
+                        className="pill-target-btn" 
+                        onClick={() => handleLinkClick(conn.targetRoomId)}
+                      >
+                        {targetRoom?.room_name}
+                      </button>
+                    ) : (
+                      <span className="pill-target undiscovered">
+                        ❓ ??? (Undiscovered)
+                      </span>
+                    )}
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+
+        <div className="card-actions">
+          {isCurrent ? (
+            <span className="current-indicator-tag">📍 You Are Here</span>
+          ) : (
+            <button 
+              className="fast-travel-btn title-glow-subtle"
+              onClick={() => handleFastTravel(room)}
+            >
+              ⚡ Fast Travel
+            </button>
           )}
         </div>
-        <button className="back-btn" onClick={() => setView('game')}>Back to Game</button>
+      </div>
+    );
+  };
+
+  return (
+    <div className="world-map-container scrollable-dark-theme">
+      <header className="world-map-header">
+        <div className="title-section">
+          <h2>Sentientworldia Room Chronicle</h2>
+          <p className="subtitle">Visualizing discovered rooms, exits, and topological connections.</p>
+        </div>
+        <button className="back-btn title-glow-subtle" onClick={() => setView('game')}>
+          🎮 Back to Game
+        </button>
       </header>
 
-      <div className="map-scroll-area">
-        <div className="world-map-grid">
-          {renderGrid()}
-        </div>
+      <div className="chronicle-scroll-area">
+        {Object.entries(REGIONS).map(([regionName, roomIds]) => {
+          const discoveredCount = roomIds.filter(id => discoveredRoomIds.has(id)).length;
+          const totalCount = roomIds.length;
+          if (discoveredCount === 0) return null; // Hide regions completely if no rooms discovered yet
+
+          return (
+            <section key={regionName} className="region-section">
+              <div className="region-header">
+                <h3>{regionName}</h3>
+                <span className="region-count">
+                  {discoveredCount} / {totalCount} Discovered
+                </span>
+              </div>
+              <div className="region-grid">
+                {roomIds.map(roomId => renderRoomCard(roomId))}
+              </div>
+            </section>
+          );
+        })}
       </div>
 
-      <div className="world-map-footer">
-        <div className="legend-item"><span className="dot current"></span> Current Position</div>
-        <div className="legend-item"><span className="dot room"></span> Discovered Room</div>
-        <div className="legend-item"><span className="dot fog"></span> Unknown (Fog)</div>
-      </div>
+      <footer className="chronicle-footer">
+        <div className="legend-item"><span className="indicator current"></span> Current Position</div>
+        <div className="legend-item"><span className="indicator discovered"></span> Discovered Room</div>
+        <div className="legend-item"><span className="indicator locked"></span> Locked Path</div>
+      </footer>
     </div>
   );
 };
