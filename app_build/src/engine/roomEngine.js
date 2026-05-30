@@ -2474,7 +2474,7 @@ export function getAvailableActions(state) {
 
   if (tileData?.npc) actions.push('talk');
   if (tileData?.npc?.trades) actions.push('trade');
-  const hasInteract = tileData?.item || tileData?.onInteract;
+  const hasInteract = tileData?.item || tileData?.onInteract || tileData?.interactionVerb;
   const isOpened = state.stateFlags[`room_${state.room.room_id}_tile_${tileType}_x${state.playerPosition.x}_y${state.playerPosition.y}_opened`];
   if (hasInteract && (!tileData?.item || !isOpened)) actions.push('interact');
   if ((tileData?.enemy && !state.stateFlags[`${tileType.replace(/^enemy_/, '')}_defeated`]) || entityEnemy) {
