@@ -171,4 +171,57 @@ export function isValidCoordinate(x, y, z = 0) {
     (z === -1 || z === 0 || z === 1) // Support underground, surface, and upstairs
   );
 }
+// Preprocess rooms to expand walkable space to 5x5 borders
+for (const roomId in worldData) {
+  const room = worldData[roomId];
+  if (!room || !room.grid || !room.tiles) continue;
+
+  // 1. Identify the primary passable floor tile type in this room
+  let floorTileType = 'floor';
+  if (room.tiles.floor && room.tiles.floor.passable) {
+    floorTileType = 'floor';
+  } else {
+    // Look for a passable tile that doesn't trigger transitions, npcs, or items
+    const candidate = Object.keys(room.tiles).find(key => {
+      const tile = room.tiles[key];
+      return tile.passable && !tile.targetRoomId && !tile.npc && !tile.item;
+    });
+    if (candidate) {
+      floorTileType = candidate;
+    } else {
+      // Fallback: search for any passable tile
+      const fallbackCandidate = Object.keys(room.tiles).find(key => room.tiles[key].passable);
+      if (fallbackCandidate) {
+        floorTileType = fallbackCandidate;
+      }
+    }
+  }
+
+  // 2. Iterate through all border tiles on the grid
+  const height = room.grid.length;
+  for (let y = 0; y < height; y++) {
+    const width = room.grid[y].length;
+    for (let x = 0; x < width; x++) {
+      // Only process edge tiles
+      if (x === 0 || x === width - 1 || y === 0 || y === height - 1) {
+        const tileType = room.grid[y][x];
+        const tileDef = room.tiles[tileType];
+
+        // We should check if the tile is a transition tile or an exit/entrance
+        const isTransition = tileDef && (
+          tileDef.targetRoomId || 
+          tileType.startsWith('exit') || 
+          tileType.startsWith('entrance') || 
+          tileType.startsWith('edge_') || 
+          tileType.startsWith('stairs_')
+        );
+
+        if (!isTransition) {
+          room.grid[y][x] = floorTileType;
+        }
+      }
+    }
+  }
+}
+
 export default worldData;

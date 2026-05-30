@@ -843,8 +843,6 @@ export function handleMove(state, direction, messages) {
           if (matchingRoomId) {
             transitionRoom = state.generatedWorld[matchingRoomId];
           }
-        } else if (isValidCoordinate(nx, ny, cz)) {
-          transitionRoom = getRoomAt(nx, ny, cz);
         }
 
         if (transitionRoom) {
@@ -857,7 +855,11 @@ export function handleMove(state, direction, messages) {
   // If no transition and no tile (or impassable tile), it's blocked
   // Also block world-edge transitions if the explicit transition at that location is HIDDEN
   if (!transitionRoom && (!targetTile || !tileData?.passable)) {
-    messages.push({ text: describeBlocked(state), type: 'warning' });
+    if (!targetTile) {
+      messages.push({ text: "⚠️ You cannot walk off the edge of the map here!", type: 'warning' });
+    } else {
+      messages.push({ text: describeBlocked(state), type: 'warning' });
+    }
     return { state, messages };
   }
 
@@ -1136,7 +1138,7 @@ function applyTileEffects(state, x, y, messages, direction) {
     }
 
     // 3. Ice Effects (Slide)
-    if (tileData.effect === 'ice' || tileType === 'ice' || tileType.includes('ice')) {
+    if (tileData.effect === 'ice' || tileType === 'ice' || tileType.split('_').includes('ice')) {
       messages.push({ text: "❄️ Woah! It's slippery!", type: 'narrative' });
       const { dx, dy } = DIR_VECTORS[direction];
       
@@ -1156,7 +1158,7 @@ function applyTileEffects(state, x, y, messages, direction) {
         lastValidX = slideX;
         lastValidY = slideY;
         
-        if (nextTileData.effect !== 'ice' && nextTile !== 'ice' && !nextTile.includes('ice')) {
+        if (nextTileData.effect !== 'ice' && nextTile !== 'ice' && !nextTile.split('_').includes('ice')) {
           break;
         }
         
