@@ -13,11 +13,11 @@
       "wall"
     ],
     [
-      "wall",
+      "dusty_slipper",
       "shelf_floor",
       "shelf_floor",
       "shelf_floor",
-      "wall"
+      "old_flipflop"
     ],
     [
       "wall",
@@ -38,7 +38,7 @@
       "wall",
       "exit_south",
       "wall",
-      "wall"
+      "shoebox_corner"
     ]
   ],
   "player_start": {
@@ -53,6 +53,33 @@
     "shelf_floor": {
       "passable": true,
       "description": "The smooth, dusty wood of the shelf."
+    },
+    "dusty_slipper": {
+      "passable": true,
+      "icon": "🥿",
+      "interactionVerb": "EXAMINE",
+      "onInteract": "You look at the faded pink velvet slipper. It's napping peacefully, snoring a tiny cloud of dust. Best not to wake it.",
+      "description": "A forgotten pink slipper, napping in the corner."
+    },
+    "old_flipflop": {
+      "passable": true,
+      "icon": "🩴",
+      "interactionVerb": "EXAMINE",
+      "onInteract": "You check out the blue rubber flip-flop. It has a broken strap but looks back at you with a chill, relaxed vibe. 'Stay cool, shoe,' it seems to say.",
+      "description": "A relaxed-looking blue flip-flop resting on the shelf."
+    },
+    "shoebox_corner": {
+      "passable": true,
+      "icon": "📦",
+      "interactionVerb": "SEARCH",
+      "item": {
+        "itemId": "food_potato",
+        "name": "Wild Potato",
+        "type": "food",
+        "opened_description": "An empty miniature shoebox.",
+        "onCollect": "You open the smallest shoebox and find a perfectly fresh Wild Potato! A wonderful starchy surprise!"
+      },
+      "description": "A stack of tiny, miniature shoebox lids in the corner."
     },
     "exit_south": {
       "passable": true,

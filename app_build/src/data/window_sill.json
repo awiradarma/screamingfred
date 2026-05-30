@@ -13,11 +13,11 @@
       "wall"
     ],
     [
-      "wall",
+      "gusty_wind",
       "ledge_floor",
       "ledge_floor",
       "ledge_floor",
-      "wall"
+      "cobweb_corner"
     ],
     [
       "exit_west",
@@ -31,7 +31,7 @@
       "ledge_floor",
       "ledge_floor",
       "ledge_floor",
-      "wall"
+      "brick_crack"
     ],
     [
       "wall",
@@ -53,6 +53,33 @@
     "ledge_floor": {
       "passable": true,
       "description": "A narrow stone ledge, covered in a thin layer of soot."
+    },
+    "gusty_wind": {
+      "passable": true,
+      "icon": "💨",
+      "interactionVerb": "LISTEN",
+      "onInteract": "You lean into the wind. It whistles through your eyelets in a soft, musical frequency. It makes you feel incredibly alive!",
+      "description": "A powerful gust of wind blowing along the side of the house."
+    },
+    "cobweb_corner": {
+      "passable": true,
+      "icon": "🕸️",
+      "interactionVerb": "EXAMINE",
+      "onInteract": "You examine the dusty cobweb. It's empty, but a sparkling morning dewdrop is caught in the silk. You admire its tiny reflection.",
+      "description": "A dusty cobweb in the corner, catching the morning light."
+    },
+    "brick_crack": {
+      "passable": true,
+      "icon": "🌱",
+      "interactionVerb": "SEARCH",
+      "item": {
+        "itemId": "food_potato",
+        "name": "Wild Potato",
+        "type": "food",
+        "opened_description": "A cracked brick. Just dirt remains.",
+        "onCollect": "You reach into the brick crack and pull out a tiny, perfectly preserved Wild Potato!"
+      },
+      "description": "A cracked brick with a tiny green clover sprout growing out of it."
     },
     "exit_west": {
       "passable": true,
