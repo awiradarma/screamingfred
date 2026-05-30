@@ -24,10 +24,10 @@
         "requiredFlag": "chapter_2_completed",
         "failMessage": "The portal is inactive. Talk to Derf first."
       },
-      "targetRoomId": "shoeboxlandia_street",
+      "targetRoomId": "bridge_of_blah",
       "targetPosition": {
-        "x": 1,
-        "y": 3
+        "x": 2,
+        "y": 2
       }
     },
     "trapped_objects": {

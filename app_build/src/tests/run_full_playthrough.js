@@ -386,10 +386,8 @@ const steps = [
   { cmd: 'north', expectRoom: 'land_of_creativity' },  // stands on Derf (x:2, y:1)
   { cmd: 'talk', expectRoom: 'land_of_creativity' },   // reconciles, receives Slipper Key, completes chapter!
   { cmd: 'south', expectRoom: 'land_of_creativity' },  // to x:2, y:2
-  { cmd: 'south', expectRoom: 'shoeboxlandia_street' }, // teleports to Shoeboxlandia Gate (x:1, y:3)
-
-  // --- Back to Gate (Unlocking) ---
-  { cmd: 'west', expectRoom: 'bridge_of_blah' }        // steps west through the gate using Slipper Key!
+  { cmd: 'south', expectRoom: 'bridge_of_blah' },      // teleports back to the Bridge of Blah (x:2, y:2)!
+  { cmd: 'east', expectRoom: 'shoeboxlandia_street' }  // steps east through the gate using Slipper Key to enter Shoeboxlandia!
 ];
 
 let state = initGameState(worldData.freds_house);
