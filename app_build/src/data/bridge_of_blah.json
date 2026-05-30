@@ -4,11 +4,6 @@
   "world_coord": "26,16,-1",
   "theme": "Underground",
   "description": "A 52-mile long bridge of brittle wood. You feel an overwhelming urge to say 'blah' every five minutes.",
-  "onEnter": {
-    "action": "remove_item",
-    "itemId": "tool_magnifying_glass",
-    "message": "Barry suddenly appears and snatches the Magnifying Glass! 'WHOOPS!' he screeches, dropping it into the Chasm of Chaos!"
-  },
   "player_start": {
     "x": 1,
     "y": 2
@@ -41,7 +36,11 @@
         "dialogue": [
           {
             "stage": 0,
-            "text": "\"Your perseverance annoys me!\" Barry sneers, deformed and sparking wildly. \"You thought you were so cool, with your magnifying glass thingy! Well, whoops!\" He grabs the Magnifying Glass and drops it into the Chasm of Chaos! Willy screeches: \"NOOOO! Not my magnifying glass again! I have to order another one off of-\" \"So take a seat!\" Barry interrupts."
+            "text": "\"Your perseverance annoys me!\" Barry sneers, deformed and sparking wildly. \"You thought you were so cool, with your magnifying glass thingy! Well, whoops!\" He grabs the Magnifying Glass and drops it into the Chasm of Chaos! Willy screeches: \"NOOOO! Not my magnifying glass again! I have to order another one off of-\" \"So take a seat!\" Barry interrupts.",
+            "onComplete": {
+              "action": "remove_item",
+              "itemId": "tool_magnifying_glass"
+            }
           },
           {
             "stage": 1,

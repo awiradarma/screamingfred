@@ -159,8 +159,8 @@ function getTileConfig(tileType, stateFlags, roomTiles = {}, abilities = [], roo
 export default function GridViewer({ grid, playerPosition, stateFlags, entities, tiles: roomTiles, enemyHP, abilities = [], activeCharacter, roomId }) {
   const [isExpanded, setIsExpanded] = React.useState(window.innerWidth > 768);
 
-  const charSymbol = activeCharacter === 'willy' ? 'W' : 'F';
-  const charLabel = activeCharacter === 'willy' ? 'Willy' : activeCharacter === 'freddista' ? 'Freddista' : 'Fred';
+  const charSymbol = activeCharacter === 'willy' ? 'W' : activeCharacter === 'banana' ? '🍌' : 'F';
+  const charLabel = activeCharacter === 'willy' ? 'Willy' : activeCharacter === 'freddista' ? 'Freddista' : activeCharacter === 'banana' ? 'Fred the Banana' : 'Fred';
 
   if (!grid) return null;
 
@@ -178,8 +178,12 @@ export default function GridViewer({ grid, playerPosition, stateFlags, entities,
               <div key={y} className="grid-row">
                 {row.map((tileType, x) => {
                   const isPlayer = playerPosition.x === x && playerPosition.y === y;
-                  const config = getTileConfig(tileType, stateFlags, roomTiles, abilities, roomId, x, y);
-                  const cellEntities = (entities || []).filter(e => e.x === x && e.y === y && !stateFlags[`${e.id}_defeated`]);
+                  let config = getTileConfig(tileType, stateFlags, roomTiles, abilities, roomId, x, y);
+                  const isBlind = stateFlags?.blind && !stateFlags?.forest_cleared && !abilities?.some(a => a.id === 'thermal_sight');
+                  if (isBlind && !isPlayer) {
+                    config = { icon: '🌫️', label: 'Memory Fog', className: 'tile-hidden' };
+                  }
+                  const cellEntities = isBlind ? [] : (entities || []).filter(e => e.x === x && e.y === y && !stateFlags[`${e.id}_defeated`]);
 
                   return (
                     <div

@@ -4,6 +4,16 @@
   "world_coord": "25,18,-1",
   "theme": "Shoebox_Forest",
   "description": "A dense canopy of silver-eyelet trees that cast long, confusing shadows. A huge metal sign reads: 'This forest makes you forget things but makes you remember the things you want to forget.' A dense memory fog pools around your laces.",
+  "onEnter": {
+    "action": "set_flag",
+    "flagSet": "blind"
+  },
+  "alt_descriptions": [
+    {
+      "requiredFlag": "blind",
+      "description": "🌫️ A dense canopy of silver-eyelet trees that has vanished into absolute blinding fog! You can hear Willy and Freddista panic nearby, but your sight is completely gone. You can see nothing but white mist. You are blind!"
+    }
+  ],
   "player_start": {
     "x": 4,
     "y": 2

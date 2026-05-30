@@ -17,6 +17,13 @@
     },
     "bridge_of_lah": {
       "passable": true,
+      "effect": "damage",
+      "damageAmount": 1,
+      "effectMessage": "The molten heat radiating from the chasm singes your laces!",
+      "conditions": {
+        "requiredFlag": "said_lah",
+        "failMessage": "The obsidian planks split apart beneath your soles! You are pushed back to solid ground. An echoing voice whispers: 'You did not say LAH...'"
+      },
       "description": "Obsidian planks stretching across the heat. A sign says: 'Bridge of LAAAAAAah: Say lah every 2 minutes!'"
     },
     "exit_south": {
@@ -43,6 +50,13 @@
     },
     "obsidian_rubble": {
       "passable": true,
+      "effect": "damage",
+      "damageAmount": 1,
+      "effectMessage": "The molten heat radiating from the chasm singes your laces!",
+      "conditions": {
+        "requiredFlag": "said_lah",
+        "failMessage": "The obsidian planks split apart beneath your soles! You are pushed back to solid ground. An echoing voice whispers: 'You did not say LAH...'"
+      },
       "icon": "💎",
       "description": "A pile of obsidian rubble on the bridge planks.",
       "interactionVerb": "SEARCH",
@@ -57,6 +71,13 @@
     },
     "lah_climax": {
       "passable": true,
+      "effect": "damage",
+      "damageAmount": 1,
+      "effectMessage": "The molten heat radiating from the chasm singes your laces!",
+      "conditions": {
+        "requiredFlag": "said_lah",
+        "failMessage": "The obsidian planks split apart beneath your soles! You are pushed back to solid ground. An echoing voice whispers: 'You did not say LAH...'"
+      },
       "description": "The center of the obsidian bridge.",
       "npc": {
         "name": "Fiery Chasm",
@@ -80,13 +101,26 @@
           }
         ]
       }
+    },
+    "bridge_sign": {
+      "passable": true,
+      "effect": "damage",
+      "damageAmount": 1,
+      "effectMessage": "The molten heat radiating from the chasm singes your laces!",
+      "conditions": {
+        "requiredFlag": "said_lah",
+        "failMessage": "The obsidian planks split apart beneath your soles! You are pushed back to solid ground. An echoing voice whispers: 'You did not say LAH...'"
+      },
+      "icon": "🪧",
+      "description": "A stone sign post standing beside the bridge planks.",
+      "onInteract": "You read the warning sign:\n'ATTENTION TRAVELERS: This bridge is highly unstable. To prevent the planks from splitting and throwing you into the boiling lava below, you must yell LAH at the top of your lungs before stepping on any bridge tile!'\nIf you whisper 'lah' quietly, the planks creak in faint agreement."
     }
   },
   "grid": [
     ["lava_pool", "lava_pool", "exit_north", "lava_pool", "lava_pool"],
     ["lava_pool", "bridge_of_lah", "bridge_of_lah", "bridge_of_lah", "lava_pool"],
     ["lava_pool", "obsidian_rubble", "lah_climax", "bridge_of_lah", "lava_pool"],
-    ["lava_pool", "bridge_of_lah", "bridge_of_lah", "bridge_of_lah", "lava_pool"],
+    ["lava_pool", "bridge_sign", "bridge_of_lah", "bridge_of_lah", "lava_pool"],
     ["lava_pool", "lava_pool", "exit_south", "lava_pool", "lava_pool"]
   ],
   "entities": [],

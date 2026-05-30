@@ -80,11 +80,13 @@ export default function PlayerHUD({ playerHP, maxHP, inventory, position, roomNa
   };
 
   const activeCharacter = useStore((state) => state.gameState?.activeCharacter);
-  const characterName = activeCharacter 
-    ? activeCharacter.charAt(0).toUpperCase() + activeCharacter.slice(1) 
-    : 'Fred';
+  const characterName = activeCharacter === 'banana'
+    ? 'Fred the Banana'
+    : activeCharacter 
+      ? activeCharacter.charAt(0).toUpperCase() + activeCharacter.slice(1) 
+      : 'Fred';
 
-  const characterEmoji = activeCharacter === 'willy' ? '🥞' : activeCharacter === 'freddista' ? '🥾' : '👟';
+  const characterEmoji = activeCharacter === 'willy' ? '🥞' : activeCharacter === 'freddista' ? '🥾' : activeCharacter === 'banana' ? '🍌' : '👟';
 
   return (
     <div className="player-hud">

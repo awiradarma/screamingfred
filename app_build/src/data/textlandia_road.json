@@ -66,13 +66,19 @@
           }
         ]
       }
+    },
+    "literal_dictionary": {
+      "passable": true,
+      "icon": "📖",
+      "description": "A massive leather-bound book with the word 'D-I-C-T-I-O-N-A-R-Y' written on its cover. It is open to the letter 'F'.",
+      "onInteract": "You read the entry for 'Fred':\n*Fred (noun)*: A brave shoe character characterized by extreme starchy determination, a loud voice, and a tendency to jump/scream when faced with standard life challenges.\nWilly mutters: 'Sounds like a very literal diagnosis.'"
     }
   },
   "grid": [
     ["wall_text", "wall_text", "exit_north", "wall_text", "wall_text"],
     ["wall_text", "road_text", "road_text", "road_text", "wall_text"],
     ["wall_text", "npc_sue_saul_cameo", "npc_apostrophe", "road_text", "wall_text"],
-    ["wall_text", "road_text", "road_text", "road_text", "wall_text"],
+    ["wall_text", "literal_dictionary", "road_text", "road_text", "wall_text"],
     ["wall_text", "wall_text", "exit_south", "wall_text", "wall_text"]
   ],
   "entities": [],

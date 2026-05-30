@@ -338,6 +338,185 @@ export function processCommand(state, rawInput, itemRegistry = {}) {
     }
   }
 
+  // --- DERF CHAPTER 2 CLIMAX INTERCEPTIONS (LAND OF CREATIVITY & APPLE SWAMP) ---
+  if (state.room?.room_id === "land_of_creativity") {
+    const stage = state.stateFlags.derf_creativity_stage || 0;
+
+    if (stage === 0) {
+      if (command.action === "talk") {
+        let finalState = { ...state };
+        finalState.activeCharacter = 'banana';
+        finalState.playerPosition = { x: 2, y: 1 };
+        finalState.room = getRoomData("apple_swamp");
+        finalState.entities = (finalState.room.entities || []).map(e => ({ ...e }));
+        finalState.stateFlags = {
+          ...finalState.stateFlags,
+          derf_creativity_stage: 1
+        };
+
+        const localMessages = [
+          {
+            text: "\"Welcome to Creativity!\" Derf sneers, his tattered crimson cape crackling with dark energy.",
+            type: "dialogue",
+            speaker: "Derf"
+          },
+          {
+            text: "Willy: \"Not as happy as I expected...\"",
+            type: "dialogue",
+            speaker: "Willy"
+          },
+          {
+            text: "Derf points a sparking, clawed finger at you: \"Fred! You think you are so clever. But I will curse you to become a banana and travel to the past! Feel the ultimate weight of starchy destiny!\"",
+            type: "dialogue",
+            speaker: "Derf"
+          },
+          {
+            text: "⚡ A massive temporal vortex of purple lightning opens beneath your sole! Everything spins! The fabric of time and space tears apart!",
+            type: "danger"
+          },
+          {
+            text: "🌀 SPACETIME WARPED! You are literally teleported back to the past swamp room!",
+            type: "system"
+          },
+          {
+            text: "🍌 You look down and gasp: you have turned into a giant banana! Your status bar reads 'Fred the Banana'. You are trapped in the Apple Swamp!",
+            type: "narrative"
+          },
+          {
+            text: "(Hint: Fulfill your destiny! Move south to the creek gap at coordinates 2, 2 and type 'bridge' or 'lay'!)",
+            type: "hint"
+          }
+        ];
+
+        return { state: finalState, messages: localMessages };
+      }
+    } else if (stage === 2) {
+      if (command.action === "talk") {
+        const localMessages = [
+          {
+            text: "\"Still trying to fight me, shoe?\" Derf laughs bitterly. \"Look at these poor objects! They will power my creativity extraction forever! Unless you go inspect their cages and realize the futility of your actions!\"",
+            type: "dialogue",
+            speaker: "Derf"
+          },
+          {
+            text: "(Hint: You must go search the cages at coordinates 1, 1 or 3, 1 first!)",
+            type: "hint"
+          }
+        ];
+        return { state, messages: localMessages };
+      }
+    } else if (stage === 3 || state.stateFlags.cages_inspected) {
+      if (command.action === "talk") {
+        let finalState = { ...state };
+        finalState.stateFlags = {
+          ...finalState.stateFlags,
+          chapter_2_completed: true,
+          derf_creativity_stage: 4
+        };
+        // Give slipper_key
+        const keyItem = {
+          name: "Slipper Key",
+          description: "The legendary key to open the gates of Shoeboxlandia, gifted by Derf.",
+          type: "quest",
+          itemId: "slipper_key"
+        };
+        finalState.inventory = [...finalState.inventory, keyItem];
+
+        const localMessages = [
+          {
+            text: "Fred looks Derf directly in his burning red eyes. He doesn't raise a fist, nor does he summon a scream. Instead, he speaks with quiet, starchy sincerity: \"I will always love you brother. I am sorry for kicking you behind the Mountains of Misery.\"",
+            type: "dialogue",
+            speaker: "Fred"
+          },
+          {
+            text: "Derf freezes. The dark cape stops crackling. His red eyes slowly soften and fade to a warm brown. A soft smile spreads across his heel.",
+            type: "narrative"
+          },
+          {
+            text: "\"I... I will always love you too, brother,\" Derf whispers. \"I've been so lonely behind those cold peaks...\"",
+            type: "dialogue",
+            speaker: "Derf"
+          },
+          {
+            text: "Derf waves his hand. The dark cages shatter, and the trapped kettles and brushes celebrate happily! He hands you the legendary Slipper Key!",
+            type: "loot"
+          },
+          {
+            text: "🔑 You received the Slipper Key! Derf opens the glowing teleportation portal south to return you home.",
+            type: "system"
+          }
+        ];
+
+        return { state: finalState, messages: localMessages };
+      }
+    }
+  }
+
+  // --- BANANA BRIDGE IN SWAMP INTERCEPTION ---
+  if (state.activeCharacter === 'banana' && state.room?.room_id === 'apple_swamp') {
+    const normalizedInput = rawInput.toLowerCase().trim();
+    if (command.action === 'bridge' || command.action === 'lay' || normalizedInput === 'bridge' || normalizedInput === 'lay' || normalizedInput === 'form bridge') {
+      if (state.playerPosition.x === 2 && state.playerPosition.y === 2) {
+        let finalState = { ...state };
+        finalState.activeCharacter = 'fred'; // restore shoe!
+        finalState.stateFlags = { 
+          ...finalState.stateFlags, 
+          banana_bridge: true, 
+          derf_creativity_stage: 2
+        };
+        // Teleport to the far side of the swamp {x: 2, y: 2} (walk over the bridge)
+        finalState.playerPosition = { x: 2, y: 2 };
+        
+        const localMessages = [
+          {
+            text: "🍌 Fred the Banana lays flat on his side across the bubbling expired apple juice gap!",
+            type: "scream"
+          },
+          {
+            text: "Suddenly, the past Fred, Willy, and Freddista walk over you to cross! \"That is so disgusting!\" yells past Fred. \"Well, do you see any other way to cross?\" you respond (or rather, think).",
+            type: "dialogue",
+            speaker: "Fred the Banana"
+          },
+          {
+            text: "✨ Fulfilling your temporal destiny, a sudden temporal snap pulls you back to the present! You transform back into Fred the Shoe on the far bank of the swamp!",
+            type: "loot"
+          }
+        ];
+        return { state: finalState, messages: localMessages };
+      } else {
+        const localMessages = [
+          { text: "🍌 You need to stand on the creek gap (coordinates 2, 2) to form a bridge!", type: "warning" }
+        ];
+        return { state, messages: localMessages };
+      }
+    }
+  }
+
+  // --- BRIDGE OF LAH "LAH" INTERCEPTION ---
+  const normalizedInput = rawInput.toLowerCase().trim();
+  if (normalizedInput === 'lah' || normalizedInput === 'yell lah' || (command.action === 'scream' && command.target === 'lah') || command.action === 'lah') {
+    if (state.room?.room_id === "lava_chasms") {
+      let finalState = { ...state };
+      finalState.stateFlags = { ...finalState.stateFlags, said_lah: true };
+      const localMessages = [
+        {
+          text: "📢 \"LAAAAAAAH!\" you yell at the top of your starchy lungs!",
+          type: "scream"
+        },
+        {
+          text: "The sound resonates off the molten walls of the chasm. The obsidian planks creak, vibrating in harmonic resonance, and solidify into a stable platform!",
+          type: "narrative"
+        }
+      ];
+      return { state: finalState, messages: localMessages };
+    } else {
+      const localMessages = [
+        { text: "You yell \"LAH!\" but there is no canyon here to echo back. You feel a bit silly.", type: "system" }
+      ];
+      return { state, messages: localMessages };
+    }
+  }
+
   switch (command.action) {
     case 'empty':
       return { state, messages: [] };
@@ -616,6 +795,16 @@ export function handleMove(state, direction, messages) {
   const targetTile = getTileAt(state.room, newX, newY);
   let tileData = targetTile ? getTileData(state.room, targetTile) : null;
 
+  if (state.activeCharacter === 'banana' && state.room?.room_id === 'apple_swamp') {
+    if (!targetTile || tileData?.targetRoomId) {
+      messages.push({
+        text: "🍌 You are a banana! You cannot leave until you fulfill your temporal destiny and lay down as a bridge!",
+        type: "warning"
+      });
+      return { state, messages };
+    }
+  }
+
   // Resolve visibility fallback for movement
   const isTargetVisible = isTileVisible(tileData, state, 'render');
   if (tileData && !isTargetVisible) {
@@ -681,6 +870,9 @@ export function handleMove(state, direction, messages) {
     const hasItem = requiredItem ? state.inventory.some(i => i.itemId === requiredItem || i.name === requiredItem) : true;
     // Check if player has met the flag
     let hasFlag = requiredFlag ? state.stateFlags[requiredFlag] || finalFlags[requiredFlag] : true;
+    if (requiredFlag === "said_lah" && state.abilities?.some(a => a.id === "expectant_float" || a.id === "float")) {
+      hasFlag = true;
+    }
     // Ability-based flag overrides
     if (requiredFlag === "corner_illuminated" && 
         state.abilities?.some(a => a.id === "detectives_intuition")) {
@@ -722,6 +914,16 @@ export function handleMove(state, direction, messages) {
   finalState = effectResult.state;
   const currentPos = finalState.playerPosition; 
 
+  if (finalState.room?.room_id === 'lava_chasms') {
+    const finalTileType = getTileAt(finalState.room, currentPos.x, currentPos.y);
+    if (['bridge_of_lah', 'obsidian_rubble', 'lah_climax', 'bridge_sign'].includes(finalTileType)) {
+      finalState.stateFlags = {
+        ...finalState.stateFlags,
+        said_lah: false
+      };
+    }
+  } 
+
   // Describe what's on the NEW FINAL tile (after effects like sliding/bouncing)
   const finalTileType = getTileAt(finalState.room, currentPos.x, currentPos.y);
   const finalTileData = getTileData(finalState.room, finalTileType);
@@ -743,9 +945,16 @@ export function handleMove(state, direction, messages) {
   }
 
   if (finalTileData?.targetRoomId) {
-    // Explicit transition tile
-    transitionRoom = getRoomData(finalTileData.targetRoomId);
-    transitionPos = finalTileData.targetPosition;
+    // Explicit transition tile only triggers if matching direction (prevents walkover transitions in Scary Scrapyard exit_west)
+    let shouldTransition = true;
+    if (finalState.room?.room_id === 'scary_scrapyard') {
+      if (finalTileType.includes('exit_west') && direction !== 'west') shouldTransition = false;
+    }
+
+    if (shouldTransition) {
+      transitionRoom = getRoomData(finalTileData.targetRoomId);
+      transitionPos = finalTileData.targetPosition;
+    }
   }
 
   if (transitionRoom) {
@@ -760,6 +969,13 @@ export function handleMove(state, direction, messages) {
     let updatedInventory = [...finalState.inventory];
     let updatedFlags = { ...finalState.stateFlags };
     
+    if (transitionRoom.room_id === 'land_of_creativity' && updatedFlags.derf_creativity_stage === 2) {
+      messages.push({
+        text: "⚡ You warp back into the Land of Creativity! Derf is hovering furiously, crackling with dark energy. Freddista screams: \"Fred! Quick! Run and search the trapped boxes on the sides! We must find a way to free them!\"",
+        type: "danger"
+      });
+    }
+    
     if (transitionRoom.onEnter) {
       const { action, itemId, message, flagSet } = transitionRoom.onEnter;
       if (message && action !== 'remove_item') {
@@ -773,7 +989,12 @@ export function handleMove(state, direction, messages) {
         }
       }
       if (action === 'set_flag' && flagSet) {
-        updatedFlags[flagSet] = true;
+        if (flagSet === 'blind' && finalState.abilities?.some(a => a.id === 'thermal_sight')) {
+          // Bypassed by Thermal Sight!
+          messages.push({ text: "✨ Your Thermal Sight shines through the fog, keeping your vision completely clear!", type: "system" });
+        } else {
+          updatedFlags[flagSet] = true;
+        }
       }
     }
 
@@ -986,6 +1207,32 @@ function applyTileEffects(state, x, y, messages, direction) {
 function handleInteract(state, target, messages, globalItems = {}) {
   const tileType = getCurrentTile(state);
   const tileData = getTileData(state.room, tileType);
+
+  if (state.room?.room_id === "land_of_creativity" && tileType === "trapped_objects") {
+    let newState = { ...state };
+    if (state.stateFlags.derf_creativity_stage === 2) {
+      newState.stateFlags = {
+        ...newState.stateFlags,
+        cages_inspected: true,
+        derf_creativity_stage: 3
+      };
+      messages.push({
+        text: "📦 You search the glass cages holding the trapped objects. Dark, crackling electrical lines lock the frames shut.",
+        type: "narrative"
+      });
+      messages.push({
+        text: "Willy deduces: \"They are sealed by a complex emotional padlock of dark magic! Physical force won't work. Fred, you have to talk to Derf again and reconcile!\"",
+        type: "dialogue",
+        speaker: "Willy"
+      });
+    } else {
+      messages.push({
+        text: "The glass cages are sealed by Derf's emotional padlock of dark magic. Talk to Derf to reconcile!",
+        type: "warning"
+      });
+    }
+    return { state: newState, messages };
+  }
 
   if (tileType === 'scrap_magnet') {
     let newState = { ...state };
@@ -2011,6 +2258,14 @@ export function getAvailableActions(state) {
     actions.push('stare');
   } else if (state.activeCharacter === 'willy') {
     actions.push('deduce');
+  }
+
+  // Context-specific custom actions
+  if (state.room?.room_id === 'lava_chasms') {
+    actions.push('lah');
+  }
+  if (state.activeCharacter === 'banana' && state.room?.room_id === 'apple_swamp' && state.playerPosition.x === 2 && state.playerPosition.y === 2) {
+    actions.push('bridge');
   }
 
   // Check for entities at current position

@@ -23,6 +23,8 @@ const ACTION_ALIASES = {
   use:      'use',      apply: 'use',   consume: 'use',
   stare:    'stare',    glare: 'stare', gaze: 'stare',
   deduce:   'deduce',   magnify: 'deduce', scan: 'deduce',
+  lah:      'lah',
+  bridge:   'bridge',   lay: 'bridge',
 };
 
 /**

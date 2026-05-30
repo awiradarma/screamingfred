@@ -205,9 +205,14 @@ const steps = [
   // --- ROOM 22: Scary Scrapyard ---
   { cmd: 'north', expectRoom: 'scary_scrapyard' }, // to x:1, y:1 (crevice)
   { cmd: 'interact', expectRoom: 'scary_scrapyard' }, // picks up tool_magnifying_glass
-  { cmd: 'east', expectRoom: 'scary_scrapyard' },  // to x:2, y:1
-  { cmd: 'east', expectRoom: 'scary_scrapyard' },  // to x:3, y:1
-  { cmd: 'south', expectRoom: 'apple_swamp' },     // to x:3, y:2 (exit_east) -> transitions to Apple Swamp at x:1, y:2
+  { cmd: 'south', expectRoom: 'scary_scrapyard' }, // to x:1, y:2
+  { cmd: 'south', expectRoom: 'scary_scrapyard' }, // to x:1, y:3
+  { cmd: 'east', expectRoom: 'scary_scrapyard' },  // to x:2, y:3
+  { cmd: 'east', expectRoom: 'scary_scrapyard' },  // to x:3, y:3 (Cutlery Monster stands here!)
+  { cmd: 'scream', expectRoom: 'scary_scrapyard' }, // scream 1 (deals 2 damage, 4 HP remaining)
+  { cmd: 'scream', expectRoom: 'scary_scrapyard' }, // scream 2 (deals 2 damage, 2 HP remaining)
+  { cmd: 'scream', expectRoom: 'scary_scrapyard' }, // scream 3 (defeats Cutlery Monster!)
+  { cmd: 'north', expectRoom: 'apple_swamp' },     // to x:3, y:2 (exit_east) -> transitions to Apple Swamp!
 
   // --- ROOM 23: Apple Swamp ---
   { cmd: 'east', expectRoom: 'apple_swamp' },  // to x:2, y:2
@@ -221,6 +226,7 @@ const steps = [
   { cmd: 'south', expectRoom: 'great_farm' }, // to x:1, y:3
   { cmd: 'east', expectRoom: 'great_farm' },  // to x:2, y:3 (golden_potato)
   { cmd: 'interact', expectRoom: 'great_farm' }, // harvests the Ultra Golden Potato!
+  { cmd: 'use Ultra Golden Potato', expectRoom: 'great_farm' }, // consumes it to boost HP to 50!
   { cmd: 'north', expectRoom: 'great_farm' }, // to x:2, y:2 (rotten_produce)
   { cmd: 'east', expectRoom: 'bridge_of_blah' }, // exits east to Bridge of Blah!
 
@@ -257,10 +263,13 @@ const steps = [
   { cmd: 'west', expectRoom: 'perception_ocean' },   // transitions west to Perception
 
   // --- Perception & Ocean ---
-  { cmd: 'west', expectRoom: 'perception_ocean' },   // shift to arcade
-  { cmd: 'west', expectRoom: 'perception_ocean' },   // shift to metal
-  { cmd: 'west', expectRoom: 'perception_ocean' },   // shift to acid
-  { cmd: 'west', expectRoom: 'mountain_of_miserly' }, // transitions west to Mountains of Miserly
+  { cmd: 'west', expectRoom: 'perception_ocean' },   // shift to arcade (x:3, y:2)
+  { cmd: 'west', expectRoom: 'perception_ocean' },   // shift to metal (x:2, y:2)
+  { cmd: 'west', expectRoom: 'perception_ocean' },   // shift to acid (x:1, y:2)
+  { cmd: 'north', expectRoom: 'perception_ocean' },  // moves to fishing spot (x:1, y:1)
+  { cmd: 'interact', expectRoom: 'perception_ocean' }, // fish wet sock!
+  { cmd: 'south', expectRoom: 'perception_ocean' },  // back to acid (x:1, y:2)
+  { cmd: 'west', expectRoom: 'mountain_of_miserly' }, // transitions west to Mountains of Miserly (to x:2, y:4)
 
   // --- Mountains of Miserly ---
   { cmd: 'north', expectRoom: 'mountain_of_miserly' }, // moves to x:2, y:3
@@ -271,29 +280,85 @@ const steps = [
   { cmd: 'north', expectRoom: 'textlandia_road' },     // transitions north to Textlandia Road (to x:2, y:3)
 
   // --- Textlandia Road ---
-  { cmd: 'north', expectRoom: 'textlandia_road' },     // moves to x:2, y:3
+  { cmd: 'north', expectRoom: 'textlandia_road' },     // moves north from entrance (to x:2, y:3)
+  { cmd: 'west', expectRoom: 'textlandia_road' },      // moves west to literal dictionary (x:1, y:3)
+  { cmd: 'interact', expectRoom: 'textlandia_road' },  // reads Fred's literal dictionary definition
+  { cmd: 'east', expectRoom: 'textlandia_road' },      // back east to x:2, y:3
   { cmd: 'north', expectRoom: 'textlandia_road' },     // moves to x:2, y:2 (stands on Apostrophe)
   { cmd: 'talk', expectRoom: 'textlandia_road' },      // reads warning
   { cmd: 'north', expectRoom: 'textlandia_road' },     // moves north (to x:2, y:1)
-  { cmd: 'north', expectRoom: 'lava_chasms' },         // transitions north to Lava Chasms (to x:2, y:3)
+  { cmd: 'north', expectRoom: 'lava_chasms' },         // transitions north to Lava Chasms (to x:2, y:4)
 
   // --- Lava Chasms ---
+  { cmd: 'lah', expectRoom: 'lava_chasms' },           // yells lah to solidify planks
   { cmd: 'north', expectRoom: 'lava_chasms' },         // moves to x:2, y:3
+  { cmd: 'lah', expectRoom: 'lava_chasms' },           // yells lah
   { cmd: 'north', expectRoom: 'lava_chasms' },         // stands on chasm climax (x:2, y:2)
   { cmd: 'talk', expectRoom: 'lava_chasms' },          // Willy slips
   { cmd: 'scream', expectRoom: 'lava_chasms' },         // rescues Willy
+  { cmd: 'lah', expectRoom: 'lava_chasms' },           // yells lah
   { cmd: 'north', expectRoom: 'lava_chasms' },         // moves north (to x:2, y:1)
   { cmd: 'north', expectRoom: 'land_of_creativity' },  // transitions north to Land of Creativity (to x:2, y:2)
 
-  // --- Land of Creativity ---
+  // --- Land of Creativity (The Epic Time Loop) ---
   { cmd: 'north', expectRoom: 'land_of_creativity' },  // stands on Derf (x:2, y:1)
-  { cmd: 'talk', expectRoom: 'land_of_creativity' },   // initiates dialogue
-  { cmd: 'talk', expectRoom: 'land_of_creativity' },   // Derf hands Slipper Key, teleports everyone back
-  { cmd: 'south', expectRoom: 'land_of_creativity' },  // moves south (to x:2, y:2)
-  { cmd: 'south', expectRoom: 'shoeboxlandia_street' }, // teleports to Shoeboxlandia Street Gate floor (x:1, y:3)!
+  { cmd: 'talk', expectRoom: 'apple_swamp' },          // Derf curses and teleports you back to Apple Swamp as a banana!
+
+  // --- Apple Swamp (Banana Bridge loop) ---
+  { cmd: 'south', expectRoom: 'apple_swamp' },         // moves to creek gap (x:2, y:2) in banana form
+  { cmd: 'bridge', expectRoom: 'apple_swamp' },        // lays down, friends cross, snaps back as shoe at x:3, y:2!
+
+  // --- Walking all the way back to Creativity ---
+  { cmd: 'east', expectRoom: 'great_farm' },           // exits east to Great Farm (x:1, y:2)
+  { cmd: 'east', expectRoom: 'great_farm' },           // to x:2, y:2
+  { cmd: 'east', expectRoom: 'bridge_of_blah' },       // exits east to Bridge of Blah (x:1, y:2)
+  { cmd: 'east', expectRoom: 'bridge_of_blah' },       // moves east onto Barry tile (x:2, y:2) to align with portal
+  { cmd: 'south', expectRoom: 'land_of_jumping' },     // transitions south to Land of Jumping (x:2, y:1)
+  { cmd: 'south', expectRoom: 'land_of_jumping' },     // to x:2, y:2
+  { cmd: 'south', expectRoom: 'land_of_jumping' },     // steps onto jelly
+  { cmd: 'scream', expectRoom: 'land_of_jumping' },    // lands safely
+  { cmd: 'south', expectRoom: 'scream_collector' },    // transitions south to Scream Collector (x:2, y:0)
+  { cmd: 'south', expectRoom: 'scream_collector' },    // moves south to x:2, y:1
+  { cmd: 'south', expectRoom: 'scream_collector' },    // moves south to x:2, y:2 to align with exit
+  { cmd: 'west', expectRoom: 'scream_collector' },     // moves west to x:1, y:2
+  { cmd: 'west', expectRoom: 'forgotten_forest' },     // transitions west to Forgotten Forest (x:4, y:2)
+  { cmd: 'west', expectRoom: 'forgotten_forest' },     // to x:3, y:2
+  { cmd: 'west', expectRoom: 'forgotten_forest' },     // to x:2, y:2
+  { cmd: 'west', expectRoom: 'forgotten_forest' },     // to x:1, y:2
+  { cmd: 'west', expectRoom: 'perception_ocean' },     // transitions west to Perception Ocean (x:4, y:2)
+  { cmd: 'west', expectRoom: 'perception_ocean' },     // to x:3, y:2
+  { cmd: 'west', expectRoom: 'perception_ocean' },     // to x:2, y:2
+  { cmd: 'west', expectRoom: 'perception_ocean' },     // to x:1, y:2 (acid)
+  { cmd: 'west', expectRoom: 'mountain_of_miserly' },  // transitions west to Mountains of Miserly (x:2, y:4)
+  { cmd: 'north', expectRoom: 'mountain_of_miserly' }, // to x:2, y:3
+  { cmd: 'north', expectRoom: 'mountain_of_miserly' }, // to x:2, y:2
+  { cmd: 'north', expectRoom: 'mountain_of_miserly' }, // to x:2, y:1
+  { cmd: 'north', expectRoom: 'textlandia_road' },     // transitions north to Textlandia Road (x:2, y:4)
+  { cmd: 'north', expectRoom: 'textlandia_road' },     // to x:2, y:3
+  { cmd: 'north', expectRoom: 'textlandia_road' },     // to x:2, y:2
+  { cmd: 'north', expectRoom: 'textlandia_road' },     // to x:2, y:1
+  { cmd: 'north', expectRoom: 'lava_chasms' },         // transitions north to Lava Chasms (to x:2, y:4)
+  { cmd: 'lah', expectRoom: 'lava_chasms' },           // yells lah
+  { cmd: 'north', expectRoom: 'lava_chasms' },         // to x:2, y:3
+  { cmd: 'lah', expectRoom: 'lava_chasms' },           // yells lah
+  { cmd: 'north', expectRoom: 'lava_chasms' },         // to x:2, y:2
+  { cmd: 'lah', expectRoom: 'lava_chasms' },           // yells lah
+  { cmd: 'north', expectRoom: 'lava_chasms' },         // to x:2, y:1
+  { cmd: 'north', expectRoom: 'land_of_creativity' },  // transitions north to Land of Creativity (x:2, y:2)
+
+  // --- Creativity: Search Cages and Reconcile! ---
+  { cmd: 'west', expectRoom: 'land_of_creativity' },   // to x:1, y:2
+  { cmd: 'north', expectRoom: 'land_of_creativity' },  // to x:1, y:1 (cages)
+  { cmd: 'interact', expectRoom: 'land_of_creativity' }, // inspects cages, sets cages_inspected!
+  { cmd: 'south', expectRoom: 'land_of_creativity' },  // to x:1, y:2
+  { cmd: 'east', expectRoom: 'land_of_creativity' },   // to x:2, y:2
+  { cmd: 'north', expectRoom: 'land_of_creativity' },  // stands on Derf (x:2, y:1)
+  { cmd: 'talk', expectRoom: 'land_of_creativity' },   // reconciles, receives Slipper Key, completes chapter!
+  { cmd: 'south', expectRoom: 'land_of_creativity' },  // to x:2, y:2
+  { cmd: 'south', expectRoom: 'shoeboxlandia_street' }, // teleports to Shoeboxlandia Gate (x:1, y:3)
 
   // --- Back to Gate (Unlocking) ---
-  { cmd: 'west', expectRoom: 'bridge_of_blah' }       // steps west through the gate using Slipper Key!
+  { cmd: 'west', expectRoom: 'bridge_of_blah' }        // steps west through the gate using Slipper Key!
 ];
 
 let state = initGameState(worldData.freds_house);

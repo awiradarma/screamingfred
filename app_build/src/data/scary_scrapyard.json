@@ -6,7 +6,7 @@
   "description": "A dark yard piled high with discarded metal, old boots, and rusted cans. Sparks occasionally fly from exposed wires. A dangerous Cutlery Monster stalker is lurking here!",
   "grid": [
     ["scrap_wall", "scrap_wall", "scrap_wall", "scrap_wall", "scrap_wall"],
-    ["scrap_wall", "crevice_magnifying_glass", "scrapyard_floor", "scrap_magnet", "scrap_wall"],
+    ["scrap_wall", "crevice_magnifying_glass", "scrap_wall", "scrap_magnet", "scrap_wall"],
     ["scrap_wall", "exit_west", "compact_crusher", "exit_east", "scrap_wall"],
     ["scrap_wall", "scrapyard_floor", "broken_boiler", "scrapyard_floor", "scrap_wall"],
     ["scrap_wall", "scrap_wall", "scrap_wall", "scrap_wall", "scrap_wall"]

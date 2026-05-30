@@ -102,6 +102,8 @@ export default function MobileController({ onSubmit, disabled }) {
     { id: 'use', label: 'Use', icon: '🎒' },
     { id: 'attack', label: 'Attack', icon: '⚔️' },
     { id: 'scream', label: 'Scream', icon: '😱' },
+    { id: 'lah', label: 'Yell Lah', icon: '📢' },
+    { id: 'bridge', label: 'Form Bridge', icon: '🍌' },
   ];
   
   const actions = allActions.filter(a => availableActionIds.includes(a.id));

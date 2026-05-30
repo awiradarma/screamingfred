@@ -45,12 +45,21 @@
     },
     "shift_tile_acid": {
       "passable": true,
+      "effect": "damage",
+      "damageAmount": 1,
+      "effectMessage": "The bubbling green acid burns your sole!",
       "description": "🧪 WARP! The ground under your sole turns into a glowing green pool of bubbling acid! (If you have Expectant Float, you float safely above the corrosion!)"
+    },
+    "fishing_spot": {
+      "passable": true,
+      "icon": "🎣",
+      "description": "A wooden railing looking over the deep, lapping ocean. It looks like a perfect fishing spot!",
+      "onInteract": "You cast a line over the railing and wait... YANK! You pull up a soggy, miserable wet sock! The sock sighs: 'Great, now I'm out of the water and still single. Life is a tragedy.' You gently drop the complaining sock back into the ocean."
     }
   },
   "grid": [
     ["void_wall", "void_wall", "void_wall", "void_wall", "void_wall"],
-    ["void_wall", "stone_floor", "stone_floor", "stone_floor", "void_wall"],
+    ["void_wall", "fishing_spot", "stone_floor", "stone_floor", "void_wall"],
     ["exit_west", "shift_tile_acid", "shift_tile_metal", "shift_tile_arcade", "exit_east"],
     ["void_wall", "stone_floor", "stone_floor", "stone_floor", "void_wall"],
     ["void_wall", "void_wall", "void_wall", "void_wall", "void_wall"]
