@@ -1,7 +1,7 @@
 {
   "room_id": "textlandia_road",
   "room_name": "Textlandia Road",
-  "world_coord": "23,16,-1",
+  "world_coord": "23,17,-1",
   "theme": "Textlandia",
   "description": "The entire realm is constructed of literal words. A wooden sign labeled 'sign' points down a road made of the letters 'r-o-a-d'. Mountains labeled 'steep mountain' line the distance.",
   "player_start": {

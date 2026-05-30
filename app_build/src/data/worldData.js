@@ -54,10 +54,10 @@ export const worldCoordinateRegistry = {
   "15,15,0": "freds_house",
   "15,15,1": "attic_bedroom",
   "15,14,1": "attic_corner",
-  "16,14,0": "shoe_rack",
-  "17,14,0": "window_sill",
+  "16,14,1": "shoe_rack",
+  "17,14,1": "window_sill",
   "16,15,0": "neighbors_house",
-  "14,16,0": "garden_path",
+  "17,15,0": "garden_path",
 
   // Main Path
   "15,16,0": "shoeboxlandia_street",
@@ -72,7 +72,7 @@ export const worldCoordinateRegistry = {
 
   // Forest
   "15,17,0": "forest_entrance",
-  "15,17,-1": "secret_cave",
+  "16,17,-1": "secret_cave",
   "15,18,0": "forest_thicket",
   "16,18,0": "forest_deep",
   "17,18,0": "forest_clearing",
@@ -94,7 +94,7 @@ export const worldCoordinateRegistry = {
   "25,18,-1": "forgotten_forest",
   "24,18,-1": "perception_ocean",
   "24,17,-1": "mountain_of_miserly",
-  "23,16,-1": "textlandia_road",
+  "23,17,-1": "textlandia_road",
   "23,15,-1": "lava_chasms",
   "23,15,0": "land_of_creativity",
 };
