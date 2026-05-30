@@ -148,6 +148,8 @@ function getTileConfig(tileType, stateFlags, roomTiles = {}, abilities = [], roo
   if (roomMeta) {
     return {
       ...baseConfig,
+      icon: roomMeta.icon || baseConfig.icon,
+      className: roomMeta.className || baseConfig.className,
       label: roomMeta.name || baseConfig.label,
       description: roomMeta.description || baseConfig.description
     };

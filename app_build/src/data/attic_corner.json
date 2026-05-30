@@ -14,9 +14,9 @@
     ],
     [
       "wall",
+      "dusty_trunk",
       "floor",
-      "floor",
-      "floor",
+      "hanging_mothball",
       "wall"
     ],
     [
@@ -28,7 +28,7 @@
     ],
     [
       "wall",
-      "floor",
+      "loose_floorboard",
       "floor",
       "floor",
       "exit_east"
@@ -53,6 +53,33 @@
     "floor": {
       "passable": true,
       "description": "A floor covered in a thick layer of grey dust."
+    },
+    "dusty_trunk": {
+      "passable": true,
+      "icon": "🧳",
+      "interactionVerb": "EXAMINE",
+      "onInteract": "You wipe decades of dust off an old leather shoe trunk, revealing catalogs of vintage high-heeled shoes from Shoeboxlandia's golden age.",
+      "description": "An old leather shoe trunk tucked away in the corner."
+    },
+    "hanging_mothball": {
+      "passable": true,
+      "icon": "🔮",
+      "interactionVerb": "EXAMINE",
+      "onInteract": "You inspect the hanging mothball. It's a giant, smelling of intense cedar and wood oils that makes your eyelets water.",
+      "description": "A crystalline mothball hanging by a strand of spider silk."
+    },
+    "loose_floorboard": {
+      "passable": true,
+      "icon": "🔍",
+      "interactionVerb": "SEARCH",
+      "item": {
+        "itemId": "food_potato",
+        "name": "Wild Potato",
+        "type": "food",
+        "opened_description": "A loose floorboard. Just a dark void of joists remains.",
+        "onCollect": "You pry open the loose floorboard and discover a plump, slightly dusty Wild Potato hidden underneath!"
+      },
+      "description": "A floorboard that seems slightly loose and uneven."
     },
     "exit_east": {
       "passable": true,

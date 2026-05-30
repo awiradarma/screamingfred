@@ -14,9 +14,9 @@
     ],
     [
       "wall",
+      "hollow_stump",
       "grass",
-      "grass",
-      "grass",
+      "butterfly_shrub",
       "wall"
     ],
     [
@@ -54,6 +54,26 @@
       "passable": true,
       "description": "Short, green grass."
     },
+    "hollow_stump": {
+      "passable": true,
+      "icon": "🪵",
+      "interactionVerb": "SEARCH",
+      "item": {
+        "itemId": "food_potato",
+        "name": "Wild Potato",
+        "type": "food",
+        "opened_description": "A hollow tree stump filled with rotting leaves.",
+        "onCollect": "You search inside the decaying mossy stump and retrieve a plump, dirty Wild Potato!"
+      },
+      "description": "An ancient, hollow tree stump covered in soft green moss."
+    },
+    "butterfly_shrub": {
+      "passable": true,
+      "icon": "🦋",
+      "interactionVerb": "EXAMINE",
+      "onInteract": "You watch a flutter of glowing butterflies with delicate, shoelace-like wings resting on the leaves. They sparkle gently when you approach.",
+      "description": "A flowering bush humming with glowing shoelace-wing butterflies."
+    },
     "exit_west": {
       "passable": true,
       "description": "The path leads back into the deep forest.",
@@ -74,7 +94,10 @@
     },
     "item_mushrooms": {
       "passable": true,
+      "icon": "🍄",
+      "interactionVerb": "EXAMINE",
       "description": "A circle of glowing mushrooms. They look slightly magical.",
+      "onInteract": "You step into the fairy ring. The mushrooms pulse with a faint, warm starchy light and a quiet hum fills your sole.",
       "item": {
         "name": "Glowing Mushrooms",
         "itemId": "item_mushrooms",
@@ -85,6 +108,17 @@
       }
     }
   },
-  "entities": [],
+  "entities": [
+    {
+      "id": "clearing_snake_hidden",
+      "name": "Hidden Shoelace Snake",
+      "behavior": "idle",
+      "detectionRange": 0,
+      "damage": 1,
+      "hp": 3,
+      "x": 3,
+      "y": 3
+    }
+  ],
   "state_flags": {}
 }

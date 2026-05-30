@@ -20,7 +20,7 @@
     [
       "wall",
       "floor",
-      "floor",
+      "wind_chime",
       "floor",
       "wall"
     ],
@@ -34,7 +34,7 @@
     [
       "wall",
       "floor",
-      "floor",
+      "snow_drift",
       "floor",
       "wall"
     ],
@@ -58,6 +58,26 @@
     "floor": {
       "passable": true,
       "description": "A narrow, icy ledge."
+    },
+    "wind_chime": {
+      "passable": true,
+      "icon": "🔔",
+      "interactionVerb": "EXAMINE",
+      "onInteract": "You listen to the metal lace tips clanging together in the freezing wind, producing a lonely, crystalline melody.",
+      "description": "An ice-crusted wind chime made of discarded metal lace tips."
+    },
+    "snow_drift": {
+      "passable": true,
+      "icon": "❄️",
+      "interactionVerb": "SEARCH",
+      "item": {
+        "itemId": "food_potato",
+        "name": "Wild Potato",
+        "type": "food",
+        "opened_description": "A pile of melted snow. The ground underneath is bare.",
+        "onCollect": "You brush away the fresh snow drift and discover a frozen, rock-solid Wild Potato nestled in the rocky crevice!"
+      },
+      "description": "A heavy drift of sparkling, wind-swept snow."
     },
     "exit_west": {
       "passable": true,

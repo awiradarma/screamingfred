@@ -16,7 +16,7 @@
       "wall",
       "marsh_ground",
       "marsh_ground",
-      "marsh_ground",
+      "sinking_quicksand",
       "wall"
     ],
     [
@@ -28,7 +28,7 @@
     ],
     [
       "exit_west",
-      "marsh_ground",
+      "decaying_log",
       "marsh_ground",
       "marsh_ground",
       "wall"
@@ -54,6 +54,26 @@
       "passable": true,
       "description": "Soggy, yielding lint-marsh."
     },
+    "sinking_quicksand": {
+      "passable": true,
+      "icon": "⏳",
+      "interactionVerb": "EXAMINE",
+      "onInteract": "You watch the slow, hypnotic bubbling of the lint quicksand. Stepping here would surely swallow a shoe whole, so you stay back.",
+      "description": "A bubbling pool of soft, thick lint quicksand."
+    },
+    "decaying_log": {
+      "passable": true,
+      "icon": "🪵",
+      "interactionVerb": "SEARCH",
+      "item": {
+        "itemId": "food_potato",
+        "name": "Wild Potato",
+        "type": "food",
+        "opened_description": "A hollow, decaying log. Nothing but damp bark remains inside.",
+        "onCollect": "You reach into a hollow split in the decaying log and pull out a cool, damp Wild Potato!"
+      },
+      "description": "A rotting, moss-covered log lying half-submerged in the marsh."
+    },
     "exit_north": {
       "passable": true,
       "description": "The path leads back to the sunlit clearing.",
@@ -74,7 +94,10 @@
     },
     "item_vine": {
       "passable": true,
+      "icon": "🌿",
+      "interactionVerb": "EXAMINE",
       "description": "A thick, pulse-like shoelace vine.",
+      "onInteract": "You touch the vine. It beats with a faint, rhythmic pulse, like a sleeping forest giant's heart.",
       "item": {
         "name": "Pulsing Vine",
         "itemId": "item_vine",
@@ -85,6 +108,17 @@
       }
     }
   },
-  "entities": [],
+  "entities": [
+    {
+      "id": "marsh_snake_hidden",
+      "name": "Hidden Shoelace Snake",
+      "behavior": "idle",
+      "detectionRange": 0,
+      "damage": 1,
+      "hp": 3,
+      "x": 3,
+      "y": 3
+    }
+  ],
   "state_flags": {}
 }

@@ -86,6 +86,17 @@
       }
     }
   },
-  "entities": [],
+  "entities": [
+    {
+      "id": "exit_snake_hidden",
+      "name": "Hidden Shoelace Snake",
+      "behavior": "idle",
+      "detectionRange": 0,
+      "damage": 1,
+      "hp": 3,
+      "x": 3,
+      "y": 1
+    }
+  ],
   "state_flags": {}
 }

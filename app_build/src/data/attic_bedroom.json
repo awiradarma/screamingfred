@@ -28,9 +28,9 @@
     ],
     [
       "wall",
+      "cobweb_closet",
       "floor",
-      "floor",
-      "floor",
+      "loose_carpet",
       "wall"
     ],
     [
@@ -72,8 +72,31 @@
         "y": 2
       }
     },
+    "cobweb_closet": {
+      "passable": true,
+      "icon": "🚪",
+      "interactionVerb": "EXAMINE",
+      "onInteract": "You peer into the small closet. It's filled with tangled cobwebs and old, faded shoelaces from forgotten shoes.",
+      "description": "A miniature wooden closet door, covered in spiderwebs."
+    },
+    "loose_carpet": {
+      "passable": true,
+      "icon": "🔍",
+      "interactionVerb": "SEARCH",
+      "item": {
+        "itemId": "food_potato",
+        "name": "Wild Potato",
+        "type": "food",
+        "opened_description": "A peeled-back corner of the carpet. Just bare floorboards remain.",
+        "onCollect": "You pull back the corner of the loose carpet and find a perfectly preserved Wild Potato hidden underneath!"
+      },
+      "description": "A corner of the soft carpet that seems to have peeled back."
+    },
     "item_pillow": {
       "passable": true,
+      "icon": "🛏️",
+      "interactionVerb": "EXAMINE",
+      "onInteract": "You poke the cotton-ball pillow. It's incredibly soft and springy—perfect for a tired sole.",
       "description": "A tiny pillow made of a single cotton ball.",
       "item": {
         "name": "Soft Pillow",
@@ -86,6 +109,9 @@
     },
     "item_photo": {
       "passable": true,
+      "icon": "🖼️",
+      "interactionVerb": "EXAMINE",
+      "onInteract": "You turn the dusty photo face up. It shows two young baby slippers, Fred and Derf, playing happily in Shoeboxlandia before Derf's exile behind the mountains. You shed a single, starchy tear.",
       "description": "An old, dusty photo lying face down on the floor.",
       "item": {
         "itemId": "flavor_photo",
@@ -97,6 +123,9 @@
     },
     "item_magnifying_lens": {
       "passable": true,
+      "icon": "🔍",
+      "interactionVerb": "EXAMINE",
+      "onInteract": "You peer through the magnifying lens. The dust motes floating in the moonlight look like massive, glowing stardust particles.",
       "description": "A highly polished magnifying lens is catching the sliver of moonlight.",
       "item": {
         "name": "Magnifying Lens",

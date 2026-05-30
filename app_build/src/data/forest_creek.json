@@ -14,7 +14,7 @@
     ],
     [
       "wall",
-      "ground",
+      "rubber_well",
       "ground",
       "ground",
       "wall"
@@ -30,7 +30,7 @@
       "wall",
       "ground",
       "ground",
-      "ground",
+      "mossy_stepping_stone",
       "wall"
     ],
     [
@@ -54,6 +54,26 @@
       "passable": true,
       "description": "The muddy bank of the rubber creek."
     },
+    "rubber_well": {
+      "passable": true,
+      "icon": "🛢️",
+      "interactionVerb": "EXAMINE",
+      "onInteract": "You peer into the miniature bubbling warm spring. Rich, black liquid rubber bubbles up from deep underground, warm and smooth.",
+      "description": "A natural warm bubbling spring of liquid rubber."
+    },
+    "mossy_stepping_stone": {
+      "passable": true,
+      "icon": "🪨",
+      "interactionVerb": "SEARCH",
+      "item": {
+        "itemId": "food_potato",
+        "name": "Wild Potato",
+        "type": "food",
+        "opened_description": "A heavy stone at the water's edge. Just mud remains underneath.",
+        "onCollect": "You roll over the mossy stepping stone and find a perfectly round Wild Potato nestled in the wet mud!"
+      },
+      "description": "A large, slick stepping stone covered in bright green moss."
+    },
     "creek": {
       "passable": true,
       "description": "A slow-moving stream of thick, black liquid rubber.",
@@ -70,6 +90,17 @@
       }
     }
   },
-  "entities": [],
+  "entities": [
+    {
+      "id": "creek_snake_hidden",
+      "name": "Hidden Shoelace Snake",
+      "behavior": "idle",
+      "detectionRange": 0,
+      "damage": 1,
+      "hp": 3,
+      "x": 1,
+      "y": 3
+    }
+  ],
   "state_flags": {}
 }
