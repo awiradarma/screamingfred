@@ -13,11 +13,11 @@
       "wall"
     ],
     [
-      "wall",
       "dusty_trunk",
       "floor",
-      "hanging_mothball",
-      "wall"
+      "floor",
+      "floor",
+      "hanging_mothball"
     ],
     [
       "wall",
@@ -27,8 +27,8 @@
       "wall"
     ],
     [
-      "wall",
       "loose_floorboard",
+      "floor",
       "floor",
       "floor",
       "exit_east"
@@ -56,14 +56,14 @@
     },
     "dusty_trunk": {
       "passable": true,
-      "icon": "🧳",
+      "icon": "📦",
       "interactionVerb": "EXAMINE",
       "onInteract": "You wipe decades of dust off an old leather shoe trunk, revealing catalogs of vintage high-heeled shoes from Shoeboxlandia's golden age.",
       "description": "An old leather shoe trunk tucked away in the corner."
     },
     "hanging_mothball": {
       "passable": true,
-      "icon": "🔮",
+      "icon": "⚪",
       "interactionVerb": "EXAMINE",
       "onInteract": "You inspect the hanging mothball. It's a giant, smelling of intense cedar and wood oils that makes your eyelets water.",
       "description": "A crystalline mothball hanging by a strand of spider silk."

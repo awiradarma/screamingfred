@@ -27,11 +27,11 @@
       "stairs_down"
     ],
     [
-      "wall",
       "cobweb_closet",
       "floor",
-      "loose_carpet",
-      "wall"
+      "floor",
+      "floor",
+      "loose_carpet"
     ],
     [
       "wall",
@@ -94,7 +94,7 @@
     },
     "item_pillow": {
       "passable": true,
-      "icon": "🛏️",
+      "icon": "☁️",
       "interactionVerb": "EXAMINE",
       "onInteract": "You poke the cotton-ball pillow. It's incredibly soft and springy—perfect for a tired sole.",
       "description": "A tiny pillow made of a single cotton ball.",

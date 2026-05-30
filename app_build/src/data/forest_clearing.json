@@ -13,11 +13,11 @@
       "wall"
     ],
     [
-      "wall",
       "hollow_stump",
       "grass",
-      "butterfly_shrub",
-      "wall"
+      "grass",
+      "grass",
+      "butterfly_shrub"
     ],
     [
       "exit_west",
@@ -116,7 +116,7 @@
       "detectionRange": 0,
       "damage": 1,
       "hp": 3,
-      "x": 3,
+      "x": 4,
       "y": 3
     }
   ],

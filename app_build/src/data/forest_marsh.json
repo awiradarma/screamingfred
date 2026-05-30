@@ -16,11 +16,11 @@
       "wall",
       "marsh_ground",
       "marsh_ground",
-      "sinking_quicksand",
-      "wall"
+      "marsh_ground",
+      "sinking_quicksand"
     ],
     [
-      "wall",
+      "decaying_log",
       "marsh_ground",
       "item_vine",
       "marsh_ground",
@@ -28,7 +28,7 @@
     ],
     [
       "exit_west",
-      "decaying_log",
+      "marsh_ground",
       "marsh_ground",
       "marsh_ground",
       "wall"
@@ -56,7 +56,7 @@
     },
     "sinking_quicksand": {
       "passable": true,
-      "icon": "⏳",
+      "icon": "░",
       "interactionVerb": "EXAMINE",
       "onInteract": "You watch the slow, hypnotic bubbling of the lint quicksand. Stepping here would surely swallow a shoe whole, so you stay back.",
       "description": "A bubbling pool of soft, thick lint quicksand."
@@ -116,7 +116,7 @@
       "detectionRange": 0,
       "damage": 1,
       "hp": 3,
-      "x": 3,
+      "x": 4,
       "y": 3
     }
   ],

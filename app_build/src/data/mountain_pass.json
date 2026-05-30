@@ -13,14 +13,14 @@
     [
       "wall",
       "wall",
-      "wall",
+      "wind_chime",
       "wall",
       "wall"
     ],
     [
       "wall",
       "floor",
-      "wind_chime",
+      "floor",
       "floor",
       "wall"
     ],
@@ -34,14 +34,14 @@
     [
       "wall",
       "floor",
-      "snow_drift",
+      "floor",
       "floor",
       "wall"
     ],
     [
       "wall",
       "wall",
-      "wall",
+      "snow_drift",
       "wall",
       "wall"
     ]
