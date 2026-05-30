@@ -1054,12 +1054,17 @@ export function handleMove(state, direction, messages) {
           x: transitionPos ? (transitionPos.x === 0 ? 3 : (transitionPos.x === 4 ? 1 : 2)) : 4,
           y: transitionPos ? (transitionPos.y === 0 ? 3 : (transitionPos.y === 4 ? 1 : 2)) : 0
         });
+        // Only say "a second" if stalker 1 is also currently active
+        const stalker1AlsoActive = updatedFlags.shadow_stalker_following && !updatedFlags.shadow_stalker_defeated;
         messages.push({
-          text: "👤 Shadows pool and shift... A second Shadow Stalker has pursued you into this room!",
+          text: stalker1AlsoActive
+            ? "👤 Shadows pool and shift... A second Shadow Stalker has pursued you into this room!"
+            : "👤 A cold dread creeps up your laces... The Shadow Stalker has followed you into this room!",
           type: "danger"
         });
       }
     }
+
 
     return {
       state: {
